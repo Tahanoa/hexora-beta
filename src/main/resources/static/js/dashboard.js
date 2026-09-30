@@ -194,7 +194,6 @@ async function fetchAPI(url, options = {}) {
 
         const response = await fetch(url, {
             ...options,
-            ,
             headers: headers
         });
 
@@ -202,6 +201,7 @@ async function fetchAPI(url, options = {}) {
             const t = translations[currentLang];
             showToast('error', t.sessionExpired, '');
             localStorage.removeItem('user');
+            localStorage.removeItem('accessToken');
             setTimeout(() => window.location.href = '/login', 1500);
             throw new Error('Unauthorized');
         }
