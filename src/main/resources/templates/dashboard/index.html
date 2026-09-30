@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد | Hexora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
+
+<!-- ===== Sidebar ===== -->
+<aside id="sidebar" class="sidebar" aria-label="منوی اصلی">
+    <div class="sidebar-content">
+        <!-- Logo -->
+        <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center shadow-lg shadow-[#00C26E]/20">
+                    <i class="fas fa-hexagon text-[#0B0F14] text-lg"></i>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-[#00C26E] to-[#4DFFB8] bg-clip-text text-transparent">Hexora</span>
+            </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center text-[#0B0F14] font-bold text-lg shadow-lg shadow-[#00C26E]/20">
+                    <span id="userInitial">T</span>
+                </div>
+                <div>
+                    <div class="font-semibold text-sm" id="userName">کاربر</div>
+                    <div class="text-xs text-[#8A94A6] flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#00C26E] inline-block animate-pulse"></span>
+                        <span id="userRole">ادمین</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="p-4 space-y-1">
+            <div class="text-[10px] text-[#8A94A6] px-4 py-2 uppercase tracking-wider font-semibold" id="navMainMenu">منوی اصلی</div>
+
+            <a href="/dashboard" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-[#00C26E]/10 text-[#00C26E] transition-all duration-300">
+                <i class="fas fa-chart-pie w-5 text-center"></i>
+                <span>داشبورد</span>
+            </a>
+
+            <a href="/profile" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-user w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navProfile">پروفایل</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navProjects">پروژه‌ها</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navSkills">مهارت‌ها</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-briefcase w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navExperiences">سوابق کاری</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navServices">سرویس‌ها</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navStatistics">آمارها</span>
+            </a>
+
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+                <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+                <span id="navMessages">پیام‌ها</span>
+                <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
+            </a>
+
+            <div class="pt-4 mt-4 border-t border-[rgba(0,194,110,0.08)]"></div>
+
+            <button type="button" id="logoutBtn" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#EF4444] hover:bg-[#EF4444]/10 transition-all duration-300 w-full">
+                <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                <span id="navLogout">خروج</span>
+            </button>
+        </nav>
+    </div>
+</aside>
+
+<!-- ===== Overlay ===== -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()" aria-hidden="true"></div>
+
+<!-- ===== Main Content ===== -->
+<div class="dashboard-main">
+    <!-- Top Bar -->
+    <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl lg:text-3xl font-bold" id="pageTitle">داشبورد</h1>
+            <p class="text-[#8A94A6] text-sm" id="pageSubtitle">خلاصه وضعیت سیستم</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-[#8A94A6] text-xs hidden sm:inline">
+                    <i class="fas fa-clock ml-1"></i>
+                    <span id="updateTime">--:--</span>
+                </span>
+            <button type="button" onclick="refreshData()" aria-label="تازه‌سازی اطلاعات" title="تازه‌سازی اطلاعات" class="bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] px-3 py-2 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button type="button" onclick="toggleLanguage()" aria-label="تغییر زبان / Change Language" class="bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] px-3 py-2 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
+                <i class="fas fa-globe"></i>
+                <span id="dashboardLangText">فارسی</span>
+            </button>
+            <button type="button" onclick="toggleSidebar()" aria-label="باز کردن منو" aria-controls="sidebar" aria-expanded="false" class="sidebar-toggle lg:hidden bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] p-2.5 rounded-xl transition-all duration-300 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== Stats Cards ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8" id="statsContainer">
+        <!-- Skeleton Loaders -->
+        <div class="skeleton-card stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="skeleton skeleton-text skeleton-text-sm" style="width: 80px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text-lg" style="width: 60px; margin-top: 8px;"></div>
+                </div>
+                <div class="skeleton skeleton-circle"></div>
+            </div>
+        </div>
+        <div class="skeleton-card stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="skeleton skeleton-text skeleton-text-sm" style="width: 100px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text-lg" style="width: 60px; margin-top: 8px;"></div>
+                </div>
+                <div class="skeleton skeleton-circle"></div>
+            </div>
+        </div>
+        <div class="skeleton-card stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="skeleton skeleton-text skeleton-text-sm" style="width: 90px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text-lg" style="width: 60px; margin-top: 8px;"></div>
+                </div>
+                <div class="skeleton skeleton-circle"></div>
+            </div>
+        </div>
+        <div class="skeleton-card stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="skeleton skeleton-text skeleton-text-sm" style="width: 70px;"></div>
+                    <div class="skeleton skeleton-text skeleton-text-lg" style="width: 60px; margin-top: 8px;"></div>
+                </div>
+                <div class="skeleton skeleton-circle"></div>
+            </div>
+        </div>
+
+        <!-- Real Stats -->
+        <div class="stat-card" style="display:none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statProjectsLabel">کل پروژه‌ها</p>
+                    <p class="stat-value" id="totalProjects">0</p>
+                </div>
+                <div class="stat-icon bg-[#00C26E]/10 text-[#00C26E]">
+                    <i class="fas fa-folder"></i>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card" style="display:none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statCompletedLabel">پروژه‌های تکمیل شده</p>
+                    <p class="stat-value" id="completedProjects">0</p>
+                </div>
+                <div class="stat-icon bg-[#4DFFB8]/10 text-[#4DFFB8]">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card" style="display:none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statMessagesLabel">پیام‌های خوانده نشده</p>
+                    <p class="stat-value" id="unreadMessages">0</p>
+                </div>
+                <div class="stat-icon bg-[#FBBF24]/10 text-[#FBBF24]">
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card" style="display:none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statSkillsLabel">مهارت‌ها</p>
+                    <p class="stat-value" id="totalSkills">0</p>
+                </div>
+                <div class="stat-icon bg-[#00C26E]/10 text-[#00C26E]">
+                    <i class="fas fa-brain"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Charts Row ===== -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6 lg:mb-8">
+        <!-- Projects by Status -->
+        <div class="chart-container">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" id="chartStatusTitle">وضعیت پروژه‌ها</h3>
+                <span class="text-xs text-[#8A94A6]" id="totalProjectsLabel">0 پروژه</span>
+            </div>
+            <div class="space-y-4" id="projectStatusList">
+                <!-- Skeletons -->
+                <div class="skeleton-status">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 80px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-status">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 70px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-status">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 90px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+
+                <!-- Real Status -->
+                <div class="status-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm" id="statusInProgress">در حال انجام</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="inProgressBar" style="width:0%; background:#FBBF24;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="inProgressCount">0</span>
+                </div>
+                <div class="status-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm" id="statusCompleted">تکمیل شده</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="completedBar" style="width:0%; background:#00C26E;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="completedCount">0</span>
+                </div>
+                <div class="status-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm" id="statusPlanning">برنامه‌ریزی شده</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="planningBar" style="width:0%; background:#8A94A6;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="planningCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills by Category -->
+        <div class="chart-container">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" id="chartSkillsTitle">مهارت‌ها بر اساس دسته‌بندی</h3>
+                <span class="text-xs text-[#8A94A6]" id="totalSkillsLabel">0 مهارت</span>
+            </div>
+            <div class="space-y-4" id="skillsCategoryList">
+                <!-- Skeletons -->
+                <div class="skeleton-skill">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 70px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-skill">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 80px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-skill">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 90px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-skill">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 60px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+                <div class="skeleton-skill">
+                    <div class="flex items-center justify-between">
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 50px;"></span>
+                        <div class="flex-1 mx-4"><div class="skeleton skeleton-bar"></div></div>
+                        <span class="skeleton skeleton-text skeleton-text-sm" style="width: 30px;"></span>
+                    </div>
+                </div>
+
+                <!-- Real Skills -->
+                <div class="skill-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm skill-name">بک‌اند</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="backendBar" style="width:0%; background:#00C26E;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="backendCount">0</span>
+                </div>
+                <div class="skill-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm skill-name">فرانت‌اند</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="frontendBar" style="width:0%; background:#4DFFB8;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="frontendCount">0</span>
+                </div>
+                <div class="skill-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm skill-name">پایگاه داده</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="databaseBar" style="width:0%; background:#FBBF24;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="databaseCount">0</span>
+                </div>
+                <div class="skill-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm skill-name">دواپس</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="devopsBar" style="width:0%; background:#EF4444;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="devopsCount">0</span>
+                </div>
+                <div class="skill-item flex items-center justify-between" style="display:none;">
+                    <span class="text-[#8A94A6] text-sm skill-name">ابزارها</span>
+                    <div class="flex-1 mx-4 chart-bar">
+                        <div class="bar-fill" id="toolsBar" style="width:0%; background:#8B5CF6;"></div>
+                    </div>
+                    <span class="text-sm font-semibold" id="toolsCount">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Bottom Row ===== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6 lg:mb-8">
+        <!-- Recent Projects -->
+        <div class="chart-container xl:col-span-1">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" id="recentProjectsTitle">پروژه‌های اخیر</h3>
+                <a href="#" class="text-[#00C26E] text-sm hover:text-[#4DFFB8] transition-colors flex items-center gap-1 group">
+                    <span id="viewAllText">مشاهده همه</span>
+                    <i class="fas fa-arrow-left text-xs group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+            <div id="recentProjectsList">
+                <!-- Skeletons -->
+                <div class="skeleton-project project-item">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="skeleton skeleton-circle" style="width:40px;height:40px;"></div>
+                            <div>
+                                <div class="skeleton skeleton-text" style="width:120px;"></div>
+                                <div class="skeleton skeleton-text skeleton-text-sm" style="width:80px;margin-top:4px;"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton skeleton-text skeleton-text-sm" style="width:60px;"></div>
+                    </div>
+                </div>
+                <div class="skeleton-project project-item">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="skeleton skeleton-circle" style="width:40px;height:40px;"></div>
+                            <div>
+                                <div class="skeleton skeleton-text" style="width:150px;"></div>
+                                <div class="skeleton skeleton-text skeleton-text-sm" style="width:100px;margin-top:4px;"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton skeleton-text skeleton-text-sm" style="width:60px;"></div>
+                    </div>
+                </div>
+                <div class="skeleton-project project-item">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="skeleton skeleton-circle" style="width:40px;height:40px;"></div>
+                            <div>
+                                <div class="skeleton skeleton-text" style="width:100px;"></div>
+                                <div class="skeleton skeleton-text skeleton-text-sm" style="width:70px;margin-top:4px;"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton skeleton-text skeleton-text-sm" style="width:60px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiences -->
+        <div class="chart-container xl:col-span-1">
+            <h3 class="text-lg font-semibold mb-4" id="experiencesTitle">سوابق کاری</h3>
+            <div id="experiencesList">
+                <div class="text-center text-[#8A94A6] py-4">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
+                    <span class="text-sm">در حال بارگذاری...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="chart-container xl:col-span-1">
+            <h3 class="text-lg font-semibold mb-4" id="servicesTitle">سرویس‌ها</h3>
+            <div id="servicesList">
+                <div class="text-center text-[#8A94A6] py-4">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
+                    <span class="text-sm">در حال بارگذاری...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Statistics Bottom ===== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Statistics -->
+        <div class="chart-container">
+            <h3 class="text-lg font-semibold mb-4" id="statisticsTitle">آمارهای سایت</h3>
+            <div id="statisticsList">
+                <div class="text-center text-[#8A94A6] py-4">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
+                    <span class="text-sm">در حال بارگذاری...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="chart-container">
+            <h3 class="text-lg font-semibold mb-4" id="quickActionsTitle">دسترسی سریع</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                    <div class="w-10 h-10 rounded-lg bg-[#00C26E]/10 flex items-center justify-center text-[#00C26E] mx-auto mb-2">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <span class="text-xs font-medium" id="actionNewProject">پروژه جدید</span>
+                </a>
+                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                    <div class="w-10 h-10 rounded-lg bg-[#4DFFB8]/10 flex items-center justify-center text-[#4DFFB8] mx-auto mb-2">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span class="text-xs font-medium" id="actionNewSkill">مهارت جدید</span>
+                </a>
+                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                    <div class="w-10 h-10 rounded-lg bg-[#FBBF24]/10 flex items-center justify-center text-[#FBBF24] mx-auto mb-2">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <span class="text-xs font-medium" id="actionNewExperience">سابقه جدید</span>
+                </a>
+                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                    <div class="w-10 h-10 rounded-lg bg-[#EF4444]/10 flex items-center justify-center text-[#EF4444] mx-auto mb-2">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span class="text-xs font-medium" id="actionViewMessages">پیام‌ها</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center text-[#8A94A6] text-xs border-t border-[rgba(0,194,110,0.08)] pt-6">
+        <span>© <span class="current-year">2026</span> Hexora. All rights reserved.</span>
+        <span class="mx-2">•</span>
+        <span id="footerVersion">v1.0.0</span>
+        <span class="mx-2">•</span>
+        <span id="footerStatus" class="text-[#00C26E]">
+                <i class="fas fa-circle text-[8px] ml-1"></i>
+                آنلاین
+            </span>
+    </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ===== Scripts ===== -->
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

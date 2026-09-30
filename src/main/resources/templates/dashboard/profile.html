@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پروفایل | Hexora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
+
+<!-- ===== Sidebar ===== -->
+<aside id="sidebar" class="sidebar" aria-label="منوی اصلی">
+  <div class="sidebar-content">
+    <!-- Logo -->
+    <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center shadow-lg shadow-[#00C26E]/20">
+          <i class="fas fa-hexagon text-[#0B0F14] text-lg"></i>
+        </div>
+        <span class="text-xl font-bold bg-gradient-to-r from-[#00C26E] to-[#4DFFB8] bg-clip-text text-transparent">Hexora</span>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center text-[#0B0F14] font-bold text-lg shadow-lg shadow-[#00C26E]/20">
+          <span id="userInitial">T</span>
+        </div>
+        <div>
+          <div class="font-semibold text-sm" id="userName">کاربر</div>
+          <div class="text-xs text-[#8A94A6] flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#00C26E] inline-block animate-pulse"></span>
+            <span id="userRole">ادمین</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="p-4 space-y-1">
+      <div class="text-[10px] text-[#8A94A6] px-4 py-2 uppercase tracking-wider font-semibold" id="navMainMenu">منوی اصلی</div>
+
+      <a href="/dashboard" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-chart-pie w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span>داشبورد</span>
+      </a>
+
+      <a href="/profile" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-[#00C26E]/10 text-[#00C26E] transition-all duration-300">
+        <i class="fas fa-user w-5 text-center"></i>
+        <span id="navProfile">پروفایل</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navProjects">پروژه‌ها</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navSkills">مهارت‌ها</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-briefcase w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navExperiences">سوابق کاری</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navServices">سرویس‌ها</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navStatistics">آمارها</span>
+      </a>
+
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+        <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
+        <span id="navMessages">پیام‌ها</span>
+        <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
+      </a>
+
+      <div class="pt-4 mt-4 border-t border-[rgba(0,194,110,0.08)]"></div>
+
+      <button type="button" id="logoutBtn" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#EF4444] hover:bg-[#EF4444]/10 transition-all duration-300 w-full">
+        <i class="fas fa-sign-out-alt w-5 text-center"></i>
+        <span id="navLogout">خروج</span>
+      </button>
+    </nav>
+  </div>
+</aside>
+
+<!-- ===== Overlay ===== -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()" aria-hidden="true"></div>
+
+<!-- ===== Main Content ===== -->
+<div class="dashboard-main">
+  <!-- Top Bar -->
+  <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+    <div>
+      <h1 class="text-2xl lg:text-3xl font-bold" id="pageTitle">پروفایل</h1>
+      <p class="text-[#8A94A6] text-sm" id="pageSubtitle">مدیریت اطلاعات شخصی و تنظیمات</p>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <button type="button" onclick="toggleLanguage()" aria-label="تغییر زبان / Change Language" class="bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] px-3 py-2 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
+        <i class="fas fa-globe"></i>
+        <span id="profileLangText">فارسی</span>
+      </button>
+      <button type="button" onclick="toggleSidebar()" aria-label="باز کردن منو" aria-controls="sidebar" aria-expanded="false" class="sidebar-toggle lg:hidden bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] p-2.5 rounded-xl transition-all duration-300 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Profile Content ===== -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column - Profile Card -->
+    <div class="lg:col-span-1">
+      <div class="profile-card">
+        <!-- Avatar -->
+        <div class="text-center mb-6">
+          <div class="relative inline-block">
+            <div class="profile-avatar-wrapper">
+              <div class="profile-avatar" id="profileAvatar">
+                <img id="avatarImage" src="" alt="Avatar" class="w-full h-full rounded-full object-cover" style="display:none;">
+                <span id="avatarText" class="text-4xl font-bold">T</span>
+              </div>
+              <div class="avatar-status online">
+                <span class="status-dot"></span>
+              </div>
+            </div>
+            <button type="button" onclick="document.getElementById('avatarInput').click()" aria-label="تغییر تصویر پروفایل"
+                    class="absolute bottom-0 right-0 bg-[#00C26E] hover:bg-[#4DFFB8] text-[#0B0F14] w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 border-2 border-[#0B0F14]">
+              <i class="fas fa-camera text-xs"></i>
+            </button>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+          </div>
+          <h2 class="text-xl font-bold mt-3" id="profileFullName">کاربر</h2>
+          <p class="text-[#8A94A6] text-sm" id="profileRole">ادمین</p>
+          <div class="flex justify-center gap-2 mt-2">
+                        <span class="px-3 py-1 rounded-full text-xs bg-[#00C26E]/10 text-[#00C26E] border border-[#00C26E]/20">
+                            <i class="fas fa-check-circle text-[10px] ml-1"></i>
+                            <span id="profileStatus">آنلاین</span>
+                        </span>
+          </div>
+        </div>
+
+        <!-- Info Items -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="w-8 h-8 rounded-lg bg-[#00C26E]/10 flex items-center justify-center text-[#00C26E]">
+              <i class="fas fa-envelope text-sm"></i>
+            </div>
+            <div>
+              <p class="text-xs text-[#8A94A6]" id="emailLabel">ایمیل</p>
+              <p class="text-sm font-medium" id="profileEmail">---</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="w-8 h-8 rounded-lg bg-[#4DFFB8]/10 flex items-center justify-center text-[#4DFFB8]">
+              <i class="fas fa-user text-sm"></i>
+            </div>
+            <div>
+              <p class="text-xs text-[#8A94A6]" id="usernameLabel">نام کاربری</p>
+              <p class="text-sm font-medium" id="profileUsername">---</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="w-8 h-8 rounded-lg bg-[#FBBF24]/10 flex items-center justify-center text-[#FBBF24]">
+              <i class="fas fa-calendar-alt text-sm"></i>
+            </div>
+            <div>
+              <p class="text-xs text-[#8A94A6]" id="joinedLabel">تاریخ عضویت</p>
+              <p class="text-sm font-medium" id="profileJoined">---</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/10 flex items-center justify-center text-[#8B5CF6]">
+              <i class="fas fa-shield-alt text-sm"></i>
+            </div>
+            <div>
+              <p class="text-xs text-[#8A94A6]" id="roleLabel">نقش‌ها</p>
+              <p class="text-sm font-medium" id="profileRoles">---</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)]">
+          <div class="text-center">
+            <p class="text-lg font-bold text-[#00C26E]" id="statProjects">0</p>
+            <p class="text-xs text-[#8A94A6]" id="statProjectsLabel">پروژه</p>
+          </div>
+          <div class="text-center">
+            <p class="text-lg font-bold text-[#4DFFB8]" id="statSkills">0</p>
+            <p class="text-xs text-[#8A94A6]" id="statSkillsLabel">مهارت</p>
+          </div>
+          <div class="text-center">
+            <p class="text-lg font-bold text-[#FBBF24]" id="statExperiences">0</p>
+            <p class="text-xs text-[#8A94A6]" id="statExperiencesLabel">سابقه</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Forms -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Personal Information -->
+      <div class="profile-card">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fas fa-edit text-[#00C26E]"></i>
+          <span id="personalInfoTitle">اطلاعات شخصی</span>
+        </h3>
+        <form id="profileForm" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="fullName">
+                <span id="fullNameLabel">نام کامل</span>
+              </label>
+              <input type="text" id="fullName"
+                     class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
+                     placeholder="نام کامل خود را وارد کنید">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="brandName">
+                <span id="brandNameLabel">نام برند</span>
+              </label>
+              <input type="text" id="brandName"
+                     class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
+                     placeholder="نام برند خود را وارد کنید">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="bio">
+              <span id="bioLabel">بیوگرافی</span>
+            </label>
+            <textarea id="bio" rows="3"
+                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 resize-none"
+                      placeholder="درباره خودتان بنویسید..."></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="location">
+              <span id="locationLabel">موقعیت مکانی</span>
+            </label>
+            <input type="text" id="location"
+                   class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
+                   placeholder="شهر، کشور">
+          </div>
+          <button type="submit" id="updateProfileBtn"
+                  class="w-full md:w-auto px-6 py-2.5 bg-[#00C26E] hover:bg-[#4DFFB8] text-[#0B0F14] font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#00C26E]/20">
+            <i class="fas fa-save"></i>
+            <span id="saveProfileBtn">ذخیره تغییرات</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Change Password -->
+      <div class="profile-card">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fas fa-key text-[#FBBF24]"></i>
+          <span id="changePasswordTitle">تغییر رمز عبور</span>
+        </h3>
+        <form id="passwordForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="currentPassword">
+              <span id="currentPasswordLabel">رمز عبور فعلی</span>
+            </label>
+            <div class="relative">
+              <input type="password" id="currentPassword"
+                     class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
+                     placeholder="رمز عبور فعلی را وارد کنید">
+              <button type="button" onclick="togglePasswordVisibility('currentPassword')"
+                      class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
+                <i class="fas fa-eye" id="currentPasswordIcon"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="newPassword">
+              <span id="newPasswordLabel">رمز عبور جدید</span>
+            </label>
+            <div class="relative">
+              <input type="password" id="newPassword"
+                     class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
+                     placeholder="رمز عبور جدید را وارد کنید">
+              <button type="button" onclick="togglePasswordVisibility('newPassword')"
+                      class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
+                <i class="fas fa-eye" id="newPasswordIcon"></i>
+              </button>
+            </div>
+            <div id="passwordStrength" class="mt-2 hidden">
+              <div class="flex gap-1">
+                <div class="flex-1 h-1 rounded-full bg-[#1A1F26] overflow-hidden">
+                  <div id="strengthBar1" class="h-full w-0 transition-all duration-500"></div>
+                </div>
+                <div class="flex-1 h-1 rounded-full bg-[#1A1F26] overflow-hidden">
+                  <div id="strengthBar2" class="h-full w-0 transition-all duration-500"></div>
+                </div>
+                <div class="flex-1 h-1 rounded-full bg-[#1A1F26] overflow-hidden">
+                  <div id="strengthBar3" class="h-full w-0 transition-all duration-500"></div>
+                </div>
+                <div class="flex-1 h-1 rounded-full bg-[#1A1F26] overflow-hidden">
+                  <div id="strengthBar4" class="h-full w-0 transition-all duration-500"></div>
+                </div>
+              </div>
+              <p id="strengthText" class="text-xs text-[#8A94A6] mt-1">ضعیف</p>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="confirmPassword">
+              <span id="confirmPasswordLabel">تکرار رمز عبور جدید</span>
+            </label>
+            <div class="relative">
+              <input type="password" id="confirmPassword"
+                     class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
+                     placeholder="رمز عبور جدید را تکرار کنید">
+              <button type="button" onclick="togglePasswordVisibility('confirmPassword')"
+                      class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
+                <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" id="changePasswordBtn"
+                  class="w-full md:w-auto px-6 py-2.5 bg-[#FBBF24] hover:bg-[#FCD34D] text-[#0B0F14] font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#FBBF24]/20">
+            <i class="fas fa-key"></i>
+            <span id="changePasswordBtnText">تغییر رمز عبور</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Security Settings -->
+      <div class="profile-card">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="fas fa-shield-alt text-[#8B5CF6]"></i>
+          <span id="securityTitle">تنظیمات امنیتی</span>
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/10 flex items-center justify-center text-[#8B5CF6]">
+                <i class="fas fa-fingerprint text-sm"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium" id="twoFactorLabel">احراز هویت دو مرحله‌ای</p>
+                <p class="text-xs text-[#8A94A6]" id="twoFactorDesc">افزایش امنیت حساب کاربری</p>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="twoFactorToggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-[#1A1F26] rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-[#00C26E] after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:peer-checked:bg-white relative transition-all"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-[#EF4444]/10 flex items-center justify-center text-[#EF4444]">
+                <i class="fas fa-trash-alt text-sm"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium" id="deleteAccountLabel">حذف حساب کاربری</p>
+                <p class="text-xs text-[#8A94A6]" id="deleteAccountDesc">این عمل غیرقابل بازگشت است</p>
+              </div>
+            </div>
+            <button type="button" onclick="confirmDeleteAccount()" class="px-4 py-1.5 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] rounded-lg text-sm transition-all duration-300 border border-[#EF4444]/20">
+              <span id="deleteAccountBtn">حذف</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-8 text-center text-[#8A94A6] text-xs border-t border-[rgba(0,194,110,0.08)] pt-6">
+    <span>© <span class="current-year">2026</span> Hexora. All rights reserved.</span>
+    <span class="mx-2">•</span>
+    <span id="footerVersion">v1.0.0</span>
+    <span class="mx-2">•</span>
+    <span id="footerStatus" class="text-[#00C26E]">
+            <i class="fas fa-circle text-[8px] ml-1"></i>
+            آنلاین
+        </span>
+  </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ===== Scripts ===== -->
+<script th:src="@{/js/profile.js}"></script>
+<script>
+  // Pass user data from server to JavaScript
+  const userData = {
+    username: /*[[${session.user?.username}]]*/ 'کاربر',
+    email: /*[[${session.user?.email}]]*/ '---',
+    roles: /*[[${session.user?.roles}]]*/ ['USER']
+  };
+</script>
+</body>
+</html>

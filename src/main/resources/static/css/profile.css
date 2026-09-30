@@ -1,0 +1,184 @@
+/* ===== Profile Styles ===== */
+
+/* ===== Profile Card ===== */
+.profile-card {
+    background: var(--hexora-dark-gray);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    border-color: rgba(0, 194, 110, 0.15);
+}
+
+/* ===== Profile Avatar ===== */
+.profile-avatar-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--hexora-emerald), var(--hexora-mint));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--hexora-black);
+    border: 3px solid var(--hexora-emerald);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(0, 194, 110, 0.2);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-status {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--hexora-dark-gray);
+}
+
+.avatar-status.online {
+    background: var(--hexora-emerald);
+}
+
+.avatar-status.offline {
+    background: var(--hexora-gray);
+}
+
+.avatar-status.busy {
+    background: #EF4444;
+}
+
+.status-dot {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ===== Form Inputs ===== */
+.profile-card input,
+.profile-card textarea {
+    background: var(--hexora-black);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    padding: 0.65rem 1rem;
+    color: var(--hexora-text);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.profile-card input:focus,
+.profile-card textarea:focus {
+    border-color: var(--hexora-emerald);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 194, 110, 0.1);
+}
+
+.profile-card input::placeholder,
+.profile-card textarea::placeholder {
+    color: var(--hexora-gray);
+    opacity: 0.5;
+}
+
+/* ===== Password Strength ===== */
+.password-strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--hexora-dark-gray);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.password-strength-bar .bar-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+/* ===== Toggle Switch ===== */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: var(--hexora-dark-gray);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active {
+    background: var(--hexora-emerald);
+}
+
+.toggle-switch .toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active .toggle-knob {
+    transform: translateX(20px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+
+    .profile-card {
+        padding: 1rem;
+    }
+}
+
+/* ===== RTL Fix ===== */
+[dir="rtl"] .avatar-status {
+    right: auto;
+    left: 4px;
+}
+
+[dir="rtl"] .toggle-switch.active .toggle-knob {
+    transform: translateX(-20px);
+}
+
+[dir="rtl"] .profile-card input,
+[dir="rtl"] .profile-card textarea {
+    text-align: right;
+}

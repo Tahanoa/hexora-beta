@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود | Hexora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Language Meta Tags -->
+    <meta name="language" content="fa">
+    <meta name="description" content="Hexora - ورود به پنل مدیریت">
+</head>
+<body>
+<!-- Hexagon Loading -->
+<div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری">
+    <div class="cssload-cssload-spinner" aria-hidden="true"></div>
+</div>
+
+<!-- Language Toggle -->
+<button type="button" class="lang-toggle" onclick="toggleLanguage()" title="تغییر زبان / Change Language" aria-label="تغییر زبان / Change Language">
+    <span class="lang-icon"><i class="fas fa-globe"></i></span>
+    <span class="lang-text" id="langText">فارسی</span>
+    <span class="lang-short" id="langShort">FA</span>
+</button>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Login Page -->
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <div class="logo-icon">
+                <i class="fas fa-hexagon"></i>
+            </div>
+            <h1>Hexora</h1>
+            <p class="subtitle" id="loginSubtitle">ورود به پنل مدیریت</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form" th:action="@{/api/auth/login}" method="POST">
+            <!-- Username / Email -->
+            <div class="form-group">
+                <label for="usernameOrEmail" id="usernameLabel">نام کاربری یا ایمیل</label>
+                <div class="input-wrapper">
+                    <input
+                            type="text"
+                            id="usernameOrEmail"
+                            name="usernameOrEmail"
+                            placeholder="نام کاربری یا ایمیل خود را وارد کنید"
+                            required
+                            autocomplete="username"
+                            autofocus
+                    >
+                    <span class="input-icon"><i class="fas fa-user"></i></span>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" id="passwordLabel">رمز عبور</label>
+                <div class="input-wrapper">
+                    <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="رمز عبور خود را وارد کنید"
+                            required
+                            autocomplete="current-password"
+                    >
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                    <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="نمایش رمز عبور" aria-pressed="false">
+                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" id="remember">
+                    <span id="rememberLabel">مرا به خاطر بسپار</span>
+                </label>
+                <button type="button" class="link-button" onclick="showToast('warning', 'در حال توسعه', 'به‌زودی افزوده خواهد شد')" id="forgotPassword">رمز عبور را فراموش کرده‌اید؟</button>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="loginButton" class="btn-primary">
+                <span class="btn-text" id="loginBtnText">ورود به پنل</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider" id="dividerText">یا</div>
+
+        <!-- Register Link -->
+        <div class="auth-footer">
+            <span id="noAccountText">حساب کاربری ندارید؟</span>
+            <a th:href="@{/register}" id="registerLink">ثبت نام کنید</a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/auth.js}"></script>
+<script>
+    // ===== Language Toggle =====
+    let currentLang = 'fa';
+    const translations = {
+        fa: {
+            loginTitle: 'ورود | Hexora',
+            loginSubtitle: 'ورود به پنل مدیریت',
+            usernameLabel: 'نام کاربری یا ایمیل',
+            usernamePlaceholder: 'نام کاربری یا ایمیل خود را وارد کنید',
+            passwordLabel: 'رمز عبور',
+            passwordPlaceholder: 'رمز عبور خود را وارد کنید',
+            rememberLabel: 'مرا به خاطر بسپار',
+            forgotPassword: 'رمز عبور را فراموش کرده‌اید؟',
+            loginBtnText: 'ورود به پنل',
+            dividerText: 'یا',
+            noAccountText: 'حساب کاربری ندارید؟',
+            registerLink: 'ثبت نام کنید',
+            langText: 'فارسی',
+            langShort: 'FA',
+            successTitle: 'موفق!',
+            successMessage: 'به پنل مدیریت خوش آمدید',
+            errorTitle: 'خطا',
+            errorMessage: 'نام کاربری یا رمز عبور اشتباه است',
+            serverError: 'مشکل در ارتباط با سرور'
+        },
+        en: {
+            loginTitle: 'Login | Hexora',
+            loginSubtitle: 'Login to Dashboard',
+            usernameLabel: 'Username or Email',
+            usernamePlaceholder: 'Enter your username or email',
+            passwordLabel: 'Password',
+            passwordPlaceholder: 'Enter your password',
+            rememberLabel: 'Remember me',
+            forgotPassword: 'Forgot password?',
+            loginBtnText: 'Login',
+            dividerText: 'or',
+            noAccountText: "Don't have an account?",
+            registerLink: 'Sign up',
+            langText: 'English',
+            langShort: 'EN',
+            successTitle: 'Success!',
+            successMessage: 'Welcome to the dashboard',
+            errorTitle: 'Error',
+            errorMessage: 'Invalid username or password',
+            serverError: 'Server connection error'
+        }
+    };
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'fa' ? 'en' : 'fa';
+        applyLanguage(currentLang);
+
+        // Change page direction
+        document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+
+        // Update meta
+        document.querySelector('meta[name="language"]').content = currentLang;
+
+        // Update button text
+        document.getElementById('langText').textContent = translations[currentLang].langText;
+        document.getElementById('langShort').textContent = translations[currentLang].langShort;
+
+        // Store preference
+        localStorage.setItem('hexora-lang', currentLang);
+    }
+
+    function applyLanguage(lang) {
+        const t = translations[lang];
+
+        document.title = t.loginTitle;
+        document.getElementById('loginSubtitle').textContent = t.loginSubtitle;
+        document.getElementById('usernameLabel').textContent = t.usernameLabel;
+        document.querySelector('#usernameOrEmail').placeholder = t.usernamePlaceholder;
+        document.getElementById('passwordLabel').textContent = t.passwordLabel;
+        document.querySelector('#password').placeholder = t.passwordPlaceholder;
+        document.getElementById('rememberLabel').textContent = t.rememberLabel;
+        document.getElementById('forgotPassword').textContent = t.forgotPassword;
+        document.getElementById('loginBtnText').textContent = t.loginBtnText;
+        document.getElementById('dividerText').textContent = t.dividerText;
+        document.getElementById('noAccountText').textContent = t.noAccountText;
+        document.getElementById('registerLink').textContent = t.registerLink;
+    }
+
+    // Load saved language preference
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedLang = localStorage.getItem('hexora-lang');
+        if (savedLang && savedLang !== currentLang) {
+            currentLang = savedLang;
+            applyLanguage(currentLang);
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('langText').textContent = translations[currentLang].langText;
+            document.getElementById('langShort').textContent = translations[currentLang].langShort;
+        }
+    });
+</script>
+</body>
+</html>

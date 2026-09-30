@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خوش آمدید | Hexora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/fonts.css}">
+</head>
+<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen flex items-center justify-center overflow-x-hidden">
+
+<div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3"></div>
+
+<div class="w-full max-w-lg mx-auto text-center px-6">
+    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#00C26E]/20">
+        <i class="fas fa-hexagon text-[#0B0F14] text-2xl"></i>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-2">
+        خوش آمدید، <span id="userNameText" class="text-[#00C26E]">کاربر</span>
+    </h1>
+    <p class="text-[#8A94A6] mb-8" id="welcomeSubtitle">
+        وارد حساب کاربری خود شدید. از این‌جا می‌توانید ادامه دهید.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="actionButtons">
+        <!-- دکمه‌ها به‌صورت پویا بر اساس نقش کاربر ساخته می‌شوند -->
+    </div>
+
+    <button id="logoutBtn"
+            class="mt-8 text-[#EF4444] hover:text-[#f87171] text-sm transition-colors">
+        <i class="fas fa-sign-out-alt ml-1"></i> خروج از حساب
+    </button>
+</div>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

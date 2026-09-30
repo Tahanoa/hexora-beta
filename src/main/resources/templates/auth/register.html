@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت‌نام | Hexora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="language" content="fa">
+    <meta name="description" content="Hexora - ثبت نام کاربر جدید">
+</head>
+<body>
+<!-- Hexagon Loading -->
+<div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری">
+    <div class="cssload-cssload-spinner" aria-hidden="true"></div>
+</div>
+
+<!-- Language Toggle -->
+<button type="button" class="lang-toggle" onclick="toggleLanguage()" title="تغییر زبان / Change Language" aria-label="تغییر زبان / Change Language">
+    <span class="lang-icon"><i class="fas fa-globe"></i></span>
+    <span class="lang-text" id="langText">فارسی</span>
+    <span class="lang-short" id="langShort">FA</span>
+</button>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Register Page -->
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <div class="logo-icon">
+                <i class="fas fa-hexagon"></i>
+            </div>
+            <h1>Hexora</h1>
+            <p class="subtitle" id="registerSubtitle">ایجاد حساب کاربری جدید</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form" th:action="@{/api/auth/register}" method="POST">
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username" id="usernameLabel">نام کاربری</label>
+                <div class="input-wrapper">
+                    <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="نام کاربری خود را انتخاب کنید"
+                            required
+                            minlength="3"
+                            maxlength="50"
+                            autocomplete="username"
+                            autofocus
+                    >
+                    <span class="input-icon"><i class="fas fa-user"></i></span>
+                </div>
+                <small style="color: var(--hexora-gray); font-size: 0.75rem;" id="usernameHint">حداقل ۳ و حداکثر ۵۰ کاراکتر</small>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email" id="emailLabel">آدرس ایمیل</label>
+                <div class="input-wrapper">
+                    <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="ایمیل خود را وارد کنید"
+                            required
+                            autocomplete="email"
+                    >
+                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" id="passwordLabel">رمز عبور</label>
+                <div class="input-wrapper">
+                    <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="رمز عبور قوی انتخاب کنید"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                    >
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                    <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="نمایش رمز عبور" aria-pressed="false">
+                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                    </button>
+                </div>
+                <small style="color: var(--hexora-gray); font-size: 0.75rem;" id="passwordHint">
+                    حداقل ۶ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد
+                </small>
+            </div>
+
+            <!-- Password Strength -->
+            <div id="passwordStrength" class="password-strength" hidden aria-live="polite">
+                <div style="display: flex; gap: 0.3rem; margin-bottom: 0.25rem;">
+                    <div id="strengthBar1" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
+                    <div id="strengthBar2" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
+                    <div id="strengthBar3" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
+                    <div id="strengthBar4" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
+                </div>
+                <span id="strengthText" style="color: var(--hexora-gray); font-size: 0.75rem;">ضعیف</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="registerButton" class="btn-primary" style="margin-top: 1.5rem;">
+                <span class="btn-text" id="registerBtnText">ثبت نام</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider" id="dividerText">قبلاً ثبت نام کرده‌اید؟</div>
+
+        <!-- Login Link -->
+        <div class="auth-footer">
+            <a th:href="@{/login}" id="loginLink">وارد شوید</a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/auth.js}"></script>
+<script>
+    // ===== Language Toggle =====
+    let currentLang = 'fa';
+    const translations = {
+        fa: {
+            registerTitle: 'ثبت نام | Hexora',
+            registerSubtitle: 'ایجاد حساب کاربری جدید',
+            usernameLabel: 'نام کاربری',
+            usernamePlaceholder: 'نام کاربری خود را انتخاب کنید',
+            usernameHint: 'حداقل ۳ و حداکثر ۵۰ کاراکتر',
+            emailLabel: 'آدرس ایمیل',
+            emailPlaceholder: 'ایمیل خود را وارد کنید',
+            passwordLabel: 'رمز عبور',
+            passwordPlaceholder: 'رمز عبور قوی انتخاب کنید',
+            passwordHint: 'حداقل ۶ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد',
+            registerBtnText: 'ثبت نام',
+            dividerText: 'قبلاً ثبت نام کرده‌اید؟',
+            loginLink: 'وارد شوید',
+            langText: 'فارسی',
+            langShort: 'FA',
+            successTitle: 'موفق!',
+            successMessage: 'ثبت نام با موفقیت انجام شد',
+            errorTitle: 'خطا',
+            errorMessage: 'مشکل در ثبت نام',
+            serverError: 'مشکل در ارتباط با سرور',
+            passwordWeak: 'ضعیف',
+            passwordMedium: 'متوسط',
+            passwordGood: 'خوب',
+            passwordStrong: 'قوی'
+        },
+        en: {
+            registerTitle: 'Register | Hexora',
+            registerSubtitle: 'Create New Account',
+            usernameLabel: 'Username',
+            usernamePlaceholder: 'Choose a username',
+            usernameHint: 'Min 3 and max 50 characters',
+            emailLabel: 'Email Address',
+            emailPlaceholder: 'Enter your email',
+            passwordLabel: 'Password',
+            passwordPlaceholder: 'Choose a strong password',
+            passwordHint: 'Min 6 chars, include uppercase, lowercase, number and symbol',
+            registerBtnText: 'Sign Up',
+            dividerText: 'Already have an account?',
+            loginLink: 'Login',
+            langText: 'English',
+            langShort: 'EN',
+            successTitle: 'Success!',
+            successMessage: 'Registration completed successfully',
+            errorTitle: 'Error',
+            errorMessage: 'Registration failed',
+            serverError: 'Server connection error',
+            passwordWeak: 'Weak',
+            passwordMedium: 'Medium',
+            passwordGood: 'Good',
+            passwordStrong: 'Strong'
+        }
+    };
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'fa' ? 'en' : 'fa';
+        applyLanguage(currentLang);
+
+        document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+        document.querySelector('meta[name="language"]').content = currentLang;
+
+        document.getElementById('langText').textContent = translations[currentLang].langText;
+        document.getElementById('langShort').textContent = translations[currentLang].langShort;
+
+        localStorage.setItem('hexora-lang', currentLang);
+    }
+
+    function applyLanguage(lang) {
+        const t = translations[lang];
+
+        document.title = t.registerTitle;
+        document.getElementById('registerSubtitle').textContent = t.registerSubtitle;
+        document.getElementById('usernameLabel').textContent = t.usernameLabel;
+        document.querySelector('#username').placeholder = t.usernamePlaceholder;
+        document.getElementById('usernameHint').textContent = t.usernameHint;
+        document.getElementById('emailLabel').textContent = t.emailLabel;
+        document.querySelector('#email').placeholder = t.emailPlaceholder;
+        document.getElementById('passwordLabel').textContent = t.passwordLabel;
+        document.querySelector('#password').placeholder = t.passwordPlaceholder;
+        document.getElementById('passwordHint').textContent = t.passwordHint;
+        document.getElementById('registerBtnText').textContent = t.registerBtnText;
+        document.getElementById('dividerText').textContent = t.dividerText;
+        document.getElementById('loginLink').textContent = t.loginLink;
+    }
+
+    // Load saved language
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedLang = localStorage.getItem('hexora-lang');
+        if (savedLang && savedLang !== currentLang) {
+            currentLang = savedLang;
+            applyLanguage(currentLang);
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('langText').textContent = translations[currentLang].langText;
+            document.getElementById('langShort').textContent = translations[currentLang].langShort;
+        }
+    });
+
+    // Update password strength labels for current language
+    const strengthLabels = {
+        fa: ['ضعیف', 'متوسط', 'خوب', 'قوی'],
+        en: ['Weak', 'Medium', 'Good', 'Strong']
+    };
+
+    // Override the original checkPasswordStrength to use translated labels
+    const originalCheck = window.checkPasswordStrength;
+    window.checkPasswordStrength = function(password) {
+        const strengthContainer = document.getElementById('passwordStrength');
+        if (!strengthContainer) return;
+
+        if (password.length === 0) {
+            strengthContainer.hidden = true;
+            return;
+        }
+
+        strengthContainer.hidden = false;
+
+        let strength = 0;
+        const bars = [
+            document.getElementById('strengthBar1'),
+            document.getElementById('strengthBar2'),
+            document.getElementById('strengthBar3'),
+            document.getElementById('strengthBar4')
+        ];
+        const text = document.getElementById('strengthText');
+
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+        const colors = ['#ef4444', '#f59e0b', '#fbbf24', '#00C26E'];
+        const labels = strengthLabels[currentLang] || strengthLabels.fa;
+
+        bars.forEach((bar, index) => {
+            if (index < strength) {
+                bar.style.background = colors[index];
+            } else {
+                bar.style.background = 'var(--hexora-dark-gray)';
+            }
+        });
+
+        text.textContent = labels[strength - 1] || labels[0];
+        text.style.color = colors[strength - 1] || '#ef4444';
+    };
+
+    document.getElementById('password').addEventListener('input', function () {
+        window.checkPasswordStrength(this.value);
+    });
+</script>
+</body>
+</html>
