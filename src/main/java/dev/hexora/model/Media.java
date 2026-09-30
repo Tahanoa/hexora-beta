@@ -3,7 +3,7 @@ import dev.hexora.enums.MediaType; import jakarta.persistence.*;
 @Entity @Table(name="media")
 public class Media extends BaseEntity {
  @Column(nullable=false,length=255) private String fileName;
- @Lob @Column(nullable=false) private byte[] data;
+ @Column(nullable=false) private byte[] data;
  @Column(nullable=false,length=100) private String contentType;
  @Column(nullable=false) private long size;
  @Enumerated(EnumType.STRING) @Column(nullable=false,length=30) private MediaType type;

@@ -14,7 +14,6 @@ Modern rebuild of the Hexora personal-brand portfolio and administration web app
 ## Run locally
 
 ```bash
-export JWT_SECRET_UNUSED=true
 ./mvnw spring-boot:run
 ```
 

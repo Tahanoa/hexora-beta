@@ -1,7 +1,8 @@
 // ===== Home / Landing Page (بعد از لاگین) =====
 
-document.addEventListener('DOMContentLoaded', function () {
-    const userStr = localStorage.getItem('user');
+document.addEventListener('DOMContentLoaded', async function () {
+    const session = await loadSession();
+    const userStr = session ? JSON.stringify(session) : null;
     if (!userStr) {
         window.location.href = '/login';
         return;

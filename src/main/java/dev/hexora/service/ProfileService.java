@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ProfileService extends CrudService<Profile,ProfileRequest,ProfileResponse> {
- public ProfileService(ProfileRepository repository) { super(repository,Profile::new); }
+ private final dev.hexora.repository.MediaRepository media;
+ public ProfileService(ProfileRepository repository,dev.hexora.repository.MediaRepository media) { super(repository,Profile::new);this.media=media; }
  @Override protected void apply(ProfileRequest request,Profile entity) {
   entity.setFullName(request.getFullName());
   entity.setBrandName(request.getBrandName());
@@ -19,6 +20,10 @@ public class ProfileService extends CrudService<Profile,ProfileRequest,ProfileRe
   entity.setAboutText(request.getAboutText());
   entity.setJourneyText(request.getJourneyText());
   entity.setProfileImage(request.getProfileImage());
+  if(request.getAvatarId()!=null){
+   var avatar=media.findById(request.getAvatarId()).orElseThrow(dev.hexora.api.ApiException::notFound);
+   if(avatar.getType()!=MediaType.IMAGE) throw new IllegalArgumentException("Avatar must be an image");
+  }
   entity.setAvatarId(request.getAvatarId());
   entity.setEmail(request.getEmail());
   entity.setPhone(request.getPhone());
@@ -51,4 +56,12 @@ public class ProfileService extends CrudService<Profile,ProfileRequest,ProfileRe
   response.setUpdatedAt(entity.getUpdatedAt());
   return response;
  }
+ public Profile latest() {return ((ProfileRepository)repository).findFirstByOrderByCreatedAtDescIdDesc().orElseThrow(dev.hexora.api.ApiException::notFound);}
+ public ProfileResponse basic(dev.hexora.dto.request.ProfileBasicUpdateRequest request) {
+  Profile entity=((ProfileRepository)repository).findFirstByOrderByCreatedAtDescIdDesc().orElseGet(Profile::new);
+  entity.setFullName(request.getFullName());entity.setBrandName(request.getBrandName());entity.setBio(request.getBio());entity.setLocation(request.getLocation());
+  return view(repository.saveAndFlush(entity));
+ }
+ public ProfileResponse status(Long id,String status){Profile entity=required(id);entity.setWorkingStatus(WorkingStatus.fromString(status));return view(repository.saveAndFlush(entity));}
+ public ProfileResponse avatar(Long id){Profile entity=latest();entity.setAvatarId(id);return view(repository.saveAndFlush(entity));}
 }

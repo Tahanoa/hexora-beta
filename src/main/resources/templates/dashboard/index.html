@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+<script src="/js/client.js"></script>
 </head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
@@ -55,12 +56,12 @@
                 <span id="navProfile">پروفایل</span>
             </a>
 
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+            <a href="/manage/projects" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
                 <span id="navProjects">پروژه‌ها</span>
             </a>
 
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+            <a href="/manage/skills" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
                 <span id="navSkills">مهارت‌ها</span>
             </a>
@@ -70,17 +71,17 @@
                 <span id="navExperiences">سوابق کاری</span>
             </a>
 
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+            <a href="/manage/services" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
                 <span id="navServices">سرویس‌ها</span>
             </a>
 
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+            <a href="/manage/statistics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
                 <span id="navStatistics">آمارها</span>
             </a>
 
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+            <a href="/manage/contact" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
                 <span id="navMessages">پیام‌ها</span>
                 <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
@@ -445,25 +446,25 @@
         <div class="chart-container">
             <h3 class="text-lg font-semibold mb-4" id="quickActionsTitle">دسترسی سریع</h3>
             <div class="grid grid-cols-2 gap-3">
-                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                <a href="/manage/projects" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#00C26E]/10 flex items-center justify-center text-[#00C26E] mx-auto mb-2">
                         <i class="fas fa-plus"></i>
                     </div>
                     <span class="text-xs font-medium" id="actionNewProject">پروژه جدید</span>
                 </a>
-                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                <a href="/manage/skills" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#4DFFB8]/10 flex items-center justify-center text-[#4DFFB8] mx-auto mb-2">
                         <i class="fas fa-code"></i>
                     </div>
                     <span class="text-xs font-medium" id="actionNewSkill">مهارت جدید</span>
                 </a>
-                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                <a href="/manage/experience" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#FBBF24]/10 flex items-center justify-center text-[#FBBF24] mx-auto mb-2">
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <span class="text-xs font-medium" id="actionNewExperience">سابقه جدید</span>
                 </a>
-                <a href="#" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
+                <a href="/manage/contact" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#EF4444]/10 flex items-center justify-center text-[#EF4444] mx-auto mb-2">
                         <i class="fas fa-envelope"></i>
                     </div>

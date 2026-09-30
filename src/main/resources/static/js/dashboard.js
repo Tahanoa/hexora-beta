@@ -38,8 +38,9 @@ let isLoading = false;
 let loadTimeout = null;
 let refreshInterval = null;
 
-document.addEventListener('DOMContentLoaded', function () {
-    checkAuth();
+document.addEventListener('DOMContentLoaded', async function () {
+    const session = await loadSession();
+    if (!session || !session.roles.includes('ADMIN')) { window.location.href = '/login'; return; }
     setupUserInfo();
     setupNavigation();
     applyLanguage(currentLang);

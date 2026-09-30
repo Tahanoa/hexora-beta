@@ -107,8 +107,9 @@ const translations = {
 let currentLang = localStorage.getItem('hexora-lang') || 'fa';
 
 // ===== DOM Ready =====
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuth();
+document.addEventListener('DOMContentLoaded', async function() {
+    const session = await loadSession();
+    if (!session || !session.roles.includes('ADMIN')) { window.location.href = '/login'; return; }
     setupUserInfo();
     setupNavigation();
     applyLanguage(currentLang);
@@ -153,7 +154,7 @@ function setupUserInfo() {
         document.getElementById('avatarText').textContent = initial;
 
         // Set joined date (mock - should come from server)
-        document.getElementById('profileJoined').textContent = new Date().toLocaleDateString('fa-IR');
+        document.getElementById('profileJoined').textContent = new Date(user.createdAt).toLocaleDateString('fa-IR');
 
     } catch (e) {
         console.error('Error parsing user data:', e);
@@ -502,7 +503,7 @@ document.getElementById('profileForm')?.addEventListener('submit', async functio
             location: document.getElementById('location').value
         };
 
-        const result = await fetchAPI('/api/profile/update', {
+        const result = await fetchAPI('/api/profile/me', {
             method: 'PUT',
             body: JSON.stringify(data)
         });

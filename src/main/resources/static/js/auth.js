@@ -91,7 +91,7 @@ async function handleLogin(form) {
         });
 
         const result = await response.json();
-        console.log('Login response:', result);
+        
 
         if (response.ok && result.success) {
             // Save user info (token is in cookie)
@@ -136,10 +136,10 @@ async function handleRegister(form) {
     const lang = getCurrentLang();
 
     const password = formData.get('password');
-    if (password.length < 6) {
+    if (password.length < 8) {
         const errorMsg = lang === 'fa'
-            ? 'رمز عبور باید حداقل ۶ کاراکتر باشد'
-            : 'Password must be at least 6 characters';
+            ? 'رمز عبور باید حداقل ۸ کاراکتر باشد'
+            : 'Password must be at least 8 characters';
         showToast('error', lang === 'fa' ? 'خطا' : 'Error', errorMsg);
         return;
     }

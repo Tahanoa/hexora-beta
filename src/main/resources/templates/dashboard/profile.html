@@ -10,6 +10,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link rel="stylesheet" th:href="@{/css/profile.css}">
+<script src="/js/client.js"></script>
 </head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
@@ -56,12 +57,12 @@
         <span id="navProfile">پروفایل</span>
       </a>
 
-      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+      <a href="/manage/projects" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
         <span id="navProjects">پروژه‌ها</span>
       </a>
 
-      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+      <a href="/manage/skills" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
         <span id="navSkills">مهارت‌ها</span>
       </a>
@@ -71,17 +72,17 @@
         <span id="navExperiences">سوابق کاری</span>
       </a>
 
-      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+      <a href="/manage/services" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
         <span id="navServices">سرویس‌ها</span>
       </a>
 
-      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+      <a href="/manage/statistics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
         <span id="navStatistics">آمارها</span>
       </a>
 
-      <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
+      <a href="/manage/contact" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
         <span id="navMessages">پیام‌ها</span>
         <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
