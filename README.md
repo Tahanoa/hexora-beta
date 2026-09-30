@@ -10,6 +10,7 @@ Modern rebuild of the Hexora personal-brand portfolio and administration web app
 - Thymeleaf templates retained from the original project
 - PostgreSQL 16+ as the only supported database
 - Flyway versioned schema migrations
+- Stateless JWT authentication with Bearer access tokens
 
 ## Run locally
 
@@ -19,6 +20,7 @@ PostgreSQL is required. Create a database named `hexora`, then provide its conne
 export DATABASE_URL=jdbc:postgresql://localhost:5432/hexora
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=postgres
+export JWT_SECRET=replace-with-at-least-32-random-characters
 ./mvnw spring-boot:run
 ```
 

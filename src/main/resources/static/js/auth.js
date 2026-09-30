@@ -83,7 +83,6 @@ async function handleLogin(form) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include', // مهم برای دریافت کوکی
             body: JSON.stringify({
                 usernameOrEmail: formData.get('usernameOrEmail'),
                 password: formData.get('password')
@@ -94,13 +93,8 @@ async function handleLogin(form) {
         
 
         if (response.ok && result.success) {
-            // Save user info (token is in cookie)
-            localStorage.setItem('user', JSON.stringify({
-                id: result.data.id,
-                username: result.data.username,
-                email: result.data.email,
-                roles: result.data.roles
-            }));
+            localStorage.setItem('accessToken', result.data.accessToken);
+            localStorage.setItem('user', JSON.stringify(result.data.user));
 
             const successMsg = lang === 'fa'
                 ? 'به پنل مدیریت خوش آمدید'

@@ -395,13 +395,5 @@
 
 <!-- ===== Scripts ===== -->
 <script th:src="@{/js/profile.js}"></script>
-<script>
-  // Pass user data from server to JavaScript
-  const userData = {
-    username: /*[[${session.user?.username}]]*/ 'کاربر',
-    email: /*[[${session.user?.email}]]*/ '---',
-    roles: /*[[${session.user?.roles}]]*/ ['USER']
-  };
-</script>
 </body>
 </html>

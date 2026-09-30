@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     document.getElementById('logoutBtn').addEventListener('click', async function () {
         try {
-            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            await fetch('/api/auth/logout', { method: 'POST' });
+            localStorage.removeItem('accessToken');
         } catch (e) {
             console.error('Logout error:', e);
         }

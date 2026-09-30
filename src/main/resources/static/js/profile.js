@@ -267,7 +267,7 @@ async function fetchAPI(url, options = {}) {
 
         const response = await fetch(url, {
             ...options,
-            credentials: 'include',
+            ,
             headers: headers
         });
 
@@ -375,7 +375,7 @@ function uploadAvatar(input) {
     // ✅ آپلود تصویر و ذخیره در پروفایل
     fetch('/api/profile/avatar', {
         method: 'POST',
-        credentials: 'include',
+        ,
         body: formData
     })
         .then(async response => {
@@ -642,7 +642,6 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     try {
         await fetch('/api/auth/logout', {
             method: 'POST',
-            credentials: 'include'
         });
     } catch (error) {
         console.error('Logout error:', error);

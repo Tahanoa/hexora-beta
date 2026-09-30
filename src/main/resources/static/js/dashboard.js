@@ -194,7 +194,7 @@ async function fetchAPI(url, options = {}) {
 
         const response = await fetch(url, {
             ...options,
-            credentials: 'include',
+            ,
             headers: headers
         });
 
@@ -567,7 +567,8 @@ async function handleLogout(e) {
     if (!confirm(t.logoutConfirm)) return;
 
     try {
-        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        await fetch('/api/auth/logout', { method: 'POST' });
+            localStorage.removeItem('accessToken');
     } catch (error) {
         console.error('Logout error:', error);
     }
