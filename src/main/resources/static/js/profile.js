@@ -344,77 +344,29 @@ function loadUserAvatar() {
 }
 
 // ===== Upload Avatar =====
-function uploadAvatar(input) {
-    const file = input.files[0];
+async function uploadAvatar(input) {
+    const file = input.files?.[0];
     if (!file) return;
-
     const t = translations[currentLang];
-
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!allowedTypes.includes(file.type)) {
-        showToast('error', t.invalidImage || 'فرمت تصویر نامعتبر است', '');
-        input.value = '';
-        return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-        showToast('error', t.imageTooLarge || 'حجم تصویر باید کمتر از 5 مگابایت باشد', '');
-        input.value = '';
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    // Show loading
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) { showToast('error', t.invalidImage || 'فرمت تصویر نامعتبر است', ''); input.value = ''; return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('error', t.imageTooLarge || 'حجم تصویر باید کمتر از ۵ مگابایت باشد', ''); input.value = ''; return; }
     const avatar = document.getElementById('profileAvatar');
-    avatar.innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-[#00C26E]"></i>';
-
-    // ✅ آپلود تصویر و ذخیره در پروفایل
-    fetch('/api/profile/avatar', {
-        method: 'POST',
-        body: formData
-    })
-        .then(async response => {
-            if (response.status === 401) {
-                const t = translations[currentLang];
-                showToast('error', t.sessionExpired || 'نشست شما منقضی شده است', '');
-                localStorage.removeItem('user');
-                setTimeout(() => window.location.href = '/login', 1500);
-                throw new Error('Unauthorized');
-            }
-
-            const result = await response.json();
-            return { response, result };
-        })
-        .then(({ response, result }) => {
-            if (response.ok && result.success) {
-                const profile = result.data;
-                const avatarId = profile.avatarId;
-
-                // ✅ ذخیره avatarId در localStorage
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user) {
-                    user.avatarId = avatarId;
-                    localStorage.setItem('user', JSON.stringify(user));
-                }
-
-                // ✅ نمایش تصویر با URL
-                const avatar = document.getElementById('profileAvatar');
-                avatar.innerHTML = `<img src="/api/media/public/${avatarId}" alt="Avatar" class="w-full h-full rounded-full object-cover">`;
-
-                showToast('success', t.avatarUploadSuccess || 'تصویر پروفایل با موفقیت آپلود شد', '');
-            } else {
-                throw new Error(result.message || 'Upload failed');
-            }
-        })
-        .catch(error => {
-            console.error('Upload error:', error);
-            showToast('error', t.avatarUploadError || 'خطا در آپلود تصویر', error.message || '');
-            resetAvatar();
-        });
+    avatar.innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-[#00C26E]" aria-label="در حال آپلود"></i>';
+    try {
+        const formData = new FormData(); formData.append('file', file, file.name);
+        const result = await fetchAPI('/api/profile/avatar', { method: 'POST', body: formData });
+        if (!result?.success || !result.data?.avatarId) throw new Error(result?.message || 'Upload failed');
+        const avatarId = result.data.avatarId;
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        if (user) { user.avatarId = avatarId; localStorage.setItem('user', JSON.stringify(user)); }
+        avatar.innerHTML = `<img src="/api/media/public/${avatarId}?v=${Date.now()}" alt="تصویر پروفایل" class="w-full h-full rounded-full object-cover">`;
+        showToast('success', t.avatarUploadSuccess || 'تصویر پروفایل با موفقیت آپلود شد', '');
+    } catch (error) {
+        console.error('Upload error:', error);
+        showToast('error', t.avatarUploadError || 'خطا در آپلود تصویر', error.message || '');
+        resetAvatar();
+    } finally { input.value = ''; }
 }
 
 // ===== Reset Avatar =====
