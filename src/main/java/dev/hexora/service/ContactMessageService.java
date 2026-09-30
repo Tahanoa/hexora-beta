@@ -24,7 +24,7 @@ public class ContactMessageService extends CrudService<ContactMessage,ContactMes
   response.setEmail(entity.getEmail());
   response.setPhone(entity.getPhone());
   response.setMessage(entity.getMessage());
-  response.setRead(entity.isRead());
+  response.setIsRead(entity.isRead());
   response.setCreatedAt(entity.getCreatedAt());
   response.setUpdatedAt(entity.getUpdatedAt());
   return response;
