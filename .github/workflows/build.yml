@@ -6,6 +6,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: hexora
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d hexora"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v5
@@ -15,6 +29,13 @@ jobs:
           cache: maven
       - run: ./mvnw -B -DskipTests package
       - name: Smoke check
+        env:
+          DATABASE_URL: jdbc:postgresql://127.0.0.1:5432/hexora
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
+          ADMIN_USERNAME: admin
+          ADMIN_EMAIL: admin@example.com
+          ADMIN_PASSWORD: change-me-for-ci
         run: |
           java -jar target/hexora-beta-1.0.0.jar > /tmp/hexora.log 2>&1 &
           app_pid=$!

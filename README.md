@@ -8,18 +8,23 @@ Modern rebuild of the Hexora personal-brand portfolio and administration web app
 - Java 17+
 - Spring MVC, Spring Security, Spring Data JPA
 - Thymeleaf templates retained from the original project
-- PostgreSQL in production, H2 file database for local startup
+- PostgreSQL 16+ as the only supported database
 - Flyway versioned schema migrations
 
 ## Run locally
 
+PostgreSQL is required. Create a database named `hexora`, then provide its connection settings through environment variables:
+
 ```bash
+export DATABASE_URL=jdbc:postgresql://localhost:5432/hexora
+export DATABASE_USERNAME=postgres
+export DATABASE_PASSWORD=postgres
 ./mvnw spring-boot:run
 ```
 
-The local default uses H2 at `./data/hexora`. No database password or hard-coded administrator is created. For an initial administrator, set `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` before first run.
+The application runs Flyway migrations against PostgreSQL on startup. No database password or hard-coded administrator is created. For an initial administrator, set `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` before first run.
 
-For PostgreSQL, set `SPRING_PROFILES_ACTIVE=prod`, `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, and `COOKIE_SECURE=true` behind HTTPS.
+For a production deployment, set `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, and `COOKIE_SECURE=true` behind HTTPS. The `prod` profile remains available for production-only overrides.
 
 ## API compatibility
 
