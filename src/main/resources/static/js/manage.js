@@ -37,7 +37,9 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
     return `<div class="field full icon-picker"><label>آیکون انتخاب‌شده</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="آیکون را از فهرست انتخاب کنید" autocomplete="off"><span class="icon-preview" aria-label="پیش‌نمایش آیکون"><i class="${esc(current || 'fa-solid fa-code')}"></i></span></div><div class="icon-picker-row"><input class="icon-search" type="search" placeholder="جست‌وجو: نام، برند یا کلمه مرتبط مانند user، java، heart" aria-label="جست‌وجوی آیکون"><select class="icon-style" aria-label="نوع آیکون"><option value="">همه انواع</option value="solid">Solid</option><option value="regular">Regular</option><option value="brands">Brands</option></select></div><span class="icon-help" role="status">در حال دریافت فهرست کامل آیکون‌ها...</span><div class="icon-options"></div><div class="icon-pagination"><button class="btn icon-prev" type="button">قبلی</button><span class="icon-page"></span><button class="btn icon-next" type="button">بعدی</button></div></div>`;
   }
 
+  const optionalProjectFields = new Set(['shortDescription','description','image','demoUrl','githubUrl','clientName','projectDate']);
   function fieldHtml([name,label,type='text'], value='') {
+    if(section==='projects'&&optionalProjectFields.has(name))label+=' '+t('(اختیاری)','(optional)');
     if (name === 'icon') return iconPickerHtml(value);
     if (type === 'checkbox') return `<label class="switch"><input name="${name}" type="checkbox" ${value ? 'checked' : ''}> ${label}</label>`;
     if (type.startsWith('select:')) return `<div class="field"><label>${label}</label><select name="${name}">${type.slice(7).split(',').map(option => `<option value="${option}" ${option === value ? 'selected' : ''}>${option}</option>`).join('')}</select></div>`;
@@ -93,6 +95,7 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
   async function save(event) {
     event.preventDefault();
     const data = Object.fromEntries(new FormData($('#editorForm')));
+    if(section==='projects')optionalProjectFields.forEach(name=>{if(typeof data[name]==='string')data[name]=data[name].trim()||null;});
     if(section==='profile'&&editing){data.avatarId=data.avatarId===''?editing.avatarId:data.avatarId;}
     meta.fields.filter(field => field[2] === 'checkbox').forEach(field => data[field[0]] = $(`[name="${field[0]}"]`).checked);
     meta.fields.forEach(([name,label,type])=>{if(type==='number')data[name]=data[name]===''?null:Number(data[name]);if((type==='date'||type==='datetime-local')&&!data[name])data[name]=null;});
