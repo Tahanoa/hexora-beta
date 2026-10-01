@@ -11,14 +11,14 @@
     media:{title:'رسانه‌ها',fields:[],columns:['fileName','contentType','size']},
     profile:{title:'پروفایل',fields:[['fullName','نام کامل'],['brandName','نام برند'],['title','عنوان'],['shortDescription','معرفی کوتاه'],['bio','زندگی‌نامه','textarea'],['aboutText','درباره من','textarea'],['location','موقعیت'],['githubUrl','گیت‌هاب'],['linkedinUrl','لینکدین'],['instagramUrl','اینستاگرام']],columns:['fullName','title','location']}
   }[section];
-  const icons = [
-    ['fa-solid fa-code','کدنویسی'],['fa-solid fa-laptop-code','توسعه وب'],['fa-solid fa-server','بک‌اند'],['fa-solid fa-database','دیتابیس'],
-    ['fa-brands fa-java','Java'],['fa-brands fa-python','Python'],['fa-brands fa-js','JavaScript'],['fa-brands fa-html5','HTML'],
-    ['fa-brands fa-css3-alt','CSS'],['fa-brands fa-react','React'],['fa-brands fa-node-js','Node.js'],['fa-brands fa-wordpress','WordPress'],
-    ['fa-brands fa-github','GitHub'],['fa-brands fa-docker','Docker'],['fa-solid fa-shield-halved','امنیت'],['fa-solid fa-cloud','ابری'],
-    ['fa-solid fa-mobile-screen-button','موبایل'],['fa-solid fa-palette','طراحی'],['fa-solid fa-bolt','سرعت'],['fa-solid fa-gears','تنظیمات'],
-    ['fa-solid fa-chart-line','آمار'],['fa-solid fa-briefcase','کار'],['fa-solid fa-graduation-cap','آموزش'],['fa-solid fa-star','ویژگی']
-  ];
+  let iconCatalog;
+  function loadIcons() {
+    if (!iconCatalog) iconCatalog = fetch('/data/fontawesome-icons.json').then(response => {
+      if (!response.ok) throw Error('دریافت فهرست آیکون‌ها ناموفق بود');
+      return response.json();
+    }).then(data => data.icons).catch(error => { iconCatalog = null; throw error; });
+    return iconCatalog;
+  }
   const $ = selector => document.querySelector(selector);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   let editing = null;
@@ -26,8 +26,9 @@
   function setStatus(message, error = false) { $('#status').textContent = message; $('#status').className = `status ${error ? 'error' : 'ok'}`; }
   function iconPickerHtml(value = '') {
     const current = String(value || '');
-    return `<div class="field full icon-picker"><label>آیکون</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="انتخاب کنید یا کلاس Font Awesome وارد کنید" autocomplete="off"><button type="button" class="icon-preview" aria-label="پیش‌نمایش آیکون"><i class="${esc(current || 'fa-solid fa-code')}"></i></button></div><span class="icon-help">یک آیکون را انتخاب کنید؛ مقدار انتخاب‌شده به‌صورت کلاس استاندارد ذخیره می‌شود.</span><div class="icon-options">${icons.map(([name,label]) => `<button type="button" class="icon-option ${name === current ? 'selected' : ''}" data-icon="${name}" title="${label}"><i class="${name}"></i></button>`).join('')}</div></div>`;
+    return `<div class="field full icon-picker"><label>آیکون انتخاب‌شده</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="آیکون را از فهرست انتخاب کنید" autocomplete="off"><span class="icon-preview" aria-label="پیش‌نمایش آیکون"><i class="${esc(current || 'fa-solid fa-code')}"></i></span></div><div class="icon-picker-row"><input class="icon-search" type="search" placeholder="جست‌وجو: نام، برند یا کلمه مرتبط مانند user، java، heart" aria-label="جست‌وجوی آیکون"><select class="icon-style" aria-label="نوع آیکون"><option value="">همه انواع</option value="solid">Solid</option><option value="regular">Regular</option><option value="brands">Brands</option></select></div><span class="icon-help" role="status">در حال دریافت فهرست کامل آیکون‌ها...</span><div class="icon-options"></div><div class="icon-pagination"><button class="btn icon-prev" type="button">قبلی</button><span class="icon-page"></span><button class="btn icon-next" type="button">بعدی</button></div></div>`;
   }
+
   function fieldHtml([name,label,type='text'], value='') {
     if (name === 'icon') return iconPickerHtml(value);
     if (type === 'checkbox') return `<label class="switch"><input name="${name}" type="checkbox" ${value ? 'checked' : ''}> ${label}</label>`;
@@ -35,14 +36,40 @@
     return `<div class="field ${type === 'textarea' ? 'full' : ''}"><label>${label}</label><${type === 'textarea' ? 'textarea' : 'input'} name="${name}" type="${type === 'textarea' ? 'text' : type}" value="${type === 'textarea' ? '' : esc(value)}" ${type === 'number' ? 'min="0"' : ''}>${type === 'textarea' ? esc(value) : ''}</${type === 'textarea' ? 'textarea' : 'input'}></div>`;
   }
   function renderForm(item = {}) { $('#editorForm').innerHTML = meta.fields.map(field => fieldHtml(field, item[field[0]])).join(''); $('#saveBtn').textContent = editing ? 'ویرایش' : 'ذخیره'; }
-  function bindIconPicker() {
+  async function bindIconPicker() {
     const picker = $('.icon-picker'); if (!picker) return;
-    const input = picker.querySelector('input[name="icon"]'); const preview = picker.querySelector('.icon-preview i');
-    picker.querySelectorAll('[data-icon]').forEach(button => button.addEventListener('click', () => {
-      input.value = button.dataset.icon; preview.className = button.dataset.icon;
-      picker.querySelectorAll('.icon-option').forEach(option => option.classList.toggle('selected', option === button));
-    }));
-    input.addEventListener('input', () => { preview.className = input.value || 'fa-solid fa-code'; });
+    const input = picker.querySelector('[name="icon"]'), preview = picker.querySelector('.icon-preview i');
+    const search = picker.querySelector('.icon-search'), style = picker.querySelector('.icon-style');
+    const options = picker.querySelector('.icon-options'), help = picker.querySelector('.icon-help');
+    const prev = picker.querySelector('.icon-prev'), next = picker.querySelector('.icon-next');
+    let all = [], page = 0;
+    const pageSize = 80;
+    function render() {
+      const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      const results = all.filter(icon => (!style.value || icon.style === style.value) && words.every(word =>
+        [icon.name, icon.label, ...icon.terms].join(' ').toLowerCase().includes(word)));
+      const pages = Math.max(1, Math.ceil(results.length / pageSize));
+      page = Math.min(page, pages - 1);
+      help.textContent = `${results.length.toLocaleString('fa-IR')} نتیجه از ${all.length.toLocaleString('fa-IR')} آیکون`;
+      options.innerHTML = results.slice(page * pageSize, (page + 1) * pageSize).map(icon => {
+        const name = `fa-${icon.style} fa-${icon.name}`;
+        return `<button type="button" class="icon-option ${name === input.value ? 'selected' : ''}" data-icon="${esc(name)}" title="${esc(icon.label)} (${icon.style})" aria-label="${esc(icon.label)} (${icon.style})" aria-pressed="${name === input.value}"><i class="${esc(name)}" aria-hidden="true"></i><small>${esc(icon.name)}</small></button>`;
+      }).join('') || '<span class="icon-empty">آیکونی یافت نشد.</span>';
+      prev.disabled = page === 0; next.disabled = page === pages - 1;
+      picker.querySelector('.icon-page').textContent = `${page + 1} / ${pages}`;
+    }
+    options.addEventListener('click', event => {
+      const button = event.target.closest('[data-icon]'); if (!button) return;
+      input.value = button.dataset.icon; preview.className = input.value; render();
+    });
+    input.addEventListener('input', () => { preview.className = input.value || 'fa-solid fa-code'; render(); });
+    search.addEventListener('input', () => { page = 0; render(); });
+    style.addEventListener('change', () => { page = 0; render(); });
+    prev.onclick = () => { page--; render(); options.scrollTop = 0; };
+    next.onclick = () => { page++; render(); options.scrollTop = 0; };
+    prev.disabled = next.disabled = true;
+    try { all = await loadIcons(); if (picker.isConnected) render(); }
+    catch (error) { if (picker.isConnected) help.textContent = error.message; }
   }
   function unwrap(json) { return json?.data ?? []; }
   async function load() {
