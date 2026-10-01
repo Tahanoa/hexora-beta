@@ -623,3 +623,13 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 window.uploadAvatar = uploadAvatar;
 window.confirmDeleteAccount = confirmDeleteAccount;
 window.showToast = showToast;
+
+// Save availability independently of unrelated profile field validation.
+document.getElementById('workingStatus')?.addEventListener('change', async event => {
+ const select=event.currentTarget, previous=currentProfile?.workingStatus||'AVAILABLE';
+ if(!currentProfile?.id){showToast('error','ابتدا پروفایل را ذخیره کنید','');select.value=previous;return;}
+ select.disabled=true;
+ try {const result=await fetchAPI(`/api/profile/${currentProfile.id}/status?status=${encodeURIComponent(select.value)}`,{method:'PATCH'});if(!result.success)throw Error(result.message||'ذخیره ناموفق بود');currentProfile.workingStatus=result.data.workingStatus;showToast('success','وضعیت همکاری ذخیره شد','');}
+ catch(error){select.value=previous;showToast('error','خطا در ذخیره وضعیت',error.message);}
+ finally{select.disabled=false;}
+});

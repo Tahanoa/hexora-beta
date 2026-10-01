@@ -1302,3 +1302,5 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* Real transparent Hexora logo */
 .image-logo{background:transparent!important;box-shadow:none!important}.image-logo img{width:72px;height:72px;object-fit:contain}.dashboard-logo{width:40px;height:40px;object-fit:contain}.auth-logo .logo-icon{background:transparent!important}
+/* Keep credentials dark, including browser autofill. */
+.auth-form input{background:#0B0F14!important;color:#F5F7FA!important;color-scheme:dark}.auth-form input:-webkit-autofill,.auth-form input:-webkit-autofill:hover,.auth-form input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px #0B0F14 inset!important;-webkit-text-fill-color:#F5F7FA!important;caret-color:#F5F7FA}
