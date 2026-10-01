@@ -4,8 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 @Controller
 public class PageController {
- @GetMapping("/") String publicHome(){return "portfolio";}
- @GetMapping("/home") String home(){return "home/index";}
+ @GetMapping("/") String publicHome(){return "home/index";}
  @GetMapping("/login") String login(){return "auth/login";}
  @GetMapping("/register") String register(){return "auth/register";}
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
