@@ -41,11 +41,34 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
   function fieldHtml([name,label,type='text'], value='') {
     if(section==='projects'&&optionalProjectFields.has(name))label+=' '+t('(اختیاری)','(optional)');
     if (name === 'icon') return iconPickerHtml(value);
+    if(section==='projects'&&name==='image')return `<div class="field full project-image-field"><label>${label}</label><input name="image" value="${esc(value)}" placeholder="${t('URL تصویر یا انتخاب از رسانه‌ها','Image URL or choose from media')}"><div class="project-image-tools"><label class="btn" for="projectImageUpload">${t('آپلود تصویر','Upload image')}</label><input id="projectImageUpload" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden><button type="button" class="btn" data-media-picker>${t('انتخاب از رسانه‌ها','Choose from media')}</button><button type="button" class="btn" data-clear-project-image>${t('حذف انتخاب','Clear selection')}</button></div><small>${t('PNG، JPEG، GIF یا WebP؛ حداکثر ۵ مگابایت','PNG, JPEG, GIF or WebP; max 5 MB')}</small><img class="project-image-preview" alt="${t('پیش‌نمایش تصویر پروژه','Project image preview')}" hidden><span class="project-image-status" role="status"></span></div>`;
     if (type === 'checkbox') return `<label class="switch"><input name="${name}" type="checkbox" ${value ? 'checked' : ''}> ${label}</label>`;
     if (type.startsWith('select:')) return `<div class="field"><label>${label}</label><select name="${name}">${type.slice(7).split(',').map(option => `<option value="${option}" ${option === value ? 'selected' : ''}>${option}</option>`).join('')}</select></div>`;
     return `<div class="field ${type === 'textarea' ? 'full' : ''}"><label>${label}</label><${type === 'textarea' ? 'textarea' : 'input'} name="${name}" type="${type === 'textarea' ? 'text' : type}" value="${type === 'textarea' ? '' : esc(value)}" ${type === 'number' ? 'min="0"' : ''}>${type === 'textarea' ? esc(value) : ''}</${type === 'textarea' ? 'textarea' : 'input'}></div>`;
   }
-  function renderForm(item = {}) { $('#editorForm').innerHTML = meta.fields.map(field => fieldHtml(field, item[field[0]])).join(''); $('#saveBtn').textContent = editing ? 'ویرایش' : 'ذخیره'; }
+  function renderForm(item = {}) { $('#editorForm').innerHTML = meta.fields.map(field => fieldHtml(field, item[field[0]])).join(''); $('#saveBtn').textContent = editing ? 'ویرایش' : 'ذخیره'; updateProjectImagePreview(); }
+  function imageUrl(value){if(!value?.trim())return '';try{const url=new URL(value,location.origin);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}}
+  function updateProjectImagePreview(){const field=$('.project-image-field');if(!field)return;const img=field.querySelector('img'),url=imageUrl(field.querySelector('[name="image"]').value);img.hidden=!url;img.onerror=()=>{img.hidden=true;};if(url)img.src=url;else img.removeAttribute('src');}
+  function selectProjectImage(url){const input=$('.project-image-field [name="image"]');if(input){input.value=url;updateProjectImagePreview();}}
+  async function openMediaPicker(){
+    const dialog=document.createElement('dialog');dialog.className='project-media-dialog';
+    dialog.innerHTML=`<div class="media-picker-header"><h2>${t('انتخاب تصویر پروژه','Choose project image')}</h2><button type="button" class="btn" data-close>${t('بستن','Close')}</button></div><input type="search" class="media-picker-search" placeholder="${t('جست‌وجوی نام فایل','Search file name')}" aria-label="${t('جست‌وجوی رسانه','Search media')}"><div class="media-picker-grid" aria-live="polite">${t('در حال دریافت رسانه‌ها…','Loading media…')}</div>`;
+    document.body.append(dialog);dialog.addEventListener('close',()=>dialog.remove());dialog.querySelector('[data-close]').onclick=()=>dialog.close();dialog.showModal();
+    const grid=dialog.querySelector('.media-picker-grid');
+    try{const response=await fetch('/api/media/type/IMAGE');const json=await response.json();if(!response.ok)throw Error(json.message||t('دریافت رسانه‌ها ناموفق بود','Unable to load media'));const items=Array.isArray(json.data)?json.data:[];
+      const render=()=>{const query=dialog.querySelector('input').value.trim().toLowerCase();grid.innerHTML=items.filter(x=>imageUrl(x.url)&&String(x.fileName).toLowerCase().includes(query)).map(x=>`<button type="button" class="media-picker-item" data-url="${esc(imageUrl(x.url))}" title="${esc(x.fileName)}"><img src="${esc(imageUrl(x.url))}" alt="" loading="lazy"><span>${esc(x.fileName)}</span></button>`).join('')||`<p>${t('تصویری یافت نشد. می‌توانید از فرم پروژه آپلود کنید.','No images found. Upload one from the project form.')}</p>`;};render();dialog.querySelector('input').oninput=render;grid.onclick=event=>{const button=event.target.closest('[data-url]');if(button){selectProjectImage(button.dataset.url);dialog.close();}};
+    }catch(error){grid.textContent=error.message;}
+  }
+  document.addEventListener('input',event=>{if(event.target.matches('.project-image-field [name="image"]'))updateProjectImagePreview();});
+  document.addEventListener('click',event=>{if(event.target.closest('[data-media-picker]'))openMediaPicker();if(event.target.closest('[data-clear-project-image]'))selectProjectImage('');});
+  document.addEventListener('change',async event=>{
+    if(event.target.id!=='projectImageUpload')return;const input=event.target,file=input.files?.[0];if(!file)return;
+    const field=input.closest('.project-image-field'),status=field.querySelector('.project-image-status'),save=$('#saveBtn');
+    if(!['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)||file.size>5*1024*1024){status.textContent=t('تصویر معتبر تا ۵ مگابایت انتخاب کنید.','Choose a supported image up to 5 MB.');input.value='';return;}
+    const controls=[...field.querySelectorAll('input,button')];controls.forEach(el=>el.disabled=true);save.disabled=true;status.textContent=t('در حال آپلود…','Uploading…');
+    try{const body=new FormData();body.append('file',file,file.name);const response=await fetch('/api/media/upload/image',{method:'POST',body});const json=await response.json();if(!response.ok||!imageUrl(json.data?.url))throw Error(json.message||t('آپلود ناموفق بود','Upload failed'));if(!field.isConnected)return;field.querySelector('[name="image"]').value=json.data.url;updateProjectImagePreview();status.textContent=t('تصویر آپلود شد؛ برای اتصال به پروژه، ذخیره را بزنید.','Image uploaded. Save the project to attach it.');}
+    catch(error){status.textContent=error.message;}finally{controls.forEach(el=>el.disabled=false);save.disabled=false;input.value='';}
+  });
   async function bindIconPicker() {
     const picker = $('.icon-picker'); if (!picker) return;
     const input = picker.querySelector('[name="icon"]'), preview = picker.querySelector('.icon-preview i');

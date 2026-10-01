@@ -363,6 +363,7 @@ async function uploadAvatar(input) {
         const result = await fetchAPI('/api/profile/avatar', { method: 'POST', body: formData });
         if (!result?.success || !result.data?.avatarId) throw new Error(result?.message || 'Upload failed');
         const avatarId = result.data.avatarId;
+        window.dispatchEvent(new Event('profile-avatar-updated'));
         const user = JSON.parse(localStorage.getItem('user') || 'null');
         if (user) { user.avatarId = avatarId; localStorage.setItem('user', JSON.stringify(user)); }
         avatar.innerHTML = `<img src="/api/media/public/${avatarId}?v=${Date.now()}" alt="تصویر پروفایل" class="w-full h-full rounded-full object-cover">`;
