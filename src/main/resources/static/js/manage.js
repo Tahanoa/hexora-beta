@@ -2,6 +2,11 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
 (() => {
   const releaseLoader=window.holdPageLoader?.()||(()=>{});
   const section = window.HEXORA_SECTION;
+  let currentLang = localStorage.getItem('hexora-lang') || 'fa';
+  const titles = {projects:['پروژه‌ها','Projects'],skills:['مهارت‌ها','Skills'],services:['خدمات','Services'],statistics:['آمارها','Statistics'],experience:['سوابق کاری','Experience'],contact:['پیام‌ها','Messages'],media:['رسانه‌ها','Media'],profile:['پروفایل','Profile']};
+  const t = (fa,en) => currentLang === 'fa' ? fa : en;
+  function applyLanguage(){ document.documentElement.lang=currentLang; document.documentElement.dir=currentLang==='fa'?'rtl':'ltr'; const pair=titles[section]||['مدیریت محتوا','Content management']; $('#heading').textContent=pair[currentLang==='fa'?0:1]; $('#subheading').textContent=t('مدیریت یکپارچه محتوا','Unified content management'); $('#refreshBtn').textContent=t('تازه‌سازی','Refresh'); $('#languageBtn').textContent=currentLang==='fa'?'English':'فارسی'; }
+  document.addEventListener('DOMContentLoaded',()=>{ $('#languageBtn')?.addEventListener('click',()=>{localStorage.setItem('hexora-lang',currentLang==='fa'?'en':'fa');location.reload();}); });
   const endpoint = {projects:'/api/projects', skills:'/api/skills', services:'/api/services', statistics:'/api/statistics', experience:'/api/experience', contact:'/api/contact', media:'/api/media', profile:'/api/profile'}[section];
   const meta = {
     projects:{title:'پروژه‌ها',fields:[['title','عنوان'],['slug','شناسه انگلیسی'],['shortDescription','خلاصه'],['description','توضیحات','textarea'],['demoUrl','لینک دمو'],['githubUrl','لینک گیت‌هاب'],['clientName','نام مشتری'],['image','تصویر پروژه / URL رسانه'],['projectDate','تاریخ پروژه','datetime-local'],['status','وضعیت','select:PLANNING,IN_PROGRESS,COMPLETED']],columns:['title','status']},
@@ -22,6 +27,7 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
     return iconCatalog;
   }
   const $ = selector => document.querySelector(selector);
+  applyLanguage();
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   let editing = null;
 
@@ -75,8 +81,9 @@ window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=documen
   }
   function unwrap(json) { return json?.data ?? []; }
   async function load(path = endpoint) {
-    setStatus('در حال دریافت اطلاعات...');
-    try { const response = await fetch(typeof path==='string'?path:endpoint); if (!response.ok) throw Error(response.status === 403 ? 'دسترسی مدیریت ندارید' : 'دریافت اطلاعات ناموفق بود'); let data = unwrap(await response.json()); if (data?.content) data = data.content; renderRows(Array.isArray(data) ? data : []); setStatus(`${Array.isArray(data) ? data.length : 0} مورد بارگذاری شد`); }
+    setStatus(t('در حال دریافت اطلاعات...','Loading data...'));
+    if(path===endpoint) $('#rows').innerHTML=Array.from({length:5},()=>'<tr class="skeleton-row"><td colspan="5"><div class="skeleton-block"></div></td></tr>').join('');
+    try { const response = await fetch(typeof path==='string'?path:endpoint); if (!response.ok) throw Error(response.status === 403 ? 'دسترسی مدیریت ندارید' : 'دریافت اطلاعات ناموفق بود'); let data = unwrap(await response.json()); if (data?.content) data = data.content; renderRows(Array.isArray(data) ? data : []); setStatus(t(`${Array.isArray(data) ? data.length : 0} مورد بارگذاری شد`, `${Array.isArray(data) ? data.length : 0} items loaded`)); }
     catch (error) { setStatus(error.message, true); $('#rows').innerHTML = `<tr><td colspan="5" class="empty">${esc(error.message)}</td></tr>`; }
   }
   function renderRows(items) {
