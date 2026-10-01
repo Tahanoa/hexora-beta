@@ -60,7 +60,7 @@ public class ProfileService extends CrudService<Profile,ProfileRequest,ProfileRe
  public Profile latest() {return ((ProfileRepository)repository).findFirstByOrderByCreatedAtDescIdDesc().orElseThrow(dev.hexora.api.ApiException::notFound);}
  public ProfileResponse basic(dev.hexora.dto.request.ProfileBasicUpdateRequest request) {
   Profile entity=((ProfileRepository)repository).findFirstByOrderByCreatedAtDescIdDesc().orElseGet(Profile::new);
-  entity.setFullName(request.getFullName());entity.setBrandName(request.getBrandName());entity.setBio(request.getBio());entity.setLocation(request.getLocation());
+  apply(request, entity);
   return view(repository.saveAndFlush(entity));
  }
  public ProfileResponse status(Long id,String status){Profile entity=required(id);entity.setWorkingStatus(WorkingStatus.fromString(status));return view(repository.saveAndFlush(entity));}

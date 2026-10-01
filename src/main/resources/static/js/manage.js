@@ -1,3 +1,4 @@
+window.toggleSidebar = window.toggleSidebar || function(){ const sidebar=document.getElementById('sidebar'), overlay=document.getElementById('sidebarOverlay'); if(!sidebar)return; const open=!sidebar.classList.contains('open'); sidebar.classList.toggle('open',open); overlay?.classList.toggle('show',open); document.body.classList.toggle('sidebar-open',open&&window.innerWidth<1024); document.querySelectorAll('.sidebar-toggle').forEach(btn=>btn.setAttribute('aria-expanded',String(open))); };
 (() => {
   const section = window.HEXORA_SECTION;
   const endpoint = {projects:'/api/projects', skills:'/api/skills', services:'/api/services', statistics:'/api/statistics', experience:'/api/experience', contact:'/api/contact', media:'/api/media', profile:'/api/profile'}[section];
@@ -9,7 +10,7 @@
     experience:{title:'سوابق کاری',fields:[['company','شرکت'],['position','سمت'],['description','توضیحات','textarea'],['startDate','تاریخ شروع','date'],['endDate','تاریخ پایان','date'],['isCurrent','همچنان فعال است','checkbox']],columns:['company','position','startDate']},
     contact:{title:'پیام‌ها',fields:[],columns:['name','email','message','isRead']},
     media:{title:'رسانه‌ها',fields:[],columns:['fileName','contentType','size']},
-    profile:{title:'پروفایل',fields:[['fullName','نام کامل'],['brandName','نام برند'],['title','عنوان'],['shortDescription','معرفی کوتاه'],['bio','زندگی‌نامه','textarea'],['aboutText','درباره من','textarea'],['location','موقعیت'],['githubUrl','گیت‌هاب'],['linkedinUrl','لینکدین'],['instagramUrl','اینستاگرام']],columns:['fullName','title','location']}
+    profile:{title:'پروفایل',fields:[['fullName','نام کامل'],['brandName','نام برند'],['title','عنوان'],['shortDescription','معرفی کوتاه'],['email','ایمیل'],['phone','تلفن'],['workingStatus','وضعیت همکاری','select:AVAILABLE,BUSY,NOT_AVAILABLE,REMOTE'],['bio','زندگی‌نامه','textarea'],['aboutText','درباره من','textarea'],['journeyText','مسیر حرفه‌ای','textarea'],['location','موقعیت'],['githubUrl','گیت‌هاب'],['linkedinUrl','لینکدین'],['instagramUrl','اینستاگرام']],columns:['fullName','title','email','location']}
   }[section];
   let iconCatalog;
   function loadIcons() {

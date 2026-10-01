@@ -295,8 +295,8 @@ async function loadProfileData() {
             const data = profile.data;
             document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('brandName').value = data.brandName || '';
-            document.getElementById('bio').value = data.bio || '';
-            document.getElementById('location').value = data.location || '';
+            const fields = ['fullName','brandName','title','email','phone','location','bio','shortDescription','aboutText','journeyText','githubUrl','linkedinUrl','instagramUrl','workingStatus'];
+            fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = data[id] || ''; });
         }
 
         // Load stats
@@ -447,12 +447,9 @@ document.getElementById('profileForm')?.addEventListener('submit', async functio
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
     try {
-        const data = {
-            fullName: document.getElementById('fullName').value,
-            brandName: document.getElementById('brandName').value,
-            bio: document.getElementById('bio').value,
-            location: document.getElementById('location').value
-        };
+        const data = {};
+        ['fullName','brandName','title','email','phone','location','bio','shortDescription','aboutText','journeyText','githubUrl','linkedinUrl','instagramUrl','workingStatus']
+            .forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value.trim(); });
 
         const result = await fetchAPI('/api/profile/me', {
             method: 'PUT',

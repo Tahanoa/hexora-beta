@@ -16,97 +16,9 @@
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
 <!-- ===== Sidebar ===== -->
-<aside id="sidebar" class="sidebar" aria-label="منوی اصلی">
-    <div class="sidebar-content">
-        <!-- Logo -->
-        <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center shadow-lg shadow-[#00C26E]/20">
-                    <i class="fas fa-hexagon text-[#0B0F14] text-lg"></i>
-                </div>
-                <span class="text-xl font-bold bg-gradient-to-r from-[#00C26E] to-[#4DFFB8] bg-clip-text text-transparent">Hexora</span>
-            </div>
-        </div>
-
-        <!-- User Info -->
-        <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center text-[#0B0F14] font-bold text-lg shadow-lg shadow-[#00C26E]/20">
-                    <span id="userInitial">T</span>
-                </div>
-                <div>
-                    <div class="font-semibold text-sm" id="userName">کاربر</div>
-                    <div class="text-xs text-[#8A94A6] flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-[#00C26E] inline-block animate-pulse"></span>
-                        <span id="userRole">ادمین</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="p-4 space-y-1">
-            <div class="text-[10px] text-[#8A94A6] px-4 py-2 uppercase tracking-wider font-semibold" id="navMainMenu">منوی اصلی</div>
-
-            <a href="/dashboard" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-[#00C26E]/10 text-[#00C26E] transition-all duration-300">
-                <i class="fas fa-chart-pie w-5 text-center"></i>
-                <span>داشبورد</span>
-            </a>
-
-            <a href="/profile" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-user w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navProfile">پروفایل</span>
-            </a>
-
-            <a href="/manage/projects" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navProjects">پروژه‌ها</span>
-            </a>
-
-            <a href="/manage/skills" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navSkills">مهارت‌ها</span>
-            </a>
-
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-briefcase w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navExperiences">سوابق کاری</span>
-            </a>
-
-            <a href="/manage/services" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navServices">سرویس‌ها</span>
-            </a>
-
-            <a href="/manage/statistics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navStatistics">آمارها</span>
-            </a>
-
-            <a href="/manage/media" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-        <i class="fas fa-photo-film w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-        <span id="navMedia">رسانه‌ها</span>
-      </a>
-
-      <a href="/manage/contact" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
-                <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navMessages">پیام‌ها</span>
-                <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
-            </a>
-
-            <div class="pt-4 mt-4 border-t border-[rgba(0,194,110,0.08)]"></div>
-
-            <button type="button" id="logoutBtn" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#EF4444] hover:bg-[#EF4444]/10 transition-all duration-300 w-full">
-                <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                <span id="navLogout">خروج</span>
-            </button>
-        </nav>
-    </div>
-</aside>
+<div th:replace="~{dashboard/fragments/sidebar :: sidebar}"></div>
 
 <!-- ===== Overlay ===== -->
-<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()" aria-hidden="true"></div>
-
 <!-- ===== Main Content ===== -->
 <div class="dashboard-main">
     <!-- Top Bar -->
