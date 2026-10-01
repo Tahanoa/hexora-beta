@@ -96,8 +96,15 @@
     if (read) { const response = await fetch(`${endpoint}/${read.dataset.read}/read`, {method:'PATCH'}); if (response.ok) load(); }
   });
   $('#editorForm').addEventListener('submit', save);
+  $('#mediaUploadForm')?.addEventListener('submit', async event => {
+    event.preventDefault(); const form = event.currentTarget, file = $('#mediaFile').files[0], status = $('#mediaUploadStatus');
+    if (!file) return; status.textContent = 'در حال آپلود...';
+    const body = new FormData(); body.append('file', file, file.name); body.append('type', $('#mediaType').value);
+    try { const response = await fetch('/api/media/upload', {method:'POST', body}); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(json.message || 'آپلود انجام نشد'); const media = json.data || {}; status.innerHTML = `آپلود شد: <a href="${esc(media.url)}" target="_blank" rel="noreferrer">مشاهده فایل</a>`; status.className = 'status ok'; form.reset(); await load(); }
+    catch (error) { status.textContent = error.message; status.className = 'status error'; }
+  });
   $('#cancelBtn').onclick = () => { editing = null; renderForm(); bindIconPicker(); setStatus('فرم پاک شد'); };
   $('#refreshBtn').onclick = load;
   $('#logoutBtn').onclick = async () => { await fetch('/api/auth/logout', {method:'POST'}); localStorage.clear(); location = '/login'; };
-  (async () => { const user = await loadSession(); if (!user || !Array.isArray(user.roles) || !user.roles.includes('ADMIN')) { location = '/login'; return; } $('#heading').textContent = meta.title; $('#subheading').textContent = `مدیریت امن ${meta.title} با JWT`; renderForm(); bindIconPicker(); if (section === 'contact' || section === 'media') $('#editorPanel').style.display = 'none'; load(); })();
+  (async () => { const user = await loadSession(); if (!user || !Array.isArray(user.roles) || !user.roles.includes('ADMIN')) { location = '/login'; return; } $('#heading').textContent = meta.title; $('#subheading').textContent = `مدیریت امن ${meta.title} با JWT`; renderForm(); bindIconPicker(); if (section === 'contact') $('#editorPanel').style.display = 'none'; if (section === 'media') { $('#editorPanel').style.display = 'none'; $('#mediaUploadPanel').style.display = 'block'; } load(); })();
 })();

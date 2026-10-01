@@ -13,8 +13,8 @@ import java.io.IOException;
 public class MediaService {
  private final MediaRepository repository;
  public MediaService(MediaRepository repository){this.repository=repository;}
- public Media upload(MultipartFile file,MediaType type){Media entity=new Media();apply(file,type,entity);return repository.saveAndFlush(entity);}
- public Media update(Long id,MultipartFile file){Media entity=repository.findById(id).orElseThrow(ApiException::notFound);apply(file,entity.getType(),entity);return repository.saveAndFlush(entity);}
+ public Media upload(MultipartFile file,MediaType type){Media entity=new Media();apply(file,type,entity);Media saved=repository.saveAndFlush(entity);saved.setUrl("/api/media/public/"+saved.getId());return repository.saveAndFlush(saved);}
+ public Media update(Long id,MultipartFile file){Media entity=repository.findById(id).orElseThrow(ApiException::notFound);apply(file,entity.getType(),entity);entity.setUrl("/api/media/public/"+id);return repository.saveAndFlush(entity);}
  private void apply(MultipartFile file,MediaType type,Media entity){
   if(file.isEmpty()||file.getSize()>5*1024*1024)throw new IllegalArgumentException("Invalid file size");
   byte[] bytes;try{bytes=file.getBytes();}catch(IOException ex){throw new IllegalStateException("Cannot read upload",ex);}
@@ -33,5 +33,5 @@ public class MediaService {
   if(b.length>=5&&new String(b,0,5,StandardCharsets.US_ASCII).equals("%PDF-"))return "application/pdf";
   throw new IllegalArgumentException("Unsupported file content");
  }
- public Map<String,Object> info(Media media){return Map.of("id",media.getId(),"fileName",media.getFileName(),"size",media.getSize(),"type",media.getType().name(),"url","/api/media/public/"+media.getId(),"contentType",media.getContentType(),"createdAt",media.getCreatedAt());}
+ public Map<String,Object> info(Media media){return Map.of("id",media.getId(),"fileName",media.getFileName(),"size",media.getSize(),"type",media.getType().name(),"url",media.getUrl()==null?"/api/media/public/"+media.getId():media.getUrl(),"contentType",media.getContentType(),"createdAt",media.getCreatedAt());}
 }
