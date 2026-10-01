@@ -13,7 +13,8 @@ public class ProfileResponse {
     private String aboutText;
     private String journeyText;
     private String profileImage;
-    private Long avatarId; // ✅ اضافه کردن
+    private Long avatarId;
+    private String avatarUrl;
     private String email;
     private String phone;
     private String location;
@@ -103,6 +104,14 @@ public class ProfileResponse {
 
     public void setAvatarId(Long avatarId) {
         this.avatarId = avatarId;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getEmail() {

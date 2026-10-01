@@ -45,6 +45,7 @@ public class ProfileService extends CrudService<Profile,ProfileRequest,ProfileRe
   response.setJourneyText(entity.getJourneyText());
   response.setProfileImage(entity.getProfileImage());
   response.setAvatarId(entity.getAvatarId());
+  response.setAvatarUrl(entity.getAvatarId()==null ? null : "/api/media/public/"+entity.getAvatarId());
   response.setEmail(entity.getEmail());
   response.setPhone(entity.getPhone());
   response.setLocation(entity.getLocation());
