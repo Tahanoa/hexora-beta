@@ -92,7 +92,7 @@ async function handleLogin(form) {
             showToast('success', lang === 'fa' ? 'موفق!' : 'Success!', successMsg);
 
             setTimeout(() => {
-                window.location.href = '/home';
+                window.location.href = '/';
             }, 500);
         } else {
             const errorMsg = result.message || (lang === 'fa'
