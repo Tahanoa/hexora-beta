@@ -1,48 +1,30 @@
-<!DOCTYPE html>
-<html lang="fa" xmlns:th="http://www.thymeleaf.org" dir="rtl">
+<!doctype html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خوش آمدید | Hexora</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" th:href="@{/css/fonts.css}">
-<script src="/js/client.js"></script>
-<link rel="stylesheet" href="/css/loading.css">
-<script src="/js/loading.js"></script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hexora | تجربه‌ای متفاوت در ساخت محصول دیجیتال</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/fonts.css}"><link rel="stylesheet" th:href="@{/css/home.css}">
+  <script src="/js/client.js"></script><script src="/js/loading.js"></script>
 </head>
-<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen flex items-center justify-center overflow-x-hidden">
-
-<div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3"></div>
-
-<div class="w-full max-w-lg mx-auto text-center px-6">
-    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#00C26E]/20">
-        <i class="fas fa-hexagon text-[#0B0F14] text-2xl"></i>
-    </div>
-
-    <h1 class="text-3xl font-bold mb-2">
-        خوش آمدید، <span id="userNameText" class="text-[#00C26E]">کاربر</span>
-    </h1>
-    <p class="text-[#8A94A6] mb-8" id="welcomeSubtitle">
-        وارد حساب کاربری خود شدید. از این‌جا می‌توانید ادامه دهید.
-    </p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="actionButtons">
-        <!-- دکمه‌ها به‌صورت پویا بر اساس نقش کاربر ساخته می‌شوند -->
-    </div>
-
-    <button id="logoutBtn"
-            class="mt-8 text-[#EF4444] hover:text-[#f87171] text-sm transition-colors">
-        <i class="fas fa-sign-out-alt ml-1"></i> خروج از حساب
-    </button>
-</div>
-
-<script th:src="@{/js/home.js}"></script>
-<!-- Hexagon Loading -->
-<div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری">
-  <div class="cssload-cssload-spinner" aria-hidden="true"></div>
-</div>
-</body>
-</html>
+<body class="public-home">
+  <div class="fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div id="toastContainer" class="toast-container"></div>
+  <header class="site-header"><div class="home-container nav-inner">
+    <a href="/home" class="brand"><span class="brand-mark"><img src="/images/logo.png" alt="Hexora" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><i class="fas fa-hexagon" style="display:none"></i></span><span>Hexora</span></a>
+    <nav class="desktop-nav"><a href="#about">درباره ما</a><a href="#services">خدمات</a><a href="#work">نمونه‌کارها</a><a href="#contact">ارتباط</a></nav>
+    <div class="nav-actions"><a class="nav-login" href="/dashboard">ورود به داشبورد</a><a class="btn btn-primary nav-cta" href="#contact">شروع همکاری <i class="fas fa-arrow-left"></i></a><button class="menu-toggle" aria-label="منو"><i class="fas fa-bars"></i></button></div>
+  </div><nav class="mobile-nav home-container"><a href="#about">درباره ما</a><a href="#services">خدمات</a><a href="#work">نمونه‌کارها</a><a href="#contact">ارتباط</a></nav></header>
+  <main>
+    <section class="hero"><div class="hero-glow"></div><div class="home-container hero-grid">
+      <div class="hero-copy"><div class="eyebrow"><span></span> استودیو طراحی و توسعه دیجیتال</div><h1>ایده‌های بزرگ را به <em>تجربه‌های ماندگار</em> تبدیل می‌کنیم.</h1><p>از اولین طرح تا محصول نهایی، کنار شما هستیم تا چیزی سریع، زیبا و قابل اعتماد بسازیم؛ محصولی که دیده شود و نتیجه بدهد.</p><div class="hero-actions"><a class="btn btn-primary" href="#contact">پروژه‌تان را شروع کنید <i class="fas fa-arrow-left"></i></a><a class="btn btn-ghost" href="#work">دیدن مسیر ما <i class="fas fa-play"></i></a></div><div class="hero-proof"><div class="avatars"><span>H</span><span>UX</span><span>DX</span></div><p><strong>طراحی با فکر، توسعه با دقت</strong><br>برای برندهایی که آینده را جدی می‌گیرند.</p></div></div>
+      <div class="hero-visual"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="video-frame"><video autoplay muted loop playsinline poster="/images/logo.png"><source src="/videos/logoandText.mp4" type="video/mp4"><source src="/videos/onlyLogoAnimation.mp4" type="video/webm"></video><div class="video-fallback"><img src="/images/logo.png" alt="Hexora"><span>Designing the next experience</span></div><div class="video-badge"><i class="fas fa-sparkles"></i> Crafted for impact</div></div><div class="float-card card-top"><strong>+۴۸٪</strong><small>تعامل بهتر</small></div><div class="float-card card-bottom"><strong><i class="fas fa-circle-check"></i></strong><small>آماده برای رشد</small></div></div>
+    </div></section>
+    <div class="stats-strip"><div class="home-container stats-grid"><div><strong>۰۱</strong><span>استراتژی دقیق</span></div><div><strong>۰۲</strong><span>طراحی متمایز</span></div><div><strong>۰۳</strong><span>توسعه مقیاس‌پذیر</span></div><div><strong>∞</strong><span>همراهی واقعی</span></div></div></div>
+    <section class="section" id="about"><div class="home-container about-grid"><div class="section-heading"><span class="section-kicker">نگاه ما</span><h2>فقط یک سایت نمی‌سازیم؛<br>یک <em>مزیت رقابتی</em> می‌سازیم.</h2></div><div><p class="lead">هر محصول موفق از یک تصمیم درست شروع می‌شود؛ تصمیمی برای ساده‌تر کردن مسیر کاربر و پررنگ‌تر کردن ارزش برند.</p><p>ما طراحی، تجربه کاربری و مهندسی را کنار هم می‌گذاریم تا خروجی نهایی هم چشم‌نواز باشد و هم در دنیای واقعی کار کند.</p><div class="signature"><span class="signature-line"></span> ساخته‌شده برای اثرگذاری</div></div></div></section>
+    <section class="section services-section" id="services"><div class="home-container"><div class="section-heading centered"><span class="section-kicker">توانمندی‌ها</span><h2>هر چیزی که برای شروع<br>نیاز دارید، همین‌جاست.</h2></div><div class="services-grid"><article class="service-card"><i class="fas fa-pen-ruler service-icon"></i><h3>طراحی تجربه</h3><p>رابط‌هایی که زیبا، واضح و برای انسان ساخته شده‌اند.</p></article><article class="service-card"><i class="fas fa-code service-icon"></i><h3>توسعه محصول</h3><p>کدنویسی تمیز و زیرساختی که با رشد شما همراه می‌شود.</p></article><article class="service-card"><i class="fas fa-rocket service-icon"></i><h3>هویت دیجیتال</h3><p>حضور آنلاین منسجم و متفاوت برای ماندن در ذهن مخاطب.</p></article></div></div></section>
+    <section class="section" id="work"><div class="home-container"><div class="section-row"><div class="section-heading"><span class="section-kicker">منتخب کارها</span><h2>کم، اما به‌یادماندنی.</h2></div><span class="section-note">جزئیات بیشتر به‌زودی</span></div><div class="projects-grid"><article class="project-card"><span class="project-meta">01 / PRODUCT</span><h3>محصولی با هویت روشن</h3><p>از ایده خام تا تجربه‌ای که کاربر دوست دارد.</p><div class="project-links"><span>مشاهده پروژه <i class="fas fa-arrow-left"></i></span></div></article><article class="project-card"><span class="project-meta">02 / WEB</span><h3>وب‌سایتی برای رشد</h3><p>عملکرد سریع، روایت درست و مسیر تبدیل شفاف.</p><div class="project-links"><span>مشاهده پروژه <i class="fas fa-arrow-left"></i></span></div></article><article class="project-card"><span class="project-meta">03 / BRAND</span><h3>برندی که دیده می‌شود</h3><p>جزئیات کوچک، تفاوت‌های بزرگ می‌سازند.</p><div class="project-links"><span>مشاهده پروژه <i class="fas fa-arrow-left"></i></span></div></article></div></div></section>
+    <section class="section contact-section" id="contact"><div class="home-container contact-card"><div><span class="section-kicker">یک قدم تا شروع</span><h2>بیایید چیزی بسازیم که ارزش دیده‌شدن داشته باشد.</h2><p>اگر ایده‌ای دارید یا هنوز در مرحله کشف مسیر هستید، گفت‌وگو را شروع کنیم.</p><div class="contact-links"><span><i class="fas fa-envelope"></i> hello@hexora.dev</span><span><i class="fas fa-arrow-left"></i> پاسخ‌گویی سریع</span></div></div><form class="contact-form"><div class="form-row"><input placeholder="نام شما" aria-label="نام شما"><input type="email" placeholder="ایمیل" aria-label="ایمیل"></div><textarea placeholder="کمی درباره ایده‌تان بنویسید" aria-label="پیام"></textarea><button class="btn btn-primary" type="button">ارسال درخواست <i class="fas fa-paper-plane"></i></button><p>با ارسال فرم، اطلاعات شما فقط برای همین گفت‌وگو استفاده می‌شود.</p></form></div></section>
+  </main><footer class="site-footer"><div class="home-container"><span>© Hexora — ساختن آینده، یک تجربه در هر بار</span><a href="/dashboard">پنل مدیریت <i class="fas fa-arrow-left"></i></a></div></footer>
+<script src="/js/home.js"></script>
+</body></html>
