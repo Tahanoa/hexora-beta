@@ -225,7 +225,7 @@ async function loadDashboardData() {
 
         const endpoints = [
             '/api/projects/public/stats',
-            '/api/contact/stats',
+            '/api/chat/admin/stats',
             '/api/skills/public',
             '/api/projects/public/recent?limit=5',
             '/api/experience/public',

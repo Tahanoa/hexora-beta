@@ -14,7 +14,6 @@ import java.util.*;
 public class ContactController {
  private final ContactMessageService service;private final ContactMessageRepository repository;
  public ContactController(ContactMessageService service,ContactMessageRepository repository){this.service=service;this.repository=repository;}
- @PostMapping @ResponseStatus(HttpStatus.CREATED) Object send(@Valid @RequestBody ContactMessageRequest request){service.create(request);return ApiResponse.created("Message sent successfully",null);}
  @GetMapping Object all(){return ApiResponse.success(service.all(Sort.by("createdAt").descending()));}
  @GetMapping("/unread") Object unread(){return ApiResponse.success(repository.findByIsReadFalseOrderByCreatedAtDesc().stream().map(service::view).toList());}
  @GetMapping("/paged") Object page(@RequestParam(defaultValue="0")int page,@RequestParam(defaultValue="20")int size,@RequestParam(defaultValue="createdAt")String sortBy,@RequestParam(defaultValue="desc")String direction){return ApiResponse.success(service.page(Queries.page(page,size,sortBy,direction,Set.of("id","createdAt","name","email"))));}
