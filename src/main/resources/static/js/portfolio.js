@@ -1,4 +1,5 @@
 (() => {
+ const releaseLoader=window.holdPageLoader?.()||(()=>{});
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const load=async path=>{const r=await fetch(path);if(!r.ok)throw Error(`${r.status}`);const j=await r.json();return j.data??[]};
  const arr=v=>Array.isArray(v)?v:[];
@@ -16,5 +17,5 @@
  document.getElementById('menuToggle').addEventListener('click',()=>document.getElementById('mobileNav').classList.toggle('open'));
  document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('mobileNav').classList.remove('open')));
  document.getElementById('contactForm').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,status=document.getElementById('contactStatus'),button=form.querySelector('button');button.disabled=true;button.textContent='در حال ارسال...';try{const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.message||'ارسال پیام ناموفق بود');status.textContent='پیام شما با موفقیت ارسال شد.';status.style.color='#66ffc0';form.reset();}catch(err){status.textContent=err.message;status.style.color='#ff9b9b';}finally{button.disabled=false;button.innerHTML='ارسال پیام <span>←</span>';}});
- run().catch(()=>{document.getElementById('servicesGrid').innerHTML='<p class="section-note">اطلاعات در حال حاضر قابل بارگذاری نیست.</p>';document.getElementById('projectsGrid').innerHTML='<p class="section-note">اطلاعات در حال حاضر قابل بارگذاری نیست.</p>';});
+ run().finally(releaseLoader).catch(()=>{document.getElementById('servicesGrid').innerHTML='<p class="section-note">اطلاعات در حال حاضر قابل بارگذاری نیست.</p>';document.getElementById('projectsGrid').innerHTML='<p class="section-note">اطلاعات در حال حاضر قابل بارگذاری نیست.</p>';});
 })();

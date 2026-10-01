@@ -104,16 +104,19 @@ const translations = {
     }
 };
 
+let currentProfile = {};
 let currentLang = localStorage.getItem('hexora-lang') || 'fa';
 
 // ===== DOM Ready =====
+const releaseInitialLoader = window.holdPageLoader?.() || (() => {});
 document.addEventListener('DOMContentLoaded', async function() {
     const session = await loadSession();
     if (!session || !session.roles.includes('ADMIN')) { window.location.href = '/login'; return; }
     setupUserInfo();
     setupNavigation();
     applyLanguage(currentLang);
-    loadProfileData();
+    await loadProfileData();
+    releaseInitialLoader();
     loadUserAvatar(); // ✅ بارگذاری Avatar
     setupEventListeners();
     document.querySelectorAll('.current-year').forEach((element) => {
@@ -293,6 +296,8 @@ async function loadProfileData() {
         const profile = await fetchAPI('/api/profile/public');
         if (profile && profile.success) {
             const data = profile.data;
+            currentProfile = data;
+            const savedUser=JSON.parse(localStorage.getItem('user')||'null');if(savedUser){savedUser.avatarId=data.avatarId;localStorage.setItem('user',JSON.stringify(savedUser));}loadUserAvatar();
             document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('brandName').value = data.brandName || '';
             const fields = ['fullName','brandName','title','email','phone','location','bio','shortDescription','aboutText','journeyText','githubUrl','linkedinUrl','instagramUrl','workingStatus'];
@@ -447,7 +452,7 @@ document.getElementById('profileForm')?.addEventListener('submit', async functio
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
     try {
-        const data = {};
+        const data = {avatarId:currentProfile.avatarId||null,profileImage:currentProfile.profileImage||null};
         ['fullName','brandName','title','email','phone','location','bio','shortDescription','aboutText','journeyText','githubUrl','linkedinUrl','instagramUrl','workingStatus']
             .forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value.trim(); });
 

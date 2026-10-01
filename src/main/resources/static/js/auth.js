@@ -1,15 +1,5 @@
 // ===== Auth Handler =====
 
-// ===== Loading Overlay =====
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('hidden');
-        }
-    }, 800);
-});
-
 // ===== Toast System =====
 function showToast(type, title, message, duration = 4000) {
     const container = document.getElementById('toastContainer');

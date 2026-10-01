@@ -1,16 +1,22 @@
 (() => {
-  const create = () => {
-    let el = document.getElementById('loadingOverlay') || document.getElementById('hexoraPageLoader');
-    if (el) return el;
-    el = document.createElement('div'); el.id = 'loadingOverlay'; el.className = 'cssload-wrap';
-    el.setAttribute('role','status'); el.setAttribute('aria-label','در حال بارگذاری');
-    el.innerHTML = '<div class="cssload-cssload-spinner" aria-hidden="true"></div>';
-    document.body.prepend(el); return el;
+  let pending = 0, loaded = document.readyState === 'complete', timer;
+  const started = performance.now(), minimum = 3000;
+  const overlay = () => document.getElementById('loadingOverlay');
+  function finish() {
+    clearTimeout(timer);
+    if (!loaded || pending) return;
+    timer = setTimeout(() => {
+      if (loaded && !pending) overlay()?.classList.add('hidden','is-hidden');
+    }, Math.max(0, minimum - (performance.now() - started)));
+  }
+  window.holdPageLoader = () => {
+    pending++; clearTimeout(timer); overlay()?.classList.remove('hidden','is-hidden');
+    let released = false;
+    return () => { if (!released) { released = true; pending--; finish(); } };
   };
-  const hide = () => { const el = create(); el.classList.add('hidden','is-hidden'); };
-  window.showPageLoader = () => { const el = create(); el.classList.remove('hidden','is-hidden'); };
-  window.hidePageLoader = hide;
-  if (document.readyState === 'complete') hide();
-  else window.addEventListener('load', hide, {once:true});
-  window.addEventListener('pageshow', event => { if (event.persisted) hide(); });
+  window.showPageLoader = () => overlay()?.classList.remove('hidden','is-hidden');
+  window.hidePageLoader = finish;
+  window.addEventListener('load', () => { loaded = true; finish(); }, {once:true});
+  window.addEventListener('pageshow', event => { if (event.persisted) { loaded = true; finish(); } });
+  finish();
 })();
