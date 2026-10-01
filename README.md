@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hexora-header.png" alt="Hexora — Portfolio. Presence. Conversation." width="100%">
+  <img width="2172" height="724" alt="a16212c7-c2ba-40d3-b504-e67ede606b69" src="https://github.com/user-attachments/assets/a30f29e4-aece-4682-9cde-09ddfa2cf23f" />
 </p>
 
 <h1 align="center">Hexora</h1>
@@ -68,7 +68,7 @@ General media uploads have a 5 MB limit. Chat text is limited to 4,000 character
 ## Project overview
 
 <p align="center">
-  <a href="docs/assets/hexora-infographic.png"><img src="docs/assets/hexora-infographic.png" alt="Hexora product overview: portfolio, responsive experience, dashboard, private chat, media storage and technical architecture" width="900"></a>
+<img width="724" height="2172" alt="6d46133f-a499-4c87-b50f-49bb8b50c627" src="https://github.com/user-attachments/assets/81b05da3-ca67-4b5e-bc74-c289638be515" />
 </p>
 
 The header and infographic are generated presentation artwork. The interface illustrations are **conceptual visuals, not screenshots** of the running application. [Artwork prompts](docs/image-prompts.md) document the visual brief.
