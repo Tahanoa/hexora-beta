@@ -28,6 +28,11 @@ public class ApiErrors {
  @ExceptionHandler(AuthenticationException.class) ResponseEntity<?> auth() { return error(HttpStatus.UNAUTHORIZED, "Invalid credentials or account disabled"); }
  @ExceptionHandler(AccessDeniedException.class) ResponseEntity<?> access() { return error(HttpStatus.FORBIDDEN, "Access denied"); }
  @ExceptionHandler(MaxUploadSizeExceededException.class) ResponseEntity<?> size() { return error(HttpStatus.PAYLOAD_TOO_LARGE, "Maximum upload size is 5 MB"); }
+ @ExceptionHandler({org.springframework.web.servlet.resource.NoResourceFoundException.class, org.springframework.web.servlet.NoHandlerFoundException.class})
+ Object missing(Exception ex,jakarta.servlet.http.HttpServletRequest request,jakarta.servlet.http.HttpServletResponse response){
+  if(request.getRequestURI().startsWith("/api/"))return error(HttpStatus.NOT_FOUND,"Resource not found");
+  response.setStatus(404);return new org.springframework.web.servlet.ModelAndView("error/404");
+ }
  @ExceptionHandler(Exception.class) ResponseEntity<?> unexpected(Exception ex) { log.error("Unhandled request failure", ex); return error(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error"); }
  private ResponseEntity<?> error(HttpStatus status, String message) { return ResponseEntity.status(status).body(ApiResponse.error(message,status.value())); }
 }

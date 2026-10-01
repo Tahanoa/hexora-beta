@@ -11,6 +11,7 @@ public class PageController {
  @GetMapping("/experience") String oldExperience(){return "redirect:/about#career";}
  @GetMapping("/projects/{slug}") String project(@PathVariable String slug,Model model){model.addAttribute("projectSlug",slug);return "home/project";}
  @GetMapping("/collaboration") String collaboration(){return "home/collaboration";}
+ @GetMapping("/faq") String faq(){return "home/faq";}
  @GetMapping("/login") String login(){return "auth/login";}
  @GetMapping("/register") String register(){return "auth/register";}
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
