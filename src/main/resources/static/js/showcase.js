@@ -22,3 +22,29 @@ const area=$('projectDetail');if(area){const release=window.holdPageLoader?.()||
  }catch(error){area.innerHTML=`<section class="detail-empty"><h1 ${text(error.message==='404'?'پروژه پیدا نشد.':'دریافت پروژه ناموفق بود.',error.message==='404'?'Project not found.':'Unable to load project.')}></h1><p ${text('به فهرست نمونه‌کارها برگردید یا دوباره تلاش کنید.','Return to the project list or try again.')}></p><div class="showcase-links"><a class="primary" href="/projects" ${text('همه نمونه‌کارها','All projects')}></a><button id="retryProject" ${text('تلاش مجدد','Try again')}></button></div></section>`;$('retryProject').onclick=()=>location.reload();language()}finally{release()}}
 if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pending');observer.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.process-step').forEach(el=>{el.classList.add('pending');observer.observe(el)})}
 })();
+
+// Keep native details semantics while animating both directions, including rapid toggles.
+document.querySelectorAll('.faq-item').forEach(item=>{
+ const summary=item.querySelector('summary'),answer=item.querySelector('.faq-answer');
+ if(!summary||!answer||!item.animate)return;
+ let heightAnimation,fadeAnimation,expanded=item.open;
+ summary.addEventListener('click',event=>{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  event.preventDefault();expanded=!expanded;
+  const start=item.getBoundingClientRect().height,opacity=item.open?getComputedStyle(answer).opacity:'0';
+  heightAnimation?.cancel();fadeAnimation?.cancel();
+  item.open=true;item.classList.toggle('is-closing',!expanded);
+  item.style.height=start+'px';item.style.overflow='hidden';
+  const border=parseFloat(getComputedStyle(item).borderTopWidth)+parseFloat(getComputedStyle(item).borderBottomWidth);
+  const end=summary.offsetHeight+(expanded?answer.offsetHeight:0)+border;
+  const settings={duration:340,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'};
+  heightAnimation=item.animate({height:[start+'px',end+'px']},settings);
+  fadeAnimation=answer.animate({opacity:[opacity,expanded?'1':'0'],transform:expanded?['translateY(-5px)','translateY(0)']:['translateY(0)','translateY(-5px)']},settings);
+  const current=heightAnimation;
+  current.onfinish=()=>{
+   if(heightAnimation!==current)return;
+   item.open=expanded;item.classList.remove('is-closing');item.style.height='';item.style.overflow='';
+   current.cancel();fadeAnimation?.cancel();heightAnimation=null;fadeAnimation=null;
+  };
+ });
+});
