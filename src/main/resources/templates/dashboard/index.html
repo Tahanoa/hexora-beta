@@ -44,6 +44,7 @@
         </div>
     </header>
 
+<section class="chart-container mb-6"><label for="dashboardWorkingStatus">وضعیت همکاری</label><select id="dashboardWorkingStatus" class="bg-[#0B0F14] rounded-xl p-3 mx-3"><option value="AVAILABLE">آماده همکاری</option><option value="BUSY">مشغول</option><option value="NOT_AVAILABLE">در دسترس نیستم</option><option value="REMOTE">همکاری ریموت</option></select><span id="workingStatusMessage" role="status"></span></section>
     <!-- ===== Stats Cards ===== -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8" id="statsContainer">
         <!-- Skeleton Loaders -->
@@ -411,4 +412,4 @@
 <!-- ===== Scripts ===== -->
 <script th:src="@{/js/dashboard.js}"></script>
 
-</body></html>
+<script src="/js/working-status.js"></script></body></html>

@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class PageController {
  @GetMapping("/") String publicHome(){return "home/index";}
+ @GetMapping("/home") String legacyHome(){return "redirect:/";}
+ @GetMapping({"/projects","/services","/skills","/contact"}) String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
  @GetMapping("/login") String login(){return "auth/login";}
  @GetMapping("/register") String register(){return "auth/register";}
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
