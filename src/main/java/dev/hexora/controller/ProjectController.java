@@ -17,6 +17,7 @@ public class ProjectController {
  public ProjectController(ProjectService service,ProjectRepository repository){this.service=service;this.repository=repository;}
  @GetMapping({"/public",""}) Object all(){return ApiResponse.success(service.all(Sort.by("projectDate").descending().and(Sort.by("id").descending())));}
  @GetMapping("/{id}") Object one(@PathVariable Long id){return ApiResponse.success(service.find(id));}
+ @GetMapping("/public/by-id/{id}") Object publicId(@PathVariable Long id){return ApiResponse.success(service.find(id));}
  @GetMapping("/public/{slug}") Object slug(@PathVariable String slug){return ApiResponse.success(service.findBySlug(slug));}
  @GetMapping("/public/status/{status}") Object status(@PathVariable String status){return ApiResponse.success(service.byStatus(ProjectStatus.fromString(status)));}
  @GetMapping("/public/completed") Object completed(){return ApiResponse.success(service.byStatus(ProjectStatus.COMPLETED));}

@@ -9,6 +9,8 @@ public class PageController {
  @GetMapping({"/projects","/services","/skills","/contact"}) String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
  @GetMapping("/about") String biography(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/biography";}
  @GetMapping("/experience") String oldExperience(){return "redirect:/about#career";}
+ @GetMapping("/projects/{slug}") String project(@PathVariable String slug,Model model){model.addAttribute("projectSlug",slug);return "home/project";}
+ @GetMapping("/collaboration") String collaboration(){return "home/collaboration";}
  @GetMapping("/login") String login(){return "auth/login";}
  @GetMapping("/register") String register(){return "auth/register";}
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
