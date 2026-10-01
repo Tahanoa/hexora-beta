@@ -1,7 +1,7 @@
 (() => {
  const releaseLoader=window.holdPageLoader?.()||(()=>{});
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const load=async path=>{const r=await fetch(path);if(!r.ok)throw Error(`${r.status}`);const j=await r.json();return j.data??[]};
+ const load=async path=>{const r=await fetch(path);if(!r.ok)throw Error(`${r.status}`);const j=await r.json();const data=j.data??j;return Array.isArray(data)?data:(Array.isArray(data?.content)?data.content:[])};
  const arr=v=>Array.isArray(v)?v:[];
  const iconFor=(i)=>['fa-solid fa-code','fa-solid fa-layer-group','fa-solid fa-bolt','fa-solid fa-palette','fa-solid fa-gears'][i%5];
  const iconMarkup=(value,fallback)=>{const icon=String(value||fallback||'').trim();if(/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+(?:\s+fa-[a-z0-9-]+)*$/i.test(icon))return `<i class=\"${esc(icon)}\" aria-hidden=\"true\"></i>`;return esc(icon);};

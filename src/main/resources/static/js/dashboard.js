@@ -75,7 +75,7 @@ function checkAuth() {
         // داشبورد فقط برای ادمین است؛ سایر نقش‌ها به صفحه‌ی خانه هدایت می‌شوند
         const isAdmin = Array.isArray(user.roles) && user.roles.includes('ADMIN');
         if (!isAdmin) {
-            window.location.href = '/';
+            window.location.href = '/home';
         }
     } catch (e) {
         window.location.href = '/login';
