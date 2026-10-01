@@ -14,3 +14,11 @@ $('projectCount').textContent=p.length;$('serviceCount').textContent=s.length;$(
 try{const profile=await api('/api/profile/public');if(profile?.brandName)$('brandName').textContent=profile.brandName;if(profile?.shortDescription)$('heroText').textContent=profile.shortDescription;if(profile?.email){$('email').textContent=profile.email;$('email').href='mailto:'+profile.email}}catch{}
 $('contactForm').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,b=f.querySelector('button');b.disabled=true;$('formStatus').textContent='در حال ارسال…';try{const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(f)))});if(!r.ok)throw Error();$('formStatus').textContent='پیام شما ارسال شد.';f.reset()}catch{$('formStatus').textContent='ارسال ناموفق بود؛ دوباره تلاش کنید.'}finally{b.disabled=false}};
 })();
+
+// Progressive scroll reveal; all content remains visible if observation is unavailable.
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+ const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+  if (entry.isIntersecting) { entry.target.classList.remove('pending'); observer.unobserve(entry.target); }
+ }), {threshold: .08});
+ document.querySelectorAll('.section .wrap, .numbers').forEach(el => { el.classList.add('reveal', 'pending'); observer.observe(el); });
+}
