@@ -19,7 +19,7 @@
    index=Math.max(0,Math.min(cards.length-1,i));const card=cards[index];if(!card)return;paint();
    // Scroll only the carousel, without moving the page or relying on RTL scrollLeft conventions.
    const box=card.getBoundingClientRect(),viewport=track.getBoundingClientRect();
-   track.scrollBy({left:box.left+box.width/2-viewport.left-track.clientWidth/2,behavior:instant||reduced()?'instant':'smooth'});
+   track.scrollBy({left:box.left+box.width/2-viewport.left-track.clientWidth/2,behavior:instant||reduced()?'auto':'smooth'});
   }
   function refresh(){
    cards=[...track.children].filter(x=>x.matches('article'));controls.hidden=cards.length<2;
