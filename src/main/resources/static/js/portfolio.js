@@ -15,9 +15,13 @@ render('/api/services/public','servicesList',data=>take(data).map(x=>`<article c
 render('/api/skills/public','skillsList',data=>{
  if(section==='skills'){
   $('skillsList').classList.add('skills-showcase-grid');
-  return data.map(x=>{const level=Math.min(100,Math.max(0,Number(x.level)||0));const icon=/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+$/i.test(x.icon||'')?x.icon:'fa-solid fa-code';return `<article class="skill-showcase-card"><div class="skill-showcase-top"><span class="skill-showcase-icon"><i class="${esc(icon)}" aria-hidden="true"></i></span><span class="skill-showcase-level">${level}%</span></div><small>${esc(x.category)}</small><h3>${esc(x.name)}</h3><div class="skill-showcase-bar" role="progressbar" aria-valuenow="${level}" aria-valuemin="0" aria-valuemax="100"><i style="width:${level}%"></i></div></article>`}).join('');
- }
- $('skillsList').classList.add('skills-marquee');
+  const labels={FRONTEND:'فرانت‌اند',BACKEND:'بک‌اند',DATABASE:'پایگاه داده',DEVOPS:'زیرساخت و استقرار',TOOLS:'ابزارها',OTHER:'سایر مهارت‌ها'};
+  const categories=[...new Set(data.map(x=>x.category||'OTHER'))];
+  const options=categories.map(c=>`<option value="${esc(c)}">${esc(labels[c]||c)}</option>`).join('');
+  const cards=data.map(x=>{const level=Math.min(100,Math.max(0,Number(x.level)||0));const icon=/^fa-(solid|regular|brands)\\s+fa-[a-z0-9-]+$/i.test(x.icon||'')?x.icon:'fa-solid fa-code';return `<article class="skill-showcase-card" data-category="${esc(x.category||'OTHER')}"><div class="skill-showcase-top"><span class="skill-showcase-icon"><i class="${esc(icon)}" aria-hidden="true"></i></span><span class="skill-showcase-level">${level}%</span></div><small>${esc(labels[x.category]||x.category||'سایر مهارت‌ها')}</small><h3>${esc(x.name)}</h3><div class="skill-showcase-bar" role="progressbar" aria-valuenow="${level}" aria-valuemin="0" aria-valuemax="100"><i style="width:${level}%"></i></div></article>`}).join('');
+  queueMicrotask(()=>{const filter=$('skillCategoryFilter');if(filter)filter.onchange=()=>document.querySelectorAll('.skill-showcase-card').forEach(card=>{card.hidden=filter.value!=='ALL'&&card.dataset.category!==filter.value});});
+  return `<div class="skill-filter"><label for="skillCategoryFilter">دسته‌بندی مهارت‌ها</label><select id="skillCategoryFilter"><option value="ALL">همه مهارت‌ها</option>${options}</select></div>${cards}`;
+ } $('skillsList').classList.add('skills-marquee');
  const card=x=>{const icon=/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+$/i.test(x.icon||'')?x.icon:'fa-solid fa-code';return `<li class="skill-chip"><i class="${esc(icon)}" aria-hidden="true"></i><b>${esc(x.name)}</b></li>`};
  const repeated=Array.from({length:Math.max(1,Math.ceil(8/data.length))},()=>data).flat();
  return `<div class="skills-slider" tabindex="0" aria-label="مهارت‌ها"><div class="skills-slide-track"><ul class="skills-slide-group">${repeated.map(card).join('')}</ul><ul class="skills-slide-group" aria-hidden="true">${repeated.map(card).join('')}</ul></div></div><a class="all-skills-link" href="/skills">مشاهده همه مهارت‌ها <span aria-hidden="true">↗</span></a>`;
