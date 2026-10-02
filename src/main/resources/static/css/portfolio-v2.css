@@ -129,3 +129,22 @@ html[dir=ltr] .hx-carousel-track>article.is-after{transform:perspective(1100px) 
 .contact-location{display:flex;align-items:center;gap:10px;margin:5px 4px 0;color:var(--muted);font-size:.75rem}.contact-location i{color:var(--green)}
 @media(max-width:780px){.contact-panel{grid-template-columns:1fr;padding:26px 20px}.contact-main-cta{width:100%;justify-content:center}.contact-channel:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){.contact-channel,.contact-main-cta{transition:none}}
+
+
+/* Dedicated skills page: editorial grid instead of a moving carousel. */
+.skills.skills-showcase-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.skill-showcase-card{position:relative;display:flex;flex-direction:column;min-height:210px;padding:22px;border:1px solid #65ffc02e;border-radius:22px;background:linear-gradient(145deg,#132b20,#0b1711);box-shadow:0 16px 36px #0003,inset 0 1px 0 #65ffc018;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.skill-showcase-card:before{content:'';position:absolute;width:130px;height:130px;inset-inline-end:-55px;top:-58px;border-radius:50%;background:#00c26e18;filter:blur(2px);transition:transform .4s,background .4s}
+.skill-showcase-card:hover{transform:translateY(-7px) rotateX(2deg);border-color:#65ffc077;box-shadow:0 25px 50px #0005,0 0 30px #00c26e0d}
+.skill-showcase-card:hover:before{transform:scale(1.5);background:#00c26e28}
+.skill-showcase-top{position:relative;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.skill-showcase-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:17px;background:#00c26e18;border:1px solid #65ffc044;color:var(--mint);font-size:1.8rem;box-shadow:inset 0 0 20px #00c26e18}
+.skill-showcase-level{color:var(--mint);font-size:.75rem;font-variant-numeric:tabular-nums}
+.skill-showcase-card small{position:relative;color:var(--green);font-size:.7rem}
+.skill-showcase-card h3{position:relative;margin:5px 0 18px;font-size:1.08rem;color:var(--text)}
+.skill-showcase-bar{height:7px;margin-top:auto;overflow:hidden;border-radius:10px;background:#ffffff12}
+.skill-showcase-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green),var(--mint));box-shadow:0 0 16px #00c26e66}
+@media(max-width:1000px){.skills.skills-showcase-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.skills.skills-showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.skill-showcase-card{min-height:185px;padding:17px;border-radius:18px}.skill-showcase-icon{width:50px;height:50px;font-size:1.5rem}}
+@media(max-width:430px){.skills.skills-showcase-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.skill-showcase-card{transition:none}}
