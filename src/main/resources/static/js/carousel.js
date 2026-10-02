@@ -17,7 +17,7 @@
   }
   function go(i,instant=false){
    index=Math.max(0,Math.min(cards.length-1,i));const card=cards[index];if(!card)return;paint();
-   card.scrollIntoView({behavior:instant||reduced()?'auto':'smooth',block:'nearest',inline:'center'});
+   const left=card.offsetLeft-(track.clientWidth-card.offsetWidth)/2;track.scrollTo({left,behavior:instant||reduced()?'auto':'smooth'});
   }
   function schedule(){
    clearInterval(autoplayTimer);
