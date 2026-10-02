@@ -34,21 +34,31 @@
 .bio-identity .contact-icon-link span{display:none}
 .bio-identity .contact-icon-link:hover{transform:translateY(-4px) scale(1.08);box-shadow:0 8px 24px #00c26e2b}
 .bio-identity>p:has(+.social-links){margin-top:8px}
-.skill-filter{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 24px;padding:10px 14px;border:1px solid #65ffc033;border-radius:14px;background:#0c191366;width:max-content;max-width:100%}
-.skill-filter label{font-size:.78rem;color:var(--muted)}
-.skill-filter select{font:inherit;font-size:.8rem;color:var(--mint);background:#0b1711;border:1px solid #65ffc055;border-radius:9px;padding:7px 30px 7px 10px;cursor:pointer}
-.skill-category[hidden],.skill-showcase-card[hidden]{display:none}
-.skill-groups-list{display:grid;gap:4px}
-@media(max-width:600px){
 .skill-category[hidden]{display:none}
 .skill-groups-list{display:grid;gap:4px;min-width:0}
-.skill-category-header{max-width:100%;min-width:0;margin-bottom:18px;border-bottom:1px solid var(--line)}
-.skill-category-nav{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;padding:4px 2px 14px;scrollbar-width:thin;scrollbar-color:#00c26e66 transparent}
-.skill-category-nav button{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;white-space:nowrap;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font:inherit;font-size:.8rem;padding:9px 14px;cursor:pointer;transition:color .2s,background .2s,border-color .2s}
-.skill-category-nav button:hover{color:var(--mint);background:#00c26e0d}
-.skill-category-nav button.is-selected{color:var(--mint);border-color:#00c26e55;background:#00c26e16}
-.skill-category-nav button span{font-size:.7rem;opacity:.75}
-.skill-category-nav button:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
-.skill-showcase,#skillGroups{min-width:0}
-@media(max-width:600px){.skill-category-nav button{font-size:.75rem;padding:8px 12px}}
-@media(prefers-reduced-motion:reduce){.skill-category-nav button{transition:none}}
+.skill-category-header{position:relative;max-width:100%;min-width:0;margin:0 0 22px;padding:0 0 12px;border-bottom:1px solid var(--line)}
+.skill-category-header::after{content:"";position:absolute;inset-inline-start:0;bottom:-1px;width:72px;height:2px;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--mint));box-shadow:0 0 14px #00c26e66}
+.skill-category-nav{display:flex;align-items:center;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;padding:5px 4px 7px;scrollbar-width:thin;scrollbar-color:#00c26e66 transparent}
+.skill-category-nav button{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;white-space:nowrap;border:1px solid #65ffc022;border-radius:12px;background:linear-gradient(145deg,#12291eaa,#0b1711aa);color:var(--muted);font:inherit;font-size:.82rem;padding:10px 16px;cursor:pointer;box-shadow:inset 0 1px 0 #65ffc012;transition:color .25s,background .25s,border-color .25s,transform .25s,box-shadow .25s}
+.skill-category-nav button:hover{color:var(--mint);border-color:#65ffc066;transform:translateY(-2px);box-shadow:0 7px 18px #0004}
+.skill-category-nav button.is-selected{color:#06190f;border-color:var(--mint);background:linear-gradient(135deg,var(--mint),var(--green));box-shadow:0 8px 20px #00c26e33;font-weight:700}
+.skill-category-nav button span{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 5px;border-radius:99px;font-size:.68rem;line-height:1;background:#ffffff16;color:inherit;opacity:.85}
+.skill-category-nav button.is-selected span{background:#06190f2b}
+.skill-category-nav button:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+@media(max-width:760px){
+ .skill-category-header{margin-bottom:18px}
+ .skill-category-nav{gap:8px;padding-inline:2px}
+ .skill-category-nav button{font-size:.78rem;padding:9px 13px}
+}
+@media(min-width:761px){
+ .skill-category-header{margin-top:8px}
+ .skill-category-nav{gap:12px;padding-block:8px 11px}
+ .skill-category-nav button{min-height:44px}
+}
+@media(min-width:1100px){
+ .skill-category-header{margin-bottom:28px}
+ .skill-category-nav button{padding-inline:18px}
+}
+@media(prefers-reduced-motion:reduce){
+ .skill-category-nav button{transition:none}
+}
