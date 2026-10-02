@@ -26,3 +26,17 @@
 .bio-cta{margin-top:45px;padding:34px;border:1px solid #65ffc033}.bio-cta h2{margin:0 0 8px}.bio-cta p{margin:0 0 18px}
 @media(max-width:760px){.biography .page-intro{padding:28px 0 8px}.bio-grid{gap:14px}.bio-identity{padding:18px}.bio-story{padding:22px 0;border-inline-start:0;border-top:1px solid #204638;border-radius:0;background:none}.bio-stats{margin:24px 0 35px}.skill-showcase{margin:28px 0 38px}.bio-cta{margin-top:32px;padding:26px 20px}}
 @media(prefers-reduced-motion:reduce){.bio-identity .contact-icon-link{transition:none}}
+
+/* Focused contact icons, transparent storytelling layers, and Persian skill filtering. */
+.bio-identity,.bio-story{background:transparent;box-shadow:none}
+.bio-identity{border-color:#65ffc033}
+.bio-identity .contact-icon-link{width:42px;height:42px;padding:0;justify-content:center;border-radius:50%;font-size:1rem}
+.bio-identity .contact-icon-link span{display:none}
+.bio-identity .contact-icon-link:hover{transform:translateY(-4px) scale(1.08);box-shadow:0 8px 24px #00c26e2b}
+.bio-identity>p:has(+.social-links){margin-top:8px}
+.skill-filter{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 24px;padding:10px 14px;border:1px solid #65ffc033;border-radius:14px;background:#0c191366;width:max-content;max-width:100%}
+.skill-filter label{font-size:.78rem;color:var(--muted)}
+.skill-filter select{font:inherit;font-size:.8rem;color:var(--mint);background:#0b1711;border:1px solid #65ffc055;border-radius:9px;padding:7px 30px 7px 10px;cursor:pointer}
+.skill-category[hidden],.skill-showcase-card[hidden]{display:none}
+.skill-groups-list{display:grid;gap:4px}
+@media(max-width:600px){.skill-filter{width:100%;justify-content:space-between}.skill-filter select{max-width:65%}}
