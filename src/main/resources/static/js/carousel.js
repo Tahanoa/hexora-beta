@@ -17,8 +17,7 @@
   }
   function go(i,instant=false){
    index=Math.max(0,Math.min(cards.length-1,i));const card=cards[index];if(!card)return;paint();
-   const box=card.getBoundingClientRect(),viewport=track.getBoundingClientRect();
-   track.scrollBy({left:box.left+box.width/2-viewport.left-track.clientWidth/2,behavior:instant||reduced()?'auto':'smooth'});
+   card.scrollIntoView({behavior:instant||reduced()?'auto':'smooth',block:'nearest',inline:'center'});
   }
   function schedule(){
    clearInterval(autoplayTimer);
