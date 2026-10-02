@@ -216,3 +216,12 @@ html[dir=ltr] .hx-carousel-track>article.is-after{transform:perspective(1100px) 
 @media(max-width:760px){.atelier-intro{grid-template-columns:1fr;padding:25px 21px}.atelier-score{width:145px;margin:auto}.atelier-categories{grid-template-columns:1fr}.atelier-category{padding:19px}}
 @media(max-width:450px){.atelier-stats{gap:4px}.atelier-stats span{font-size:.64rem}.atelier-stats b{font-size:1.1rem}.atelier-intro h2{font-size:2rem}}
 @media(prefers-reduced-motion:reduce){.atelier-category{transition:none}}
+
+/* Override the legacy .skills grid on the dedicated atelier container. */
+#skillsList.skills.skills-atelier{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;width:100%;min-width:0}
+#skillsList.skills.skills-atelier .atelier-intro,
+#skillsList.skills.skills-atelier .atelier-stats,
+#skillsList.skills.skills-atelier .atelier-categories{width:100%;min-width:0}
+@media(max-width:760px){
+ #skillsList.skills.skills-atelier{grid-template-columns:minmax(0,1fr);gap:22px}
+}
