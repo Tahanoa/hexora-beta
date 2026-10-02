@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 public class PageController {
  @GetMapping("/") String publicHome(){return "home/index";}
  @GetMapping("/home") String legacyHome(){return "redirect:/";}
- @GetMapping({"/projects","/services","/skills"}) String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
+ @GetMapping("/projects") String projects(Model model){model.addAttribute("publicSection","projects");return "portfolio";}
+ @GetMapping({"/services","/skills"}) String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
  @GetMapping("/about") String biography(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/biography";}
  @GetMapping("/experience") String oldExperience(){return "redirect:/about#career";}
  @GetMapping("/projects/{slug}") String project(@PathVariable String slug,Model model){model.addAttribute("projectSlug",slug);return "home/project";}
