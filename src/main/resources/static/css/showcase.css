@@ -25,3 +25,17 @@
 .process-contact{border:1px solid #65ffc033;border-radius:16px;padding:20px;background:#0c191399}
 @media(max-width:760px){.process-overview{grid-template-columns:1fr;gap:10px;margin-bottom:40px}.process-overview article{min-height:0;padding:16px}.process-hero{padding-bottom:35px}}
 @media(prefers-reduced-motion:reduce){.process-overview article{transition:none}}
+
+/* Stable mobile flow for the collaboration journey. */
+.process-hero{position:relative}
+.process-overview{position:relative}
+@media(max-width:760px){
+ .showcase{width:min(100% - 28px,1120px);padding-top:82px;overflow:hidden}
+ .process-hero h1{font-size:clamp(2rem,10vw,3rem);line-height:1.4}
+ .process-hero>p{font-size:.92rem;line-height:2}
+ .process-hero .primary{width:100%;justify-content:center}
+ .process-overview{margin-top:10px}
+ .process-steps{margin-top:35px}
+ .process-step,.process-step:nth-child(even){margin-left:40px!important;width:calc(100% - 40px)!important}
+ .process-notes{padding:25px 0;gap:24px}
+}
