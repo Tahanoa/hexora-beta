@@ -8,7 +8,7 @@
   const controls=document.createElement('div');controls.className='hx-carousel-controls';
   controls.innerHTML='<button type="button" class="hx-prev"><i aria-hidden="true"></i></button><div class="hx-dots"></div><span class="hx-position" aria-live="polite"></span><button type="button" class="hx-next"><i aria-hidden="true"></i></button>';shell.append(controls);
   const prev=controls.querySelector('.hx-prev'),next=controls.querySelector('.hx-next'),dots=controls.querySelector('.hx-dots'),position=controls.querySelector('.hx-position');
-  let index=0,cards=[],frame;
+  let index=0,cards=[],frame,autoplayTimer;
   const en=()=>document.documentElement.lang==='en',reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
   function paint(){
    prev.disabled=index===0;next.disabled=index>=cards.length-1;position.textContent=cards.length?`${index+1} / ${cards.length}`:'';
@@ -17,9 +17,13 @@
   }
   function go(i,instant=false){
    index=Math.max(0,Math.min(cards.length-1,i));const card=cards[index];if(!card)return;paint();
-   // Scroll only the carousel, without moving the page or relying on RTL scrollLeft conventions.
    const box=card.getBoundingClientRect(),viewport=track.getBoundingClientRect();
    track.scrollBy({left:box.left+box.width/2-viewport.left-track.clientWidth/2,behavior:instant||reduced()?'auto':'smooth'});
+  }
+  function schedule(){
+   clearInterval(autoplayTimer);
+   if(cards.length<2)return;
+   autoplayTimer=setInterval(()=>{if(document.hidden||shell.matches(':hover')||shell.contains(document.activeElement))return;go(index>=cards.length-1?0:index+1);},5200);
   }
   function refresh(){
    cards=[...track.children].filter(x=>x.matches('article'));controls.hidden=cards.length<2;
@@ -31,11 +35,11 @@
    index=Math.min(index,Math.max(0,cards.length-1));
    cards.forEach((card,i)=>{card.setAttribute('role','group');card.setAttribute('aria-roledescription','slide');card.setAttribute('aria-label',`${i+1} / ${cards.length}`);});
    dots.innerHTML=cards.map((_,i)=>`<button type="button" data-index="${i}" aria-label="${en()?'Slide':'اسلاید'} ${i+1}"></button>`).join('');paint();
-   requestAnimationFrame(()=>go(index,true));
+   requestAnimationFrame(()=>go(index,true));schedule();
   }
-  prev.onclick=()=>go(index-1);next.onclick=()=>go(index+1);
-  dots.onclick=e=>{const b=e.target.closest('[data-index]');if(b)go(Number(b.dataset.index));};
-  shell.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const rtl=getComputedStyle(track).direction==='rtl';go(index+(e.key==='ArrowRight'?(rtl?-1:1):(rtl?1:-1)));});
+  prev.onclick=()=>{go(index-1);schedule()};next.onclick=()=>{go(index+1);schedule()};
+  dots.onclick=e=>{const b=e.target.closest('[data-index]');if(b){go(Number(b.dataset.index));schedule()}};
+  shell.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const rtl=getComputedStyle(track).direction==='rtl';go(index+(e.key==='ArrowRight'?(rtl?-1:1):(rtl?1:-1)));schedule()});
   track.addEventListener('scroll',()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{
    const viewport=track.getBoundingClientRect(),center=viewport.left+track.clientWidth/2;let closest=Infinity;
    cards.forEach((card,i)=>{const box=card.getBoundingClientRect(),distance=Math.abs(box.left+box.width/2-center);if(distance<closest){closest=distance;index=i;}});paint();
