@@ -12,7 +12,7 @@
    const rating=Number(x.rating),validRating=x.rating!=null&&Number.isInteger(rating)&&rating>=1&&rating<=5;
    const avatar=safe(x.avatar),source=safe(x.sourceUrl);
    const full=String(x.quote||''),compact=full.replace(/\s+/g,' ').trim(),characters=Array.from(compact);
-   const long=home&&(characters.length>180||full.split('\n').length>3);
+   const long=home;
    const excerpt=characters.slice(0,180).join('')+(characters.length>180?'…':'');
    return `<article id="testimonial-${esc(x.id)}" class="testimonial-card"><i class="fa-solid fa-quote-right testimonial-quote-mark" aria-hidden="true"></i>${validRating?`<div class="testimonial-stars" role="img" aria-label="${t(`امتیاز ${rating} از ۵`,`Rating ${rating} out of 5`)}">${Array.from({length:5},(_,i)=>`<i class="${i<rating?'fa-solid':'fa-regular'} fa-star" aria-hidden="true"></i>`).join('')}</div>`:''}<blockquote id="testimonial-quote-${esc(x.id)}">${esc(long?excerpt:full)}</blockquote>${long?`<a class="testimonial-read-more" href="/testimonials#testimonial-${esc(x.id)}">${t('ادامه نظر','Read full feedback')} <span aria-hidden="true">↗</span></a>`:''}<div class="testimonial-author">${avatar?`<img src="${avatar}" alt="${esc(x.authorName)}" loading="lazy">`:`<span class="testimonial-initial" aria-hidden="true">${esc(Array.from(x.authorName||'')[0])}</span>`}<div><h2>${esc(x.authorName)}</h2>${x.role||x.company?`<p>${[x.role,x.company].filter(Boolean).map(esc).join(' · ')}</p>`:''}</div></div>${x.projectTitle||source?`<div class="testimonial-context">${x.projectTitle?`<span>${esc(x.projectTitle)}</span>`:''}${source?`<a href="${source}" target="_blank" rel="noopener noreferrer">${t('منبع بازخورد ↗','Feedback source ↗')}</a>`:''}</div>`:''}</article>`;
   }).join('');
@@ -20,6 +20,7 @@
   area.querySelectorAll('.testimonial-author img').forEach(img=>{img.onerror=()=>{const fallback=document.createElement('span');fallback.className='testimonial-initial';fallback.textContent=Array.from(img.alt)[0]||'';fallback.setAttribute('aria-hidden','true');img.replaceWith(fallback);};});
  }
   async function load(){failed=false;try{const response=await fetch('/api/testimonials/public');if(!response.ok)throw Error();const json=await response.json();items=Array.isArray(json.data)?json.data:[];}catch{failed=true;}render();}
- try{await load();requestAnimationFrame(()=>{const target=location.hash?document.querySelector(location.hash):null;if(target){target.scrollIntoView({block:'center'});target.classList.add('is-target');}});}finally{release();}
+ try{await load();requestAnimationFrame(()=>{const target=location.hash?document.getElementById(decodeURIComponent(location.hash.slice(1))):null;if(target){target.scrollIntoView({block:'center'});target.classList.add('is-target');}});}finally{release();}
  new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 })();
+
