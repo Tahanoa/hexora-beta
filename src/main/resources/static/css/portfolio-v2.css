@@ -107,3 +107,25 @@ html[dir=ltr] .hx-carousel-track>article.is-after{transform:perspective(1100px) 
 @media(max-width:760px){.hx-carousel{--card-width:82vw;--carousel-gap:16px}.hx-carousel .hx-carousel-track{padding-block:24px 32px}.hx-carousel--projects .project{grid-template-columns:1fr}.hx-carousel--projects .project-media,.hx-carousel--projects .project-media img{min-height:0;height:190px!important}.hx-carousel--projects .project-media-empty img{height:90px!important;width:90px!important}.hx-carousel--projects .project-body{padding:24px}.hx-carousel--testimonials .testimonial-card{min-height:280px;padding:26px}.hx-carousel--testimonials blockquote{font-size:1rem}.hx-carousel-controls{gap:12px}.skill-chip{width:155px;min-height:135px}.skills-slide-group{gap:14px;padding-right:14px}}
 @media(prefers-reduced-motion:reduce){.skills-slider{overflow-x:auto;mask-image:none}.skills-slide-track{animation:none}.skills-slide-group[aria-hidden]{display:none}.hx-carousel-track>article{transition:none;transform:none!important;filter:none}.hx-carousel button{transition:none}}
 
+
+
+/* Contact panel with clear, icon-led communication paths. */
+.contact-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,1.05fr);gap:clamp(28px,6vw,76px);align-items:stretch;padding:clamp(26px,5vw,52px);border:1px solid #65ffc035;border-radius:28px;background:radial-gradient(circle at 0 0,#00c26e20,transparent 48%),linear-gradient(145deg,#132b20,#0a1510);box-shadow:0 24px 70px #0005,inset 0 1px 0 #65ffc01a}
+.contact-copy{display:flex;flex-direction:column;justify-content:center}
+.contact-kicker{display:flex;align-items:center;gap:10px;color:var(--green)}
+.contact-kicker small{font-size:.8rem}
+.contact-kicker-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#00c26e18;color:var(--mint);box-shadow:inset 0 0 16px #00c26e18}
+.contact-copy h2{margin:16px 0 8px;font-size:clamp(1.7rem,4vw,2.8rem);line-height:1.35}
+.contact-copy p{max-width:430px;margin:0;color:var(--muted);line-height:2}
+.contact-main-cta{width:max-content;margin-top:26px;box-shadow:0 12px 28px #00c26e2b}
+.contact-main-cta .fa-arrow-left{font-size:.78rem}
+.contact-channels{display:flex;flex-direction:column;gap:10px;justify-content:center}
+.contact-channel{display:flex;align-items:center;gap:13px;min-height:64px;padding:11px 14px;border:1px solid #ffffff0d;border-radius:16px;background:#07100d88;color:var(--text);text-decoration:none;transition:transform .25s,border-color .25s,background .25s}
+.contact-channel:hover{transform:translateX(-5px);border-color:#65ffc066;background:#10271b}
+.contact-channel-icon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:13px;background:#00c26e16;color:var(--mint);font-size:1.05rem}
+.contact-channel>span:nth-child(2){display:flex;flex-direction:column;gap:1px;min-width:0}
+.contact-channel b{font-size:.85rem}.contact-channel small{color:var(--muted);font-size:.72rem;overflow-wrap:anywhere}
+.contact-channel-arrow{margin-inline-start:auto;color:var(--green);font-size:.78rem}
+.contact-location{display:flex;align-items:center;gap:10px;margin:5px 4px 0;color:var(--muted);font-size:.75rem}.contact-location i{color:var(--green)}
+@media(max-width:780px){.contact-panel{grid-template-columns:1fr;padding:26px 20px}.contact-main-cta{width:100%;justify-content:center}.contact-channel:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.contact-channel,.contact-main-cta{transition:none}}
