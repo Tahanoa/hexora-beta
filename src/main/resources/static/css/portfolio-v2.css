@@ -183,3 +183,36 @@ html[dir=ltr] .hx-carousel-track>article.is-after{transform:perspective(1100px) 
 .skills-category-title>span{color:var(--muted);font-size:.75rem;white-space:nowrap}
 .skills-category-group .skills-showcase-grid{margin:0}
 @media(max-width:700px){.skills-category-groups{gap:38px}.skills-category-title{margin-bottom:14px}.skills-category-title h2{font-size:1.2rem}}
+
+/* Skills atelier: a new editorial dashboard for the dedicated skills page. */
+.skills-page #skills{padding-top:34px}
+.skills-atelier{display:grid;gap:28px}
+.atelier-intro{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:30px;align-items:center;padding:clamp(26px,5vw,52px);border:1px solid #65ffc044;border-radius:28px;background:radial-gradient(circle at 8% 12%,#00c26e24,transparent 35%),linear-gradient(135deg,#153626,#08120e 72%);box-shadow:0 25px 70px #0005,inset 0 1px 0 #ffffff0a;overflow:hidden;position:relative}
+.atelier-intro::after{content:"</>";position:absolute;inset-inline-end:7%;bottom:-35px;color:#65ffc00c;font:900 12rem/1 monospace;pointer-events:none}
+.atelier-overline{display:inline-flex;align-items:center;gap:8px;color:var(--mint);font-size:.72rem;letter-spacing:.03em}
+.atelier-overline i{color:var(--green)}
+.atelier-intro h2{position:relative;margin:15px 0 12px;font-size:clamp(2rem,4.5vw,4rem);line-height:1.35;letter-spacing:-.04em}
+.atelier-intro h2 em{color:var(--green);font-style:normal}
+.atelier-intro p{max-width:550px;color:var(--muted);margin:0;line-height:2}
+.atelier-score{position:relative;z-index:1;display:grid;place-items:center;align-content:center;aspect-ratio:1;border:1px solid #65ffc055;border-radius:50%;background:radial-gradient(circle,#00c26e28,#0b1711 68%);box-shadow:0 0 55px #00c26e1c}
+.atelier-score strong{color:var(--mint);font-size:clamp(3rem,6vw,5rem);line-height:1}
+.atelier-score strong small{font-size:.42em}
+.atelier-score span{margin-top:12px;color:var(--muted);font-size:.7rem;text-align:center}
+.atelier-stats{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line);padding:17px 0}
+.atelier-stats span{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:.72rem;border-inline-end:1px solid var(--line)}
+.atelier-stats span:last-child{border:0}
+.atelier-stats b{color:var(--mint);font-size:1.35rem;line-height:1}
+.atelier-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.atelier-category{padding:23px;border:1px solid #65ffc02e;border-radius:20px;background:linear-gradient(145deg,#11291d,#0a1510);box-shadow:0 15px 35px #0003;transition:transform .3s,border-color .3s,box-shadow .3s}
+.atelier-category:hover{transform:translateY(-5px);border-color:#65ffc066;box-shadow:0 25px 50px #0005}
+.atelier-category>header{display:flex;align-items:center;gap:12px;margin-bottom:17px;padding-bottom:15px;border-bottom:1px solid #ffffff0d}
+.atelier-category-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#00c26e18;color:var(--mint)}
+.atelier-category header div{flex:1}.atelier-category header small{color:var(--green);font-size:.66rem}.atelier-category h2{margin:2px 0 0;font-size:1.15rem}.atelier-category header>b{color:#65ffc055;font:700 1.3rem/1 monospace}
+.atelier-category ul{display:grid;gap:12px;list-style:none;margin:0;padding:0}
+.atelier-skill{display:flex;align-items:center;gap:10px;min-width:0}
+.atelier-skill-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:#07100d;color:var(--mint);font-size:.9rem}
+.atelier-skill-info{display:grid;gap:5px;flex:1;min-width:0}.atelier-skill-info b{font-size:.82rem;overflow-wrap:anywhere}.atelier-skill-info>span{height:4px;overflow:hidden;border-radius:5px;background:#ffffff12}.atelier-skill-info>span i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green),var(--mint));box-shadow:0 0 10px #00c26e55}
+.atelier-skill>strong{min-width:34px;color:var(--mint);font-size:.68rem;text-align:end}
+@media(max-width:760px){.atelier-intro{grid-template-columns:1fr;padding:25px 21px}.atelier-score{width:145px;margin:auto}.atelier-categories{grid-template-columns:1fr}.atelier-category{padding:19px}}
+@media(max-width:450px){.atelier-stats{gap:4px}.atelier-stats span{font-size:.64rem}.atelier-stats b{font-size:1.1rem}.atelier-intro h2{font-size:2rem}}
+@media(prefers-reduced-motion:reduce){.atelier-category{transition:none}}
