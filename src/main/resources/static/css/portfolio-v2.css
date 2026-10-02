@@ -172,3 +172,9 @@ html[dir=ltr] .hx-carousel-track>article.is-after{transform:perspective(1100px) 
 .projects-page #projects .project:hover{transform:translateY(-8px);border-color:#65ffc077;box-shadow:0 28px 60px #0006}
 @media(max-width:900px){.projects-page #projects.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.projects-page #projects .project,.projects-page #projects .project:nth-child(1),.projects-page #projects .project:nth-child(2),.projects-page #projects .project:nth-child(3){grid-column:span 1;grid-row:auto;min-height:300px}.projects-page #projects .project:nth-child(1) .project-media,.projects-page #projects .project-media{height:185px;min-height:185px}.projects-page #projects .project:nth-child(1) h3{font-size:1.3rem}}
 @media(max-width:560px){.projects-page #work{padding-top:24px}.projects-page #projects.cards{grid-template-columns:1fr;gap:16px}.projects-page #projects .project,.projects-page #projects .project:nth-child(1){min-height:0}.projects-page #projects .project:nth-child(1) .project-media,.projects-page #projects .project-media{height:180px;min-height:180px}.projects-page #projects .project-body{padding:19px}.projects-page #projects .project h3,.projects-page #projects .project:nth-child(1) h3{font-size:1.15rem}}
+
+.skill-filter{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 24px;padding:10px 14px;border:1px solid #65ffc033;border-radius:14px;background:#0c191366;width:max-content;max-width:100%}
+.skill-filter label{font-size:.78rem;color:var(--muted)}
+.skill-filter select{font:inherit;font-size:.8rem;color:var(--mint);background:#0b1711;border:1px solid #65ffc055;border-radius:9px;padding:7px 30px 7px 10px;cursor:pointer}
+.skill-showcase-card[hidden]{display:none}
+@media(max-width:600px){.skill-filter{width:100%;justify-content:space-between}.skill-filter select{max-width:65%}}
