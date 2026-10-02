@@ -12,7 +12,7 @@
 <script src="/js/dashboard-shell.js" defer></script>
 <link rel="stylesheet" href="/css/manage.css">
 </head>
-<body>
+<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 <div th:replace="~{dashboard/fragments/sidebar :: sidebar}"></div>
 <div class="dashboard-main"><main class="manage-shell">
   <header class="manage-header"><div><button type="button" class="sidebar-toggle manage-menu-toggle" onclick="toggleSidebar()" aria-label="باز کردن منو"><i class="fas fa-bars"></i></button><a class="back" href="/dashboard">← بازگشت به داشبورد</a><h1 id="heading">مدیریت محتوا</h1><p class="subtitle" id="subheading">در حال بررسی دسترسی...</p></div><div class="toolbar"><button class="btn lang-btn" id="languageBtn" type="button">English</button><button class="btn" id="refreshBtn">تازه‌سازی</button></div></header>
