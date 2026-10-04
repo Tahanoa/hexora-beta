@@ -10,4 +10,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
  List<Project> findByStatus(ProjectStatus status);
  long countByStatus(ProjectStatus status);
  List<Project> findByProjectDateBetween(LocalDateTime start, LocalDateTime end);
+ long countByIdIn(java.util.Collection<Long> ids);
 }

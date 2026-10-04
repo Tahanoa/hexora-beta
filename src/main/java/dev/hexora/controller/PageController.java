@@ -7,7 +7,9 @@ public class PageController {
  @GetMapping("/") String publicHome(){return "home/index";}
  @GetMapping("/home") String legacyHome(){return "redirect:/";}
  @GetMapping("/projects") String projects(Model model){model.addAttribute("publicSection","projects");return "portfolio";}
- @GetMapping({"/services","/skills"}) String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
+ @GetMapping("/services") String services(){return "home/services";}
+ @GetMapping("/services/{slug}") String serviceDetail(@PathVariable String slug,Model model){model.addAttribute("serviceSlug",slug);return "home/service";}
+ @GetMapping("/skills") String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
  @GetMapping("/about") String biography(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/biography";}
  @GetMapping("/experience") String oldExperience(){return "redirect:/about#career";}
  @GetMapping("/projects/{slug}") String project(@PathVariable String slug,Model model){model.addAttribute("projectSlug",slug);return "home/project";}

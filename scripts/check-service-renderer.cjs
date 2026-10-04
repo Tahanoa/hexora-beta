@@ -1,0 +1,27 @@
+// Run: node scripts/check-service-renderer.cjs (no dependencies).
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const context={window:{},document:{documentElement:{lang:'fa'}},location:{origin:'https://hexora.test'},URL};
+vm.runInNewContext(fs.readFileSync('src/main/resources/static/js/services-ui.js','utf8'),context);
+const ui=context.window.HexoraServices;
+const x={id:42,slug:'web-app',title:'توسعه وب‌اپ',shortDescription:'معرفی',cover:'/api/media/public/8',icon:'fa-brands fa-java',features:'["ویژگی اول","ویژگی دوم"]',deliverables:['پنل مدیریت','API','مستندات','آموزش'],duration:'۲ تا ۴ هفته',pricingMode:'FROM',priceLabel:'۲۰ میلیون تومان',featured:true};
+const card=ui.card(x);
+assert(card.includes('https://hexora.test/api/media/public/8'));
+assert(card.includes('fa-brands fa-java'));
+assert(card.includes('/services/web-app'));
+assert(card.includes('/contact?service=42'));
+assert(card.includes('پنل مدیریت')&&!card.includes('آموزش'));
+assert(card.includes('شروع از ۲۰ میلیون تومان'));
+assert.equal(ui.safeUrl('javascript:alert(1)'),'');
+assert.equal(ui.safeUrl('data:text/html,unsafe'),'');
+assert.equal(ui.safeUrl('https://user:password@example.org/a'),'');
+assert.equal(ui.list('A,B\nC').join('|'),'A|B|C');
+assert.equal(ui.list(x.features).join('|'),'ویژگی اول|ویژگی دوم');
+const unsafe=ui.card({...x,title:'<img src=x onerror=alert(1)>',shortDescription:'<script>unsafe</script>',cover:'javascript:alert(1)',icon:'" onload="unsafe'});
+assert(!unsafe.includes('<script>')&&!unsafe.includes('<img src=x'));
+assert(unsafe.includes('&lt;img')&&unsafe.includes('hx-svc-cover-empty'));
+assert.equal(ui.path({id:7}),'/services/7');
+context.document.documentElement.lang='en';
+assert(ui.card(x).includes('Explore service'));
+assert.equal(ui.price({pricingMode:'QUOTE',priceLabel:'hidden'}),'After reviewing requirements');
+assert.equal(ui.price({pricingMode:'RANGE',priceLabel:'10–20'}),'10–20');
+console.log('Service renderer: cover, selected icon, deliverables, request links, legacy features, English and escaping passed.');

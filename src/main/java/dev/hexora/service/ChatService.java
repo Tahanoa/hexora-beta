@@ -13,8 +13,8 @@ import java.nio.*;
 import java.nio.charset.*;
 @Service @Transactional
 public class ChatService{
- private final ChatMessageRepository messages;private final UserRepository users;
- public ChatService(ChatMessageRepository messages,UserRepository users){this.messages=messages;this.users=users;}
+ private final ChatMessageRepository messages;private final UserRepository users;private final BusinessServiceRepository services;
+ public ChatService(ChatMessageRepository messages,UserRepository users,BusinessServiceRepository services){this.messages=messages;this.users=users;this.services=services;}
  public User user(String username){return users.findByUsernameIgnoreCase(username).orElseThrow(ApiException::notFound);}
  private User required(Long id){return users.findById(id).orElseThrow(ApiException::notFound);}
  private ChatMessageResponse view(ChatMessage m){return new ChatMessageResponse(m.getId(),m.getText(),m.isFromAdmin(),m.getFileName(),m.getCreatedAt());}
@@ -25,6 +25,10 @@ public class ChatService{
   else{list=before==null?messages.findByUserIdOrderByIdDesc(userId,page):messages.findByUserIdAndIdLessThanOrderByIdDesc(userId,before,page);Collections.reverse(list);}
   if(!list.isEmpty())messages.markRead(userId,!admin,list.stream().map(ChatMessage::getId).toList());
   return list.stream().map(this::view).toList();
+ }
+ public ChatMessageResponse sendRequest(Long userId,String text,Long serviceId){
+  if(serviceId!=null){var selected=services.findById(serviceId).orElseThrow(ApiException::notFound);if(!BusinessServiceService.isPublished(selected))throw ApiException.notFound();text="درخواست خدمت: "+selected.getTitle()+" (#"+selected.getId()+")\n\n"+text;}
+  return send(userId,false,text,null);
  }
  public ChatMessageResponse send(Long userId,boolean admin,String text,String fileName){
   User owner=required(userId);if(!admin&&(owner.getPhone()==null||owner.getPhone().isBlank()))throw new ApiException(HttpStatus.FORBIDDEN,"Save your phone number before sending a message");

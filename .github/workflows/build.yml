@@ -27,6 +27,10 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/check-service-renderer.cjs
       - run: ./mvnw -B -DskipTests package
       - name: Smoke check
         env:
@@ -43,4 +47,5 @@ jobs:
           trap 'kill $app_pid 2>/dev/null || true' EXIT
           for i in $(seq 1 45); do curl --fail --silent http://127.0.0.1:8080/actuator/health && break || sleep 2; done
           curl --fail --silent http://127.0.0.1:8080/ | grep -q Hexora
-          curl --fail --silent http://127.0.0.1:8080/api/auth/csrf | grep -q token
+          curl --fail --silent http://127.0.0.1:8080/api/auth/csrf | grep -q bearer-jwt
+          python3 scripts/check-services-api.py

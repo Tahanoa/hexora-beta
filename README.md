@@ -26,7 +26,10 @@ Hexora connects three parts of a personal brand: the work people discover, the c
 ### Discover the work
 
 - **Project showcase and detail pages:** titles, descriptions, images, project dates, client names, status, demo links and source links. Empty optional fields disappear from the presentation.
-- **Services and skills:** database-driven content, separate public pages and a restrained homepage preview. Skill icons drift slowly on the homepage; the about page groups skills by category.
+- **Services:** dedicated service catalog and `/services/{slug}` detail pages, full cover images, selected icons, audience, deliverables, scope/exclusions, duration, quote/starting-price/range pricing, support, revisions, related projects and per-service FAQs. The homepage prioritizes featured services. Drafts are excluded from every public service API.
+- **Service management:** grouped editor, media upload/picker with preview, editable feature/deliverable lists, project selection, FAQ rows, draft/published state and display order. Publishing requires an introduction and at least one deliverable.
+- **Service requests:** a selected service survives sign-in/registration in the same browser tab. The authenticated chat API validates that it is published and saves its title and ID in the first request message. Normal logins still return to `/`.
+- **Skills:** database-driven content; icons drift slowly on the homepage and the about page groups skills by category.
 - **About and career:** profile content, circular portrait, floating skill icons, work history and counts derived from portfolio data.
 - **Collaboration:** an alternating timeline that explains the path from discovery to handover.
 - **FAQ:** keyboard-accessible questions with animated opening and closing.
@@ -173,7 +176,8 @@ For the `prod` profile, provide the required database variables and signing key.
 | --- | --- |
 | `/` | Homepage |
 | `/projects` / `/projects/{slug}` | Work showcase / project detail |
-| `/services` / `/skills` | Services / skills |
+| `/services` / `/services/{slug}` | Service catalog / service detail |
+| `/skills` | Skills |
 | `/about` | About and career; `/experience` redirects here |
 | `/collaboration` | Collaboration process |
 | `/faq` / `/testimonials` | Questions / published client feedback |
@@ -232,3 +236,11 @@ If the first build reports an unresolved parent POM or a dependency download err
 ---
 
 Built by [Tahanoa](https://github.com/Tahanoa) · [Hexora repository](https://github.com/Tahanoa/hexora-beta)
+
+## Service changes and validation
+
+The configured `JPA_DDL_AUTO=update` adds nullable service fields and collection tables (`service_deliverables`, `service_relatedprojectids`, `service_faqs`). Existing services with a null publication flag remain public, and an ID-based detail link works until a slug is generated on edit. New services default to draft. Existing feature text is supported alongside JSON feature lists. No existing service content is removed. Services without covers display their selected icon.
+
+For environments using `validate` or managed production migrations, apply the equivalent schema changes before starting this version. The project still does not introduce a new Flyway baseline.
+
+Run `node scripts/check-service-renderer.cjs` for renderer/escaping checks. Run `python3 scripts/check-services-api.py` against a disposable running app and PostgreSQL, with `ADMIN_USERNAME` and `ADMIN_PASSWORD` set. This integration check creates temporary service, project, media and user records, removes service/project/media records afterward, and verifies draft privacy, validation, publishing, related work, FAQs and service-aware chat. GitHub Actions runs these checks with its disposable database. A full local Maven build requires access to Maven Central.

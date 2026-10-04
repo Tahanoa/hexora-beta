@@ -92,7 +92,8 @@ async function handleLogin(form) {
             showToast('success', lang === 'fa' ? 'موفق!' : 'Success!', successMsg);
 
             setTimeout(() => {
-                window.location.href = '/';
+                const pending=sessionStorage.getItem('hexora-service-request');
+                window.location.href = pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):'/';
             }, 500);
         } else {
             const errorMsg = result.message || (lang === 'fa'

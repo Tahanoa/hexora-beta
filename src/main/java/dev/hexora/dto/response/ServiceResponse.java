@@ -77,4 +77,37 @@ public class ServiceResponse {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+ private String slug;
+ private String shortDescription;
+ private String cover;
+ private String audience;
+ private String scope;
+ private String exclusions;
+ private String duration;
+ private String pricingMode;
+ private String priceLabel;
+ private String support;
+ private String revisions;
+ private Boolean published;
+ private Boolean featured;
+ private java.util.List<String> deliverables;
+ private java.util.List<Long> relatedProjectIds;
+ private java.util.List<dev.hexora.model.ServiceFaq> faqs;
+ public String getSlug(){return slug;} public void setSlug(String value){slug=value;}
+ public String getShortDescription(){return shortDescription;} public void setShortDescription(String value){shortDescription=value;}
+ public String getCover(){return cover;} public void setCover(String value){cover=value;}
+ public String getAudience(){return audience;} public void setAudience(String value){audience=value;}
+ public String getScope(){return scope;} public void setScope(String value){scope=value;}
+ public String getExclusions(){return exclusions;} public void setExclusions(String value){exclusions=value;}
+ public String getDuration(){return duration;} public void setDuration(String value){duration=value;}
+ public String getPricingMode(){return pricingMode;} public void setPricingMode(String value){pricingMode=value;}
+ public String getPriceLabel(){return priceLabel;} public void setPriceLabel(String value){priceLabel=value;}
+ public String getSupport(){return support;} public void setSupport(String value){support=value;}
+ public String getRevisions(){return revisions;} public void setRevisions(String value){revisions=value;}
+ public Boolean getPublished(){return published;} public void setPublished(Boolean value){published=value;}
+ public Boolean getFeatured(){return featured;} public void setFeatured(Boolean value){featured=value;}
+ public java.util.List<String> getDeliverables(){return deliverables;} public void setDeliverables(java.util.List<String> value){deliverables=value;}
+ public java.util.List<Long> getRelatedProjectIds(){return relatedProjectIds;} public void setRelatedProjectIds(java.util.List<Long> value){relatedProjectIds=value;}
+ public java.util.List<dev.hexora.model.ServiceFaq> getFaqs(){return faqs;} public void setFaqs(java.util.List<dev.hexora.model.ServiceFaq> value){faqs=value;}
 }
