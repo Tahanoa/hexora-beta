@@ -31,6 +31,14 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/check-service-renderer.cjs
+      - name: Demo archive validation
+        run: |
+          javac -d /tmp/demo-parser src/main/java/dev/hexora/service/DemoBundle.java scripts/DemoBundleCheck.java
+          java -cp /tmp/demo-parser DemoBundleCheck
+      - name: Install browser for demo isolation checks
+        run: |
+          npm install --prefix /tmp/hexora-browser --no-save --ignore-scripts playwright@1.62.1
+          node /tmp/hexora-browser/node_modules/playwright/cli.js install chromium --with-deps
       - run: ./mvnw -B -DskipTests package
       - name: Smoke check
         env:
@@ -49,3 +57,5 @@ jobs:
           curl --fail --silent http://127.0.0.1:8080/ | grep -q Hexora
           curl --fail --silent http://127.0.0.1:8080/api/auth/csrf | grep -q bearer-jwt
           python3 scripts/check-services-api.py
+          python3 scripts/check-demos-api.py
+          NODE_PATH=/tmp/hexora-browser/node_modules node scripts/check-demos-browser.cjs

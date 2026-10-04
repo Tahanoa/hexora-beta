@@ -26,7 +26,7 @@ public class ProjectRequest {
     @Size(max = 255, message = "Image path must be less than 255 characters")
     private String image;
 
-    @ValidUrl
+    @dev.hexora.validation.ValidDemoUrl
     @Size(max = 255, message = "Demo URL must be less than 255 characters")
     private String demoUrl;
 

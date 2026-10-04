@@ -22,7 +22,8 @@ public class PageController {
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
  @GetMapping("/profile") String profile(){return "dashboard/profile";}
  @GetMapping("/manage/{section}") String manage(@PathVariable String section,Model model){
-  if(!java.util.Set.of("testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
+  if(!java.util.Set.of("demos","testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
+  if(section.equals("demos"))return "dashboard/demos";
   if(section.equals("contact"))return "dashboard/chat";
   model.addAttribute("section",section);return "dashboard/manage";
  }

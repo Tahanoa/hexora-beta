@@ -190,6 +190,7 @@ For the `prod` profile, provide the required database variables and signing key.
 | `/manage/projects` / `/manage/skills` / `/manage/services` | Portfolio management |
 | `/manage/experience` / `/manage/statistics` | Career / statistics |
 | `/manage/media` / `/manage/testimonials` | Media / client feedback |
+| `/manage/demos` | Static demo studio |
 | `/manage/contact` | Administrative chat |
 
 Dashboard HTML shells are loadable routes; browser code checks the account and the backend enforces administrative access to protected APIs.
@@ -244,3 +245,17 @@ The configured `JPA_DDL_AUTO=update` adds nullable service fields and collection
 For environments using `validate` or managed production migrations, apply the equivalent schema changes before starting this version. The project still does not introduce a new Flyway baseline.
 
 Run `node scripts/check-service-renderer.cjs` for renderer/escaping checks. Run `python3 scripts/check-services-api.py` against a disposable running app and PostgreSQL, with `ADMIN_USERNAME` and `ADMIN_PASSWORD` set. This integration check creates temporary service, project, media and user records, removes service/project/media records afterward, and verifies draft privacy, validation, publishing, related work, FAQs and service-aware chat. GitHub Actions runs these checks with its disposable database. A full local Maven build requires access to Maven Central.
+
+## Demo studio
+
+`/manage/demos` accepts UTF-8 HTML or a static ZIP package containing `index.html`/`index.htm`, CSS, JavaScript, images and fonts. Asset references must be relative to the package; absolute `/assets/...` references should be changed in your static export. A ZIP with one enclosing folder is unwrapped automatically. Server-side Java, PHP and Node applications are not executed.
+
+Create a demo, optionally choose its portfolio project, upload a version, preview it at desktop/tablet/mobile widths, then publish. The active URL is `/demo-sites/{slug}/`. Uploading a new version never changes the live version automatically. Publishing any retained version performs a rollback, and deactivation removes public access and clears the managed link on the connected project. External project links manually changed afterward are preserved on deactivation. Slugs remain fixed; settings allow changing the title and project connection. Up to 50 versions are retained per demo; unused versions and complete demos can be deleted.
+
+All uploaded bytes are stored in PostgreSQL (`demo_sites`, `demo_versions`, `demo_assets`). Existing `JPA_DDL_AUTO=update` creates these tables; deployments using managed migrations must create the equivalent schema before starting. Uploads allow 10 MB compressed, 5 MB per file, 30 MB expanded and 200 static files. Archive entries are never extracted to disk; traversal, duplicate paths, unsupported extensions and over-limit expansion are rejected. General media uploads retain their existing 5 MB limit.
+
+Admin APIs under `/api/demos` require the ADMIN role. Public requests serve only the selected live version. Preview links use independent, hashed, random 256-bit capabilities that expire after ten minutes; preview tokens are not account JWTs. A refreshed preview replaces the previous token. Responses disable caching, use strict MIME types/no sniffing, suppress referrer leakage and enforce `Content-Security-Policy: sandbox allow-scripts` without `allow-same-origin`. Preview iframes also use the same sandbox. Demo scripts can run, but cannot read panel DOM, cookies or storage, navigate the parent, submit forms, embed frames or install service workers. Static demos may load external HTTP(S) resources; only publish code you intend to display publicly. Browser storage-dependent demos and server-backed forms need changes to work in this sandbox.
+
+For a dedicated demo domain, route it to this app's demo paths and set `DEMO_PUBLIC_BASE_URL=https://demo.example.com` and `DEMO_PANEL_ORIGIN=https://portfolio.example.com`. Use a separate registrable domain for maximum separation and keep portfolio cookies scoped to the portfolio host. No external DNS/hosting account is provisioned by the demo studio. With these variables empty, demo links work on the current app host using the opaque sandbox origin.
+
+Run the pure-Java parser checks with `javac -d /tmp/demo-parser src/main/java/dev/hexora/service/DemoBundle.java scripts/DemoBundleCheck.java` then `java -cp /tmp/demo-parser DemoBundleCheck`. `scripts/check-demos-api.py` verifies publication, scoped previews, asset serving, rollback, linking and upload limits against a disposable running app. `scripts/check-demos-browser.cjs` verifies the admin flow, mobile overflow and actual browser isolation using Playwright. GitHub Actions runs all three checks with its disposable PostgreSQL instance.
