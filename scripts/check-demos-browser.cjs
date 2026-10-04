@@ -33,9 +33,15 @@ const suffix=Date.now().toString(36),slug='browser-demo-'+suffix;
   assert.equal(await page.evaluate(()=>localStorage.getItem('accessToken')),token);
   page.once('dialog',dialog=>dialog.accept());await page.locator('#dmPreviewPublish').click();await page.waitForFunction(()=>!document.querySelector('#dmPreviewDialog').open);
   const linked=await api('GET','/api/projects/'+projectId);assert.equal(linked.demoUrl,'/demo-sites/'+slug+'/');
+  // Exercise a ZIP with relative styles, ES modules and nested imports.
+  const fixture=JSON.stringify({'dist/index.html':'<html><head><link rel="stylesheet" href="assets/app.css"></head><body><h1>ZIP module demo</h1><script type="module" src="assets/app.mjs"></script></body></html>','dist/assets/app.css':'h1{color:rgb(20, 150, 90)}','dist/assets/app.mjs':'import {mark} from "./part.mjs"; mark();','dist/assets/part.mjs':'export function mark(){document.body.dataset.module="ready";}'});
+  const zip=require('node:child_process').execFileSync('python3',['-c','import sys,json,io,zipfile; files=json.load(sys.stdin); out=io.BytesIO(); z=zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED); [z.writestr(k,v) for k,v in files.items()]; z.close(); sys.stdout.buffer.write(out.getvalue())'],{input:fixture});
+  await card.locator('[data-upload]').click();await page.locator('#dmUploadForm input[type=file]').setInputFiles({name:'module-demo.zip',mimeType:'application/zip',buffer:zip});await page.locator('#dmUploadForm button[type=submit]').click();await page.waitForFunction(()=>!document.querySelector('#dmUploadDialog').open);
+  const sites=await api('GET','/api/demos'),newVersion=sites.find(x=>x.id===demoId).versions[0].id;
+  await card.locator(`[data-preview="${newVersion}"]`).click();await frame.locator('body[data-module="ready"]').waitFor();assert.equal(await frame.locator('h1').evaluate(e=>getComputedStyle(e).color),'rgb(20, 150, 90)');await page.locator('#dmPreviewDialog [data-close]').click();
   const publicPage=await context.newPage();await publicPage.goto(base+'/demo-sites/'+slug+'/');await publicPage.locator('#probe').waitFor();probe=JSON.parse(await publicPage.locator('#probe').textContent());assert.equal(probe.storage,'blocked');assert.equal(probe.session,'blocked');await publicPage.close();
   await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  await card.locator('[data-preview]').click();await frame.locator('#probe').waitFor();await page.locator('#dmPreviewDialog [data-close]').click();
+  await card.locator('[data-preview]').last().click();await frame.locator('#probe').waitFor();await page.locator('#dmPreviewDialog [data-close]').click();
   page.once('dialog',dialog=>dialog.accept());await card.locator('[data-deactivate]').click();await page.waitForFunction(()=>!document.querySelector('[data-deactivate]'));
   assert.equal((await context.request.get(base+'/demo-sites/'+slug+'/')).status(),404);
   assert.deepEqual(failures,[]);
