@@ -33,5 +33,5 @@ public class MediaService {
   if(b.length>=5&&new String(b,0,5,StandardCharsets.US_ASCII).equals("%PDF-"))return "application/pdf";
   throw new IllegalArgumentException("Unsupported file content");
  }
- public Map<String,Object> info(Media media){return Map.of("id",media.getId(),"fileName",media.getFileName(),"size",media.getSize(),"type",media.getType().name(),"url",media.getUrl()==null?"/api/media/public/"+media.getId():media.getUrl(),"contentType",media.getContentType(),"createdAt",media.getCreatedAt());}
+ public Map<String,Object> info(Media media){return Map.of("id",media.getId(),"fileName",media.getFileName(),"size",media.getSize(),"type",media.getType().name(),"url",media.getUrl()==null?"/api/media/public/"+media.getId():media.getUrl(),"contentType",media.getContentType(),"createdAt",media.getCreatedAt(),"updatedAt",media.getUpdatedAt()==null?media.getCreatedAt():media.getUpdatedAt());}
 }

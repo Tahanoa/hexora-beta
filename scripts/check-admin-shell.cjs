@@ -12,7 +12,7 @@ dashboardLanguage.events.click();profileLanguage.events.click();dashboardRefresh
 assert.equal(languageCalls,2);assert.equal(refreshCalls,1);
 const fragment=fs.readFileSync('src/main/resources/templates/dashboard/fragments/topbar.html','utf8');
 assert(!/th:on\w+\s*=/.test(fragment),'Shared header must not interpolate event handlers');
-for(const name of ['index','profile','manage','chat','demos']){
+for(const name of ['index','profile','manage','chat','demos','media']){
  const template=fs.readFileSync(`src/main/resources/templates/dashboard/${name}.html`,'utf8');
  const call=template.match(/topbar\((.*?)\)\}/)[1];
  assert.equal([...call.matchAll(/'([^']*)'/g)].length,7,`${name}: fragment argument count`);

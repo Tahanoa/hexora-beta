@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>رسانه‌ها | Hexora</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/fonts.css"><link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
+  <script src="/js/client.js"></script><script src="/js/i18n.js"></script><script src="/js/dashboard-shell.js" defer></script>
+  <link rel="stylesheet" href="/css/admin-shell.css"><link rel="stylesheet" href="/css/media-library.css">
+</head>
+<body>
+<div th:replace="~{dashboard/fragments/sidebar :: sidebar}"></div>
+<main class="dashboard-main hx-media">
+  <div th:replace="~{dashboard/fragments/topbar :: topbar('mediaTitle', 'mediaSubtitle', 'رسانه‌ها', 'کتابخانهٔ تصاویر و فایل‌های سایت', 'mediaLanguage', 'mediaLanguageText', 'mediaRefresh')}"></div>
+  <section class="hx-media-stats" aria-label="آمار رسانه‌ها" data-i18n-aria-label-fa="آمار رسانه‌ها" data-i18n-aria-label-en="Media statistics">
+    <article><span class="hx-media-stat-icon"><i class="fa-solid fa-folder-open" aria-hidden="true"></i></span><div><small data-i18n-fa="تمام فایل‌ها" data-i18n-en="All files">تمام فایل‌ها</small><strong id="mediaTotal">—</strong></div></article>
+    <article><span class="hx-media-stat-icon"><i class="fa-regular fa-image" aria-hidden="true"></i></span><div><small data-i18n-fa="تصاویر" data-i18n-en="Images">تصاویر</small><strong id="mediaImages">—</strong></div></article>
+    <article><span class="hx-media-stat-icon"><i class="fa-regular fa-file-pdf" aria-hidden="true"></i></span><div><small data-i18n-fa="اسناد PDF" data-i18n-en="PDF documents">اسناد PDF</small><strong id="mediaDocuments">—</strong></div></article>
+    <article><span class="hx-media-stat-icon"><i class="fa-solid fa-hard-drive" aria-hidden="true"></i></span><div><small data-i18n-fa="حجم فایل‌ها" data-i18n-en="File storage">حجم فایل‌ها</small><strong id="mediaStorage">—</strong></div></article>
+  </section>
+  <section class="hx-media-upload" aria-labelledby="mediaUploadTitle">
+    <div class="hx-media-upload-copy"><span class="hx-media-eyebrow" data-i18n-fa="افزودن به کتابخانه" data-i18n-en="ADD TO LIBRARY">افزودن به کتابخانه</span><h2 id="mediaUploadTitle" data-i18n-fa="فایل‌های شما، آمادهٔ استفاده." data-i18n-en="Your files, ready to use.">فایل‌های شما، آمادهٔ استفاده.</h2><p data-i18n-fa="کاور پروژه، تصویر پروفایل یا سند؛ فایل‌ها را یک‌جا نگه دارید و لینکشان را در سایت استفاده کنید." data-i18n-en="Project covers, profile images or documents. Keep your files together and use their links across the site.">کاور پروژه، تصویر پروفایل یا سند؛ فایل‌ها را یک‌جا نگه دارید و لینکشان را در سایت استفاده کنید.</p><small data-i18n-fa="PNG، JPG، GIF، WebP و PDF · هر فایل حداکثر ۵ مگابایت" data-i18n-en="PNG, JPG, GIF, WebP and PDF · up to 5 MB per file">PNG، JPG، GIF، WebP و PDF · هر فایل حداکثر ۵ مگابایت</small></div>
+    <div id="mediaDropzone" class="hx-media-dropzone" role="button" tabindex="0" aria-controls="mediaFileInput" aria-label="انتخاب یا رها کردن فایل‌ها" data-i18n-aria-label-fa="انتخاب یا رها کردن فایل‌ها" data-i18n-aria-label-en="Choose or drop files">
+      <span class="hx-media-drop-icon"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><strong data-i18n-fa="فایل‌ها را اینجا رها کنید" data-i18n-en="Drop your files here">فایل‌ها را اینجا رها کنید</strong><span data-i18n-fa="یا برای انتخاب از دستگاه کلیک کنید" data-i18n-en="or click to choose from your device">یا برای انتخاب از دستگاه کلیک کنید</span><span class="hx-media-choose" data-i18n-fa="انتخاب فایل‌ها" data-i18n-en="Choose files">انتخاب فایل‌ها</span>
+    </div>
+    <input id="mediaFileInput" class="hx-media-sr" type="file" multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf,.pdf" tabindex="-1" aria-label="انتخاب فایل‌ها" data-i18n-aria-label-fa="انتخاب فایل‌ها" data-i18n-aria-label-en="Choose files">
+    <div id="mediaQueuePanel" class="hx-media-queue-panel" hidden><ul id="mediaQueue"></ul><div class="hx-media-queue-actions"><span id="mediaQueueSummary"></span><button id="mediaClearQueue" class="hx-media-button" type="button" data-i18n-fa="پاک کردن صف" data-i18n-en="Clear queue">پاک کردن صف</button><button id="mediaUpload" class="hx-media-button hx-media-primary" type="button"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i><span data-i18n-fa="آپلود فایل‌ها" data-i18n-en="Upload files">آپلود فایل‌ها</span></button></div></div>
+  </section>
+  <div id="mediaStatus" class="hx-media-status" role="status" aria-live="polite"></div>
+  <section class="hx-media-library" aria-labelledby="mediaLibraryTitle">
+    <div class="hx-media-library-heading"><div><h2 id="mediaLibraryTitle" data-i18n-fa="کتابخانهٔ رسانه" data-i18n-en="Media library">کتابخانهٔ رسانه</h2><p id="mediaResultCount" aria-live="polite"></p></div><div class="hx-media-view" role="group" aria-label="حالت نمایش" data-i18n-aria-label-fa="حالت نمایش" data-i18n-aria-label-en="View mode"><button type="button" data-media-view="grid" aria-pressed="true" aria-label="نمایش شبکه‌ای" data-i18n-aria-label-fa="نمایش شبکه‌ای" data-i18n-aria-label-en="Grid view"><i class="fa-solid fa-border-all" aria-hidden="true"></i></button><button type="button" data-media-view="list" aria-pressed="false" aria-label="نمایش فهرستی" data-i18n-aria-label-fa="نمایش فهرستی" data-i18n-aria-label-en="List view"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></div>
+    <div class="hx-media-filters"><label class="hx-media-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="mediaSearch" type="search" placeholder="جست‌وجوی نام فایل…" data-i18n-placeholder-fa="جست‌وجوی نام فایل…" data-i18n-placeholder-en="Search file names…" aria-label="جست‌وجوی رسانه" data-i18n-aria-label-fa="جست‌وجوی رسانه" data-i18n-aria-label-en="Search media"></label><select id="mediaFilter" aria-label="نوع فایل" data-i18n-aria-label-fa="نوع فایل" data-i18n-aria-label-en="File type"><option value="all" data-i18n-fa="تمام فایل‌ها" data-i18n-en="All files">تمام فایل‌ها</option><option value="image" data-i18n-fa="تصاویر" data-i18n-en="Images">تصاویر</option><option value="pdf" data-i18n-fa="اسناد PDF" data-i18n-en="PDF documents">اسناد PDF</option></select><select id="mediaSort" aria-label="مرتب‌سازی" data-i18n-aria-label-fa="مرتب‌سازی" data-i18n-aria-label-en="Sort files"><option value="newest" data-i18n-fa="جدیدترین" data-i18n-en="Newest first">جدیدترین</option><option value="oldest" data-i18n-fa="قدیمی‌ترین" data-i18n-en="Oldest first">قدیمی‌ترین</option><option value="name" data-i18n-fa="نام فایل" data-i18n-en="File name">نام فایل</option><option value="size" data-i18n-fa="بزرگ‌ترین فایل‌ها" data-i18n-en="Largest first">بزرگ‌ترین فایل‌ها</option></select></div>
+    <div id="mediaGrid" class="hx-media-grid" data-view="grid" aria-busy="true"></div>
+    <button id="mediaLoadMore" class="hx-media-button hx-media-more" type="button" hidden data-i18n-fa="نمایش فایل‌های بیشتر" data-i18n-en="Show more files">نمایش فایل‌های بیشتر</button>
+  </section>
+  <dialog id="mediaDetails" class="hx-media-dialog" aria-labelledby="mediaDetailTitle"><div id="mediaDetailContent"></div></dialog>
+  <input id="mediaReplaceInput" class="hx-media-sr" type="file" accept="image/png,image/jpeg,image/gif,image/webp,application/pdf,.pdf" tabindex="-1" aria-label="جایگزینی فایل" data-i18n-aria-label-fa="جایگزینی فایل" data-i18n-aria-label-en="Replace file">
+</main>
+<script src="/js/media-library.js"></script>
+</body></html>

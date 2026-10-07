@@ -25,6 +25,7 @@ public class PageController {
   if(!java.util.Set.of("demos","testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
   if(section.equals("demos"))return "dashboard/demos";
   if(section.equals("contact"))return "dashboard/chat";
+  if(section.equals("media"))return "dashboard/media";
   model.addAttribute("section",section);return "dashboard/manage";
  }
 }
