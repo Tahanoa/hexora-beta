@@ -1,0 +1,89 @@
+/* Contact-only styles: the dashboard keeps its own chat layout. */
+.contact-workspace{--contact-border:#243c33;--contact-muted:#a1b5ac;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.65fr);gap:clamp(28px,4vw,64px);align-items:start;padding-block:72px 84px}
+.contact-intro{margin:0;padding-block:22px;min-width:0}
+.contact-eyebrow{display:flex;align-items:center;gap:10px;direction:ltr;justify-content:flex-end;color:#65ffc0;font-size:.63rem;letter-spacing:.13em}
+[dir=ltr] .contact-eyebrow{justify-content:flex-start}
+.contact-eyebrow>span{width:6px;height:6px;border-radius:50%;background:#65ffc0;box-shadow:0 0 15px #00c26e66}
+.contact-intro h1{font-size:clamp(2.25rem,3.8vw,3.5rem);line-height:1.5;letter-spacing:-.04em;margin:22px 0 18px;font-weight:800}
+.contact-intro h1 strong{color:#65ffc0;font-weight:800}
+.contact-intro>p{font-size:.91rem;line-height:2.2;color:var(--contact-muted);margin:0;max-width:340px}
+.contact-note{display:flex;align-items:flex-start;gap:14px;padding-block:28px;margin-top:32px;border-block:1px solid var(--contact-border)}
+.contact-note>i{width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border:1px solid #00c26e33;border-radius:12px;background:#00c26e0c;color:#65ffc0;font-size:1.1rem}
+.contact-note h2{font-size:.88rem;font-weight:600;margin:0 0 7px}
+.contact-note p{font-size:.78rem;line-height:2;color:var(--contact-muted);margin:0}
+.contact-process{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:19px;color:#c9dfd4;font-size:.74rem;text-decoration:none;transition:color .2s}
+.contact-process:hover{color:#65ffc0}
+[dir=ltr] .contact-process i{transform:rotate(180deg)}
+.contact-social-block{margin-top:32px;font-size:.7rem;color:var(--contact-muted)}
+.contact-social-block:has(.chat-socials:empty){display:none}
+.contact-workspace .chat-socials{gap:10px;margin-top:12px}
+.contact-workspace .chat-socials a{display:flex;align-items:center;gap:8px;color:#c9dfd4;font-size:.72rem;padding:8px 12px;border:1px solid var(--contact-border);border-radius:10px;transition:border-color .2s,color .2s}
+.contact-workspace .chat-socials a:hover{color:#65ffc0;border-color:#00c26e88}
+.contact-panel{min-width:0;border:1px solid var(--contact-border);border-radius:24px;background:linear-gradient(150deg,#11241c,#0b1712 55%);box-shadow:0 24px 80px #0003;overflow:hidden}
+.contact-workspace .chat-app{border:0;border-radius:0;background:transparent;box-shadow:none}
+.contact-workspace .chat-room-header{padding:22px 24px;gap:14px;border-color:var(--contact-border);background:#14241d80}
+.contact-room-identity{display:flex;align-items:center;gap:12px;min-width:0}
+.contact-avatar{position:relative;display:grid;place-items:center;width:44px;height:44px;flex-shrink:0;border:1px solid #37664d;background:linear-gradient(135deg,#1f4631,#12251b);border-radius:14px;font-size:1.35rem;font-weight:800;color:#65ffc0;font-family:var(--font-en)}
+.contact-avatar>span{position:absolute;width:9px;height:9px;border-radius:50%;border:2px solid #14241d;inset-inline-end:-3px;bottom:1px;background:#65ffc0}
+.contact-workspace .chat-room-header h2{font-size:.91rem}
+.contact-workspace .chat-room-header p{font-size:.66rem;color:var(--contact-muted);line-height:1.9;max-width:300px}
+.contact-room-label{white-space:nowrap;font-size:.61rem;border:1px solid #00c26e33;padding:5px 9px;border-radius:20px;color:#a6d9bb;background:#00c26e0a}
+.contact-workspace .chat-phone-settings{font-size:.72rem;padding:12px 24px;border-color:var(--contact-border);color:var(--contact-muted)}
+.contact-workspace .chat-phone-settings summary{cursor:pointer;display:flex;align-items:center;gap:9px;list-style:none}
+.contact-workspace .chat-phone-settings summary::-webkit-details-marker{display:none}
+.contact-workspace .chat-phone-settings summary>i:last-child{margin-inline-start:auto;font-size:.6rem;transition:transform .2s}
+.contact-workspace .chat-phone-settings[open] summary>i:last-child{transform:rotate(180deg)}
+.contact-workspace .chat-phone-settings[open]{background:#142b20}
+.contact-workspace .chat-phone-settings input{flex:1;min-width:130px;width:auto}
+.contact-workspace #phoneStatus{width:100%;font-size:.72rem}
+.contact-workspace .chat-messages{height:355px;padding:26px;gap:20px;overscroll-behavior:contain;background-image:radial-gradient(#40614a26 .7px,transparent .7px);background-size:20px 20px}
+.contact-workspace .chat-bubble{max-width:85%;padding:13px 17px;background:#1a2e24;border-color:#304a3b;border-radius:16px 4px 16px 16px}
+.contact-workspace .chat-bubble.mine{background:linear-gradient(135deg,#194b32,#123b28);border-color:#367654;border-radius:4px 16px 16px 16px}
+[dir=ltr] .contact-workspace .chat-bubble{border-radius:4px 16px 16px 16px}
+[dir=ltr] .contact-workspace .chat-bubble.mine{border-radius:16px 4px 16px 16px}
+.contact-workspace .chat-bubble p{font-size:.82rem;line-height:2}
+.contact-workspace .chat-bubble time{color:#a2bcae;font-size:.61rem}
+.contact-workspace .chat-composer{padding:0 20px 10px;border:0}
+.contact-input-box{border:1px solid #345341;background:#09140f;border-radius:16px;padding:12px;transition:border-color .2s,box-shadow .2s}
+.contact-input-box:focus-within{border-color:#00c26e;box-shadow:0 0 0 3px #00c26e10}
+.contact-workspace .chat-composer textarea{display:block;min-height:70px;max-height:180px;padding:6px 4px;resize:vertical;background:transparent;border:0;border-radius:0;font-size:.84rem;line-height:1.9;box-shadow:none}
+.contact-workspace .chat-composer textarea::placeholder{color:#859b90}
+.contact-workspace .chat-composer-actions{margin:10px 0 0;gap:10px}
+.contact-workspace .chat-composer .contact-attach{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px;background:transparent;color:#b3c6bc;font-size:.7rem;border:0;border-radius:8px}
+.contact-workspace .chat-composer .contact-attach:hover:not(:disabled){color:#65ffc0;background:#00c26e10}
+.contact-workspace .contact-count{margin-inline-start:auto;font-size:.62rem;color:#91a49c;font-variant-numeric:tabular-nums}
+.contact-workspace .chat-composer #chatSend{padding:10px 16px;min-height:42px;border-radius:10px;font-size:.78rem;font-weight:700;box-shadow:0 4px 16px #00c26e12}
+.contact-workspace .chat-composer #chatSend:hover:not(:disabled){background:#65ffc0}
+.contact-composer-help{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
+.contact-workspace .contact-composer-help small{color:#a1b5ac;font-size:.59rem;letter-spacing:0}
+.contact-workspace .chat-status{color:var(--contact-muted);padding:0 24px 8px;min-height:24px;font-size:.72rem}
+.contact-workspace .chat-status.error{color:#ffabab}
+.contact-workspace .chat-service-request{margin:0;padding:16px 22px;border-radius:0;border-width:0 0 1px;font-size:.78rem}
+.contact-panel-foot{display:flex;align-items:center;gap:8px;border-top:1px solid var(--contact-border);padding:14px 22px;background:#09140f66;font-size:.62rem;color:var(--contact-muted)}
+.contact-panel-foot>i{color:#65ffc0}
+.contact-panel-brand{margin-inline-start:auto;direction:ltr;font-size:.52rem;letter-spacing:.1em;color:#94a99d}
+.contact-workspace .contact-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:550px;padding:42px 28px;border:0;border-radius:0;margin:0;background:radial-gradient(ellipse at 50% 30%,#00c26e12,transparent 60%)}
+.contact-workspace .contact-gate:empty{display:none}
+.contact-gate-icon,.contact-empty-icon{display:grid;place-items:center;width:70px;height:70px;background:#00c26e0d;border:1px solid #00c26e33;border-radius:22px;color:#65ffc0;font-size:1.8rem;margin-bottom:24px;box-shadow:0 0 0 10px #00c26e04}
+.contact-gate .contact-gate-eyebrow{color:#65ffc0;font-size:.57rem;letter-spacing:.15em;direction:ltr}
+.contact-gate h2{font-size:clamp(1.2rem,2vw,1.6rem);line-height:1.8;margin:12px 0;color:#effaf4}
+.contact-gate p{font-size:.82rem;color:var(--contact-muted);max-width:330px;line-height:2.1;margin:0 0 24px}
+.contact-gate-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.contact-workspace .contact-gate a{margin:0;min-width:120px;justify-content:center;padding:11px 18px;font-size:.8rem}
+.contact-workspace .contact-gate a.contact-register{background:transparent;border:1px solid #355642;color:#effaf4}
+.contact-gate .contact-gate-hint{font-size:.65rem;margin:25px 0 0}
+.contact-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;margin:auto;text-align:center;width:100%;max-width:400px;padding:18px 0}
+.contact-empty-icon{width:54px;height:54px;border-radius:17px;font-size:1.4rem;margin-bottom:17px}
+.contact-empty h3{font-size:1.1rem;line-height:1.8;margin:0 0 9px}
+.contact-empty p{font-size:.77rem;line-height:2;color:var(--contact-muted);max-width:310px;margin:0}
+.contact-starters{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:20px}
+.contact-starters button{font:inherit;font-size:.69rem;border:1px solid #355642;border-radius:20px;padding:8px 12px;color:#cde5d7;background:#10251a;cursor:pointer;transition:border-color .2s,background .2s}
+.contact-starters button:hover:not(:disabled){border-color:#00c26e;background:#193c29}
+.contact-starters button:disabled{opacity:.5;cursor:default}
+.contact-workspace :is(button,a,summary,textarea,input):focus-visible{outline:2px solid #65ffc0;outline-offset:4px}
+.contact-workspace textarea:focus-visible{outline-offset:0}
+@media(min-width:1400px){.contact-workspace{width:min(1240px,calc(100% - 64px));gap:72px;padding-top:85px}}
+@media(max-width:1000px){.contact-workspace{grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr);gap:26px;padding-top:48px}.contact-room-label{display:none}.contact-intro h1{font-size:2.35rem}.contact-note{padding-block:22px;margin-top:24px}.contact-workspace .chat-messages{padding:20px}.contact-keyboard{display:none}}
+@media(max-width:760px){.contact-workspace{grid-template-columns:1fr;gap:28px;padding-block:30px 45px}.contact-intro{padding:0}.contact-intro h1{font-size:clamp(2.1rem,7vw,3rem);line-height:1.4;margin:16px 0}.contact-intro h1 br{display:none}.contact-intro h1 span,.contact-intro h1 strong{display:inline}.contact-intro h1 strong::before,.contact-intro h1 strong::after{content:' '}.contact-intro>p{max-width:520px;font-size:.84rem}.contact-note{display:none}.contact-process{font-size:.72rem;padding-bottom:0}.contact-social-block{margin-top:20px}.contact-workspace .chat-socials a{padding:6px 10px}.contact-panel{border-radius:20px}.contact-workspace .chat-room-header{padding:18px}.contact-room-label{display:block}.contact-workspace .chat-phone-settings{padding:12px 18px}.contact-workspace .chat-messages{height:clamp(310px,48dvh,420px);padding:18px;gap:16px}.contact-workspace .chat-bubble{max-width:92%}.contact-workspace .chat-composer{padding-inline:14px}.contact-workspace .contact-gate{min-height:420px;padding:32px 20px}.contact-panel-foot{padding:13px 18px}.contact-workspace .chat-service-request{padding:16px;margin:0;border-radius:0;border-width:0 0 1px;font-size:.78rem}.contact-empty h3{font-size:1rem}}
+@media(max-width:380px){.contact-room-label,.contact-panel-brand{display:none}.contact-workspace .chat-composer .contact-attach span{display:none}.contact-intro h1{font-size:2rem}.contact-workspace .chat-room-header p{font-size:.62rem}.contact-starters{gap:6px}.contact-starters button{font-size:.65rem}}
+@media(prefers-reduced-motion:reduce){.contact-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
