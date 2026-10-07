@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد | Hexora</title>
+    <title data-i18n-fa="داشبورد | Hexora" data-i18n-en="Dashboard | Hexora">داشبورد | Hexora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 <script src="/js/client.js"></script>
 <script src="/js/dashboard-shell.js" defer></script>
-<link rel="stylesheet" href="/css/admin-shell.css"></head>
+<link rel="stylesheet" href="/css/admin-shell.css"><script src="/js/i18n.js"></script></head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
 <!-- ===== Sidebar ===== -->
@@ -68,7 +68,7 @@
         <div class="stat-card" style="display:none;">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[#8A94A6] text-sm font-medium" id="statProjectsLabel">کل پروژه‌ها</p>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statProjectsLabel"><span data-i18n-fa="کل پروژه‌ها" data-i18n-en="Total projects">کل پروژه‌ها</span></p>
                     <p class="stat-value" id="totalProjects">0</p>
                 </div>
                 <div class="stat-icon bg-[#00C26E]/10 text-[#00C26E]">
@@ -79,7 +79,7 @@
         <div class="stat-card" style="display:none;">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[#8A94A6] text-sm font-medium" id="statCompletedLabel">پروژه‌های تکمیل شده</p>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statCompletedLabel"><span data-i18n-fa="پروژه‌های تکمیل شده" data-i18n-en="Completed projects">پروژه‌های تکمیل شده</span></p>
                     <p class="stat-value" id="completedProjects">0</p>
                 </div>
                 <div class="stat-icon bg-[#4DFFB8]/10 text-[#4DFFB8]">
@@ -90,7 +90,7 @@
         <div class="stat-card" style="display:none;">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[#8A94A6] text-sm font-medium" id="statMessagesLabel">پیام‌های خوانده نشده</p>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statMessagesLabel"><span data-i18n-fa="پیام‌های خوانده نشده" data-i18n-en="Unread messages">پیام‌های خوانده نشده</span></p>
                     <p class="stat-value" id="unreadMessages">0</p>
                 </div>
                 <div class="stat-icon bg-[#FBBF24]/10 text-[#FBBF24]">
@@ -101,7 +101,7 @@
         <div class="stat-card" style="display:none;">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[#8A94A6] text-sm font-medium" id="statSkillsLabel">مهارت‌ها</p>
+                    <p class="text-[#8A94A6] text-sm font-medium" id="statSkillsLabel"><span data-i18n-fa="مهارت‌ها" data-i18n-en="Skills">مهارت‌ها</span></p>
                     <p class="stat-value" id="totalSkills">0</p>
                 </div>
                 <div class="stat-icon bg-[#00C26E]/10 text-[#00C26E]">
@@ -116,8 +116,8 @@
         <!-- Projects by Status -->
         <div class="chart-container">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold" id="chartStatusTitle">وضعیت پروژه‌ها</h3>
-                <span class="text-xs text-[#8A94A6]" id="totalProjectsLabel">0 پروژه</span>
+                <h3 class="text-lg font-semibold" id="chartStatusTitle"><span data-i18n-fa="وضعیت پروژه‌ها" data-i18n-en="Project status">وضعیت پروژه‌ها</span></h3>
+                <span class="text-xs text-[#8A94A6]" id="totalProjectsLabel"><span data-i18n-fa="0 پروژه" data-i18n-en="0 projects">0 پروژه</span></span>
             </div>
             <div class="space-y-4" id="projectStatusList">
                 <!-- Skeletons -->
@@ -145,21 +145,21 @@
 
                 <!-- Real Status -->
                 <div class="status-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm" id="statusInProgress">در حال انجام</span>
+                    <span class="text-[#8A94A6] text-sm" id="statusInProgress"><span data-i18n-fa="در حال انجام" data-i18n-en="In progress">در حال انجام</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="inProgressBar" style="width:0%; background:#FBBF24;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="inProgressCount">0</span>
                 </div>
                 <div class="status-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm" id="statusCompleted">تکمیل شده</span>
+                    <span class="text-[#8A94A6] text-sm" id="statusCompleted"><span data-i18n-fa="تکمیل شده" data-i18n-en="Completed">تکمیل شده</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="completedBar" style="width:0%; background:#00C26E;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="completedCount">0</span>
                 </div>
                 <div class="status-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm" id="statusPlanning">برنامه‌ریزی شده</span>
+                    <span class="text-[#8A94A6] text-sm" id="statusPlanning"><span data-i18n-fa="برنامه‌ریزی شده" data-i18n-en="Planned">برنامه‌ریزی شده</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="planningBar" style="width:0%; background:#8A94A6;"></div>
                     </div>
@@ -171,8 +171,8 @@
         <!-- Skills by Category -->
         <div class="chart-container">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold" id="chartSkillsTitle">مهارت‌ها بر اساس دسته‌بندی</h3>
-                <span class="text-xs text-[#8A94A6]" id="totalSkillsLabel">0 مهارت</span>
+                <h3 class="text-lg font-semibold" id="chartSkillsTitle"><span data-i18n-fa="مهارت‌ها بر اساس دسته‌بندی" data-i18n-en="Skills by category">مهارت‌ها بر اساس دسته‌بندی</span></h3>
+                <span class="text-xs text-[#8A94A6]" id="totalSkillsLabel"><span data-i18n-fa="0 مهارت" data-i18n-en="0 skills">0 مهارت</span></span>
             </div>
             <div class="space-y-4" id="skillsCategoryList">
                 <!-- Skeletons -->
@@ -214,35 +214,35 @@
 
                 <!-- Real Skills -->
                 <div class="skill-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm skill-name">بک‌اند</span>
+                    <span class="text-[#8A94A6] text-sm skill-name"><span data-i18n-fa="بک‌اند" data-i18n-en="Backend">بک‌اند</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="backendBar" style="width:0%; background:#00C26E;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="backendCount">0</span>
                 </div>
                 <div class="skill-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm skill-name">فرانت‌اند</span>
+                    <span class="text-[#8A94A6] text-sm skill-name"><span data-i18n-fa="فرانت‌اند" data-i18n-en="Frontend">فرانت‌اند</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="frontendBar" style="width:0%; background:#4DFFB8;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="frontendCount">0</span>
                 </div>
                 <div class="skill-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm skill-name">پایگاه داده</span>
+                    <span class="text-[#8A94A6] text-sm skill-name"><span data-i18n-fa="پایگاه داده" data-i18n-en="Database">پایگاه داده</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="databaseBar" style="width:0%; background:#FBBF24;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="databaseCount">0</span>
                 </div>
                 <div class="skill-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm skill-name">دواپس</span>
+                    <span class="text-[#8A94A6] text-sm skill-name"><span data-i18n-fa="دواپس" data-i18n-en="DevOps">دواپس</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="devopsBar" style="width:0%; background:#EF4444;"></div>
                     </div>
                     <span class="text-sm font-semibold" id="devopsCount">0</span>
                 </div>
                 <div class="skill-item flex items-center justify-between" style="display:none;">
-                    <span class="text-[#8A94A6] text-sm skill-name">ابزارها</span>
+                    <span class="text-[#8A94A6] text-sm skill-name"><span data-i18n-fa="ابزارها" data-i18n-en="Tools">ابزارها</span></span>
                     <div class="flex-1 mx-4 chart-bar">
                         <div class="bar-fill" id="toolsBar" style="width:0%; background:#8B5CF6;"></div>
                     </div>
@@ -257,9 +257,9 @@
         <!-- Recent Projects -->
         <div class="chart-container xl:col-span-1">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold" id="recentProjectsTitle">پروژه‌های اخیر</h3>
+                <h3 class="text-lg font-semibold" id="recentProjectsTitle"><span data-i18n-fa="پروژه‌های اخیر" data-i18n-en="Recent projects">پروژه‌های اخیر</span></h3>
                 <a href="#" class="text-[#00C26E] text-sm hover:text-[#4DFFB8] transition-colors flex items-center gap-1 group">
-                    <span id="viewAllText">مشاهده همه</span>
+                    <span id="viewAllText"><span data-i18n-fa="مشاهده همه" data-i18n-en="View all">مشاهده همه</span></span>
                     <i class="fas fa-arrow-left text-xs group-hover:translate-x-1 transition-transform"></i>
                 </a>
             </div>
@@ -306,22 +306,22 @@
 
         <!-- Experiences -->
         <div class="chart-container xl:col-span-1">
-            <h3 class="text-lg font-semibold mb-4" id="experiencesTitle">سوابق کاری</h3>
+            <h3 class="text-lg font-semibold mb-4" id="experiencesTitle"><span data-i18n-fa="سوابق کاری" data-i18n-en="Work experience">سوابق کاری</span></h3>
             <div id="experiencesList">
                 <div class="text-center text-[#8A94A6] py-4">
                     <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
-                    <span class="text-sm">در حال بارگذاری...</span>
+                    <span class="text-sm"><span data-i18n-fa="در حال بارگذاری..." data-i18n-en="Loading...">در حال بارگذاری...</span></span>
                 </div>
             </div>
         </div>
 
         <!-- Services -->
         <div class="chart-container xl:col-span-1">
-            <h3 class="text-lg font-semibold mb-4" id="servicesTitle">سرویس‌ها</h3>
+            <h3 class="text-lg font-semibold mb-4" id="servicesTitle"><span data-i18n-fa="سرویس‌ها" data-i18n-en="Services">سرویس‌ها</span></h3>
             <div id="servicesList">
                 <div class="text-center text-[#8A94A6] py-4">
                     <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
-                    <span class="text-sm">در حال بارگذاری...</span>
+                    <span class="text-sm"><span data-i18n-fa="در حال بارگذاری..." data-i18n-en="Loading...">در حال بارگذاری...</span></span>
                 </div>
             </div>
         </div>
@@ -331,42 +331,42 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Statistics -->
         <div class="chart-container">
-            <h3 class="text-lg font-semibold mb-4" id="statisticsTitle">آمارهای سایت</h3>
+            <h3 class="text-lg font-semibold mb-4" id="statisticsTitle"><span data-i18n-fa="آمارهای سایت" data-i18n-en="Site statistics">آمارهای سایت</span></h3>
             <div id="statisticsList">
                 <div class="text-center text-[#8A94A6] py-4">
                     <i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>
-                    <span class="text-sm">در حال بارگذاری...</span>
+                    <span class="text-sm"><span data-i18n-fa="در حال بارگذاری..." data-i18n-en="Loading...">در حال بارگذاری...</span></span>
                 </div>
             </div>
         </div>
 
         <!-- Quick Actions -->
         <div class="chart-container">
-            <h3 class="text-lg font-semibold mb-4" id="quickActionsTitle">دسترسی سریع</h3>
+            <h3 class="text-lg font-semibold mb-4" id="quickActionsTitle"><span data-i18n-fa="دسترسی سریع" data-i18n-en="Quick access">دسترسی سریع</span></h3>
             <div class="grid grid-cols-2 gap-3">
                 <a href="/manage/projects" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#00C26E]/10 flex items-center justify-center text-[#00C26E] mx-auto mb-2">
                         <i class="fas fa-plus"></i>
                     </div>
-                    <span class="text-xs font-medium" id="actionNewProject">پروژه جدید</span>
+                    <span class="text-xs font-medium" id="actionNewProject"><span data-i18n-fa="پروژه جدید" data-i18n-en="New project">پروژه جدید</span></span>
                 </a>
                 <a href="/manage/skills" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#4DFFB8]/10 flex items-center justify-center text-[#4DFFB8] mx-auto mb-2">
                         <i class="fas fa-code"></i>
                     </div>
-                    <span class="text-xs font-medium" id="actionNewSkill">مهارت جدید</span>
+                    <span class="text-xs font-medium" id="actionNewSkill"><span data-i18n-fa="مهارت جدید" data-i18n-en="New skill">مهارت جدید</span></span>
                 </a>
                 <a href="/manage/experience" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#FBBF24]/10 flex items-center justify-center text-[#FBBF24] mx-auto mb-2">
                         <i class="fas fa-briefcase"></i>
                     </div>
-                    <span class="text-xs font-medium" id="actionNewExperience">سابقه جدید</span>
+                    <span class="text-xs font-medium" id="actionNewExperience"><span data-i18n-fa="سابقه جدید" data-i18n-en="New experience">سابقه جدید</span></span>
                 </a>
                 <a href="/manage/contact" class="bg-[#0B0F14] rounded-xl p-4 text-center hover:bg-[#1A1F26] transition-all duration-300 border border-transparent hover:border-[rgba(0,194,110,0.1)]">
                     <div class="w-10 h-10 rounded-lg bg-[#EF4444]/10 flex items-center justify-center text-[#EF4444] mx-auto mb-2">
                         <i class="fas fa-envelope"></i>
                     </div>
-                    <span class="text-xs font-medium" id="actionViewMessages">پیام‌ها</span>
+                    <span class="text-xs font-medium" id="actionViewMessages"><span data-i18n-fa="پیام‌ها" data-i18n-en="Messages">پیام‌ها</span></span>
                 </a>
             </div>
         </div>
@@ -380,7 +380,7 @@
         <span class="mx-2">•</span>
         <span id="footerStatus" class="text-[#00C26E]">
                 <i class="fas fa-circle text-[8px] ml-1"></i>
-                آنلاین
+                <span data-i18n-fa="آنلاین" data-i18n-en="Online">آنلاین</span>
             </span>
     </div>
 </div>

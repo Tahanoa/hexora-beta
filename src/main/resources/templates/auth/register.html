@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ثبت‌نام | Hexora</title>
+    <title data-i18n-fa="ثبت‌نام | Hexora" data-i18n-en="Register | Hexora">ثبت‌نام | Hexora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,17 +14,17 @@
 <script src="/js/client.js"></script>
 <link rel="stylesheet" href="/css/loading.css">
 <script src="/js/loading.js"></script>
-</head>
+<script src="/js/i18n.js"></script></head>
 <body>
 <!-- Hexagon Loading -->
-<div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری">
+<div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری" data-i18n-aria-label-fa="در حال بارگذاری" data-i18n-aria-label-en="Loading">
     <div class="cssload-cssload-spinner" aria-hidden="true"></div>
 </div>
 
 <!-- Language Toggle -->
-<button type="button" class="lang-toggle" onclick="toggleLanguage()" title="تغییر زبان / Change Language" aria-label="تغییر زبان / Change Language">
+<button type="button" class="lang-toggle" onclick="toggleLanguage()" title="تغییر زبان / Change Language" aria-label="تغییر زبان / Change Language" data-i18n-aria-label-fa="تغییر زبان / Change Language" data-i18n-aria-label-en="Change language" data-i18n-title-fa="تغییر زبان / Change Language" data-i18n-title-en="Change language">
     <span class="lang-icon"><i class="fas fa-globe"></i></span>
-    <span class="lang-text" id="langText">فارسی</span>
+    <span class="lang-text" id="langText"><span data-i18n-fa="فارسی" data-i18n-en="English">فارسی</span></span>
     <span class="lang-short" id="langShort">FA</span>
 </button>
 
@@ -38,7 +38,7 @@
         <div class="auth-logo">
             <div class="logo-icon image-logo"><img src="/images/logo.png" alt="Hexora"></div>
             <h1>Hexora</h1>
-            <p class="subtitle" id="registerSubtitle">ایجاد حساب کاربری جدید</p>
+            <p class="subtitle" id="registerSubtitle"><span data-i18n-fa="ایجاد حساب کاربری جدید" data-i18n-en="Create a new account">ایجاد حساب کاربری جدید</span></p>
         </div>
 
         <!-- Alert Container -->
@@ -48,7 +48,7 @@
         <form id="registerForm" class="auth-form" th:action="@{/api/auth/register}" method="POST">
             <!-- Username -->
             <div class="form-group">
-                <label for="username" id="usernameLabel">نام کاربری</label>
+                <label for="username" id="usernameLabel"><span data-i18n-fa="نام کاربری" data-i18n-en="Username">نام کاربری</span></label>
                 <div class="input-wrapper">
                     <input
                             type="text"
@@ -60,15 +60,15 @@
                             maxlength="50"
                             autocomplete="username"
                             autofocus
-                    >
+                     data-i18n-placeholder-fa="نام کاربری خود را انتخاب کنید" data-i18n-placeholder-en="Choose your username">
                     <span class="input-icon"><i class="fas fa-user"></i></span>
                 </div>
-                <small style="color: var(--hexora-gray); font-size: 0.75rem;" id="usernameHint">حداقل ۳ و حداکثر ۵۰ کاراکتر</small>
+                <small style="color: var(--hexora-gray); font-size: 0.75rem;" id="usernameHint"><span data-i18n-fa="حداقل ۳ و حداکثر ۵۰ کاراکتر" data-i18n-en="Between 3 and 50 characters">حداقل ۳ و حداکثر ۵۰ کاراکتر</span></small>
             </div>
 
             <!-- Email -->
             <div class="form-group">
-                <label for="email" id="emailLabel">آدرس ایمیل</label>
+                <label for="email" id="emailLabel"><span data-i18n-fa="آدرس ایمیل" data-i18n-en="Email address">آدرس ایمیل</span></label>
                 <div class="input-wrapper">
                     <input
                             type="email"
@@ -77,14 +77,14 @@
                             placeholder="ایمیل خود را وارد کنید"
                             required
                             autocomplete="email"
-                    >
+                     data-i18n-placeholder-fa="ایمیل خود را وارد کنید" data-i18n-placeholder-en="Enter your email">
                     <span class="input-icon"><i class="fas fa-envelope"></i></span>
                 </div>
             </div>
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password" id="passwordLabel">رمز عبور</label>
+                <label for="password" id="passwordLabel"><span data-i18n-fa="رمز عبور" data-i18n-en="Password">رمز عبور</span></label>
                 <div class="input-wrapper">
                     <input
                             type="password"
@@ -94,14 +94,14 @@
                             required
                             minlength="6"
                             autocomplete="new-password"
-                    >
+                     data-i18n-placeholder-fa="رمز عبور قوی انتخاب کنید" data-i18n-placeholder-en="Choose a strong password">
                     <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="نمایش رمز عبور" aria-pressed="false">
+                    <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="نمایش رمز عبور" aria-pressed="false" data-i18n-aria-label-fa="نمایش رمز عبور" data-i18n-aria-label-en="Show password">
                         <i class="fas fa-eye" id="passwordToggleIcon"></i>
                     </button>
                 </div>
                 <small style="color: var(--hexora-gray); font-size: 0.75rem;" id="passwordHint">
-                    حداقل ۶ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد
+                    <span data-i18n-fa="حداقل ۸ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد" data-i18n-en="At least 8 characters, including uppercase and lowercase letters, a number and a symbol">حداقل ۸ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد</span>
                 </small>
             </div>
 
@@ -113,22 +113,22 @@
                     <div id="strengthBar3" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
                     <div id="strengthBar4" style="flex:1; height: 4px; background: var(--hexora-dark-gray); border-radius: 2px; transition: background 0.3s;"></div>
                 </div>
-                <span id="strengthText" style="color: var(--hexora-gray); font-size: 0.75rem;">ضعیف</span>
+                <span id="strengthText" style="color: var(--hexora-gray); font-size: 0.75rem;"><span data-i18n-fa="ضعیف" data-i18n-en="Weak">ضعیف</span></span>
             </div>
 
             <!-- Submit Button -->
             <button type="submit" id="registerButton" class="btn-primary" style="margin-top: 1.5rem;">
-                <span class="btn-text" id="registerBtnText">ثبت نام</span>
+                <span class="btn-text" id="registerBtnText"><span data-i18n-fa="ثبت نام" data-i18n-en="Register">ثبت نام</span></span>
                 <div class="spinner"></div>
             </button>
         </form>
 
         <!-- Divider -->
-        <div class="auth-divider" id="dividerText">قبلاً ثبت نام کرده‌اید؟</div>
+        <div class="auth-divider" id="dividerText"><span data-i18n-fa="قبلاً ثبت نام کرده‌اید؟" data-i18n-en="Already registered?">قبلاً ثبت نام کرده‌اید؟</span></div>
 
         <!-- Login Link -->
         <div class="auth-footer">
-            <a th:href="@{/login}" id="loginLink">وارد شوید</a>
+            <a th:href="@{/login}" id="loginLink"><span data-i18n-fa="وارد شوید" data-i18n-en="Sign in">وارد شوید</span></a>
         </div>
     </div>
 </div>
@@ -148,7 +148,7 @@
             emailPlaceholder: 'ایمیل خود را وارد کنید',
             passwordLabel: 'رمز عبور',
             passwordPlaceholder: 'رمز عبور قوی انتخاب کنید',
-            passwordHint: 'حداقل ۶ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد',
+            passwordHint: 'حداقل ۸ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد',
             registerBtnText: 'ثبت نام',
             dividerText: 'قبلاً ثبت نام کرده‌اید؟',
             loginLink: 'وارد شوید',
@@ -174,7 +174,7 @@
             emailPlaceholder: 'Enter your email',
             passwordLabel: 'Password',
             passwordPlaceholder: 'Choose a strong password',
-            passwordHint: 'Min 6 chars, include uppercase, lowercase, number and symbol',
+            passwordHint: 'Min 8 chars, include uppercase, lowercase, number and symbol',
             registerBtnText: 'Sign Up',
             dividerText: 'Already have an account?',
             loginLink: 'Login',

@@ -2,6 +2,7 @@
 
 // ===== Toast System =====
 function showToast(type, title, message, duration = 4000) {
+    title=window.HexoraI18n.tr(title);message=window.HexoraI18n.tr(message);
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
@@ -50,7 +51,7 @@ function togglePassword() {
     }
 
     button.setAttribute('aria-pressed', String(showingPassword));
-    button.setAttribute('aria-label', showingPassword ? 'پنهان کردن رمز عبور' : 'نمایش رمز عبور');
+    button.setAttribute('aria-label', getCurrentLang()==='en'?(showingPassword?'Hide password':'Show password'):(showingPassword?'پنهان کردن رمز عبور':'نمایش رمز عبور'));
 }
 
 // ===== Get Language =====
@@ -96,7 +97,7 @@ async function handleLogin(form) {
                 window.location.href = pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):'/';
             }, 500);
         } else {
-            const errorMsg = result.message || (lang === 'fa'
+            const errorMsg = window.HexoraI18n.tr(result.message) || (lang === 'fa'
                 ? 'نام کاربری یا رمز عبور اشتباه است'
                 : 'Invalid username or password');
             showToast('error', lang === 'fa' ? 'خطا' : 'Error', errorMsg);
@@ -159,7 +160,7 @@ async function handleRegister(form) {
                 window.location.href = '/login';
             }, 1500);
         } else {
-            const errorMsg = result.message || (lang === 'fa'
+            const errorMsg = window.HexoraI18n.tr(result.message) || (lang === 'fa'
                 ? 'مشکل در ثبت نام'
                 : 'Registration failed');
             showToast('error', lang === 'fa' ? 'خطا' : 'Error', errorMsg);

@@ -372,12 +372,12 @@ function updateRecentProjects(projects) {
                     <i class="fas fa-file-code"></i>
                 </div>
                 <div class="min-w-0">
-                    <div class="font-medium text-sm truncate">${project.title || 'بدون عنوان'}</div>
+                    <div class="font-medium text-sm truncate">${project.title || window.HexoraI18n.tr('بدون عنوان')}</div>
                     <div class="text-xs text-[#8A94A6] truncate">${project.clientName || ''}</div>
                 </div>
             </div>
             <span class="project-status ${statusColors[statusKey] || 'status-planning'} flex-shrink-0">
-                ${statusLabels[statusKey] || project.status}
+                ${window.HexoraI18n.markup(statusKey in statusLabels?statusKey:project.status)}
             </span>
         `;
         container.appendChild(div);
@@ -395,7 +395,7 @@ function updateExperiences(experiences) {
         container.innerHTML = `
             <div class="text-center text-[#8A94A6] py-4">
                 <i class="fas fa-briefcase text-2xl mb-2 block opacity-50"></i>
-                <span class="text-sm">هیچ سابقه کاری یافت نشد</span>
+                <span class="text-sm">${window.HexoraI18n.markup("هیچ سابقه کاری یافت نشد")}</span>
             </div>
         `;
         return;
@@ -413,7 +413,7 @@ function updateExperiences(experiences) {
                 <div class="text-xs text-[#8A94A6] truncate">${exp.company || ''}</div>
             </div>
             <span class="text-xs text-[#8A94A6] flex-shrink-0">
-                ${exp.isCurrent ? 'فعلی' : (exp.endDate || '')}
+                ${exp.isCurrent ? window.HexoraI18n.markup('فعلی') : (exp.endDate || '')}
             </span>
         `;
         container.appendChild(div);
@@ -431,7 +431,7 @@ function updateServices(services) {
         container.innerHTML = `
             <div class="text-center text-[#8A94A6] py-4">
                 <i class="fas fa-cogs text-2xl mb-2 block opacity-50"></i>
-                <span class="text-sm">هیچ سرویسی یافت نشد</span>
+                <span class="text-sm">${window.HexoraI18n.markup("هیچ سرویسی یافت نشد")}</span>
             </div>
         `;
         return;
@@ -464,7 +464,7 @@ function updateStatistics(statistics) {
         container.innerHTML = `
             <div class="text-center text-[#8A94A6] py-4">
                 <i class="fas fa-chart-bar text-2xl mb-2 block opacity-50"></i>
-                <span class="text-sm">هیچ آماری یافت نشد</span>
+                <span class="text-sm">${window.HexoraI18n.markup("هیچ آماری یافت نشد")}</span>
             </div>
         `;
         return;
@@ -483,7 +483,7 @@ function updateStatistics(statistics) {
 
 function updateTimestamp() {
     const now = new Date();
-    const time = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const time = now.toLocaleTimeString(currentLang==='en'?'en-US':'fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     document.getElementById('updateTime').textContent = time;
 }
 
@@ -503,6 +503,7 @@ function refreshData() {
 }
 
 function showToast(type, title, message, duration = 4000) {
+    title=window.HexoraI18n.tr(title);message=window.HexoraI18n.tr(message);
     const container = document.getElementById('toastContainer');
     if (!container) return;
 

@@ -25,6 +25,7 @@
   const routes={dashboard:['داشبورد','Dashboard'],profile:['پروفایل','Profile'],projects:['پروژه‌ها','Projects'],demos:['دموساز','Demo studio'],skills:['مهارت‌ها','Skills'],experience:['سوابق کاری','Experience'],services:['خدمات','Services'],statistics:['آمارها','Statistics'],media:['رسانه‌ها','Media'],testimonials:['نظرات کارفرمایان','Testimonials'],contact:['پیام‌ها','Messages']};
   function language(){
     const fa=document.documentElement.lang!=='en';
+    const page=routes[location.pathname.split('/').pop()];if(page)document.title=page[fa?0:1]+' | Hexora';
     document.querySelectorAll('[data-admin-language]').forEach(el=>el.textContent=fa?'فارسی':'English');
     document.querySelectorAll('[data-admin-refresh]').forEach(el=>el.setAttribute('aria-label',fa?'تازه‌سازی':'Refresh'));
     document.querySelectorAll('#sidebar a[href]').forEach(link=>{

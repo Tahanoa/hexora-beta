@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>پروفایل | Hexora</title>
+  <title data-i18n-fa="پروفایل | Hexora" data-i18n-en="Profile | Hexora">پروفایل | Hexora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
@@ -12,7 +12,7 @@
   <link rel="stylesheet" th:href="@{/css/profile.css}">
 <script src="/js/client.js"></script>
 <script src="/js/dashboard-shell.js" defer></script>
-<link rel="stylesheet" href="/css/admin-shell.css"></head>
+<link rel="stylesheet" href="/css/admin-shell.css"><script src="/js/i18n.js"></script></head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
 <!-- ===== Sidebar ===== -->
@@ -42,17 +42,17 @@
               </div>
             </div>
             <button type="button" onclick="document.getElementById('avatarInput').click()" aria-label="تغییر تصویر پروفایل"
-                    class="absolute bottom-0 right-0 bg-[#00C26E] hover:bg-[#4DFFB8] text-[#0B0F14] w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 border-2 border-[#0B0F14]">
+                    class="absolute bottom-0 right-0 bg-[#00C26E] hover:bg-[#4DFFB8] text-[#0B0F14] w-8 h-8 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 border-2 border-[#0B0F14]" data-i18n-aria-label-fa="تغییر تصویر پروفایل" data-i18n-aria-label-en="Change profile picture">
               <i class="fas fa-camera text-xs"></i>
             </button>
             <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
           </div>
-          <h2 class="text-xl font-bold mt-3" id="profileFullName">کاربر</h2>
-          <p class="text-[#8A94A6] text-sm" id="profileRole">ادمین</p>
+          <h2 class="text-xl font-bold mt-3" id="profileFullName"><span data-i18n-fa="کاربر" data-i18n-en="User">کاربر</span></h2>
+          <p class="text-[#8A94A6] text-sm" id="profileRole"><span data-i18n-fa="ادمین" data-i18n-en="Admin">ادمین</span></p>
           <div class="flex justify-center gap-2 mt-2">
                         <span class="px-3 py-1 rounded-full text-xs bg-[#00C26E]/10 text-[#00C26E] border border-[#00C26E]/20">
                             <i class="fas fa-check-circle text-[10px] ml-1"></i>
-                            <span id="profileStatus">آنلاین</span>
+                            <span id="profileStatus"><span data-i18n-fa="آنلاین" data-i18n-en="Online">آنلاین</span></span>
                         </span>
           </div>
         </div>
@@ -64,7 +64,7 @@
               <i class="fas fa-envelope text-sm"></i>
             </div>
             <div>
-              <p class="text-xs text-[#8A94A6]" id="emailLabel">ایمیل</p>
+              <p class="text-xs text-[#8A94A6]" id="emailLabel"><span data-i18n-fa="ایمیل" data-i18n-en="Email">ایمیل</span></p>
               <p class="text-sm font-medium" id="profileEmail">---</p>
             </div>
           </div>
@@ -73,7 +73,7 @@
               <i class="fas fa-user text-sm"></i>
             </div>
             <div>
-              <p class="text-xs text-[#8A94A6]" id="usernameLabel">نام کاربری</p>
+              <p class="text-xs text-[#8A94A6]" id="usernameLabel"><span data-i18n-fa="نام کاربری" data-i18n-en="Username">نام کاربری</span></p>
               <p class="text-sm font-medium" id="profileUsername">---</p>
             </div>
           </div>
@@ -82,7 +82,7 @@
               <i class="fas fa-calendar-alt text-sm"></i>
             </div>
             <div>
-              <p class="text-xs text-[#8A94A6]" id="joinedLabel">تاریخ عضویت</p>
+              <p class="text-xs text-[#8A94A6]" id="joinedLabel"><span data-i18n-fa="تاریخ عضویت" data-i18n-en="Joined">تاریخ عضویت</span></p>
               <p class="text-sm font-medium" id="profileJoined">---</p>
             </div>
           </div>
@@ -91,7 +91,7 @@
               <i class="fas fa-shield-alt text-sm"></i>
             </div>
             <div>
-              <p class="text-xs text-[#8A94A6]" id="roleLabel">نقش‌ها</p>
+              <p class="text-xs text-[#8A94A6]" id="roleLabel"><span data-i18n-fa="نقش‌ها" data-i18n-en="Roles">نقش‌ها</span></p>
               <p class="text-sm font-medium" id="profileRoles">---</p>
             </div>
           </div>
@@ -101,15 +101,15 @@
         <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)]">
           <div class="text-center">
             <p class="text-lg font-bold text-[#00C26E]" id="statProjects">0</p>
-            <p class="text-xs text-[#8A94A6]" id="statProjectsLabel">پروژه</p>
+            <p class="text-xs text-[#8A94A6]" id="statProjectsLabel"><span data-i18n-fa="پروژه" data-i18n-en="Project">پروژه</span></p>
           </div>
           <div class="text-center">
             <p class="text-lg font-bold text-[#4DFFB8]" id="statSkills">0</p>
-            <p class="text-xs text-[#8A94A6]" id="statSkillsLabel">مهارت</p>
+            <p class="text-xs text-[#8A94A6]" id="statSkillsLabel"><span data-i18n-fa="مهارت" data-i18n-en="Skill">مهارت</span></p>
           </div>
           <div class="text-center">
             <p class="text-lg font-bold text-[#FBBF24]" id="statExperiences">0</p>
-            <p class="text-xs text-[#8A94A6]" id="statExperiencesLabel">سابقه</p>
+            <p class="text-xs text-[#8A94A6]" id="statExperiencesLabel"><span data-i18n-fa="سابقه" data-i18n-en="Experience">سابقه</span></p>
           </div>
         </div>
       </div>
@@ -121,57 +121,57 @@
       <div class="profile-card">
         <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <i class="fas fa-edit text-[#00C26E]"></i>
-          <span id="personalInfoTitle">اطلاعات شخصی</span>
+          <span id="personalInfoTitle"><span data-i18n-fa="اطلاعات شخصی" data-i18n-en="Personal information">اطلاعات شخصی</span></span>
         </h3>
         <form id="profileForm" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="fullName">
-                <span id="fullNameLabel">نام کامل</span>
+                <span id="fullNameLabel"><span data-i18n-fa="نام کامل" data-i18n-en="Full name">نام کامل</span></span>
               </label>
               <input type="text" id="fullName"
                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
-                     placeholder="نام کامل خود را وارد کنید">
+                     placeholder="نام کامل خود را وارد کنید" data-i18n-placeholder-fa="نام کامل خود را وارد کنید" data-i18n-placeholder-en="Enter your full name">
             </div>
             <div>
               <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="brandName">
-                <span id="brandNameLabel">نام برند</span>
+                <span id="brandNameLabel"><span data-i18n-fa="نام برند" data-i18n-en="Brand name">نام برند</span></span>
               </label>
               <input type="text" id="brandName"
                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
-                     placeholder="نام برند خود را وارد کنید">
+                     placeholder="نام برند خود را وارد کنید" data-i18n-placeholder-fa="نام برند خود را وارد کنید" data-i18n-placeholder-en="Enter your brand name">
             </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="title">عنوان حرفه‌ای</label><input type="text" id="title" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none" placeholder="مثلاً Full-Stack Developer"></div>
-            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="email">ایمیل</label><input type="email" id="email" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none" placeholder="email@example.com"></div>
-            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="phone">شماره تماس</label><input type="text" id="phone" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></div>
-            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="workingStatus">وضعیت همکاری</label><select id="workingStatus" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"><option value="AVAILABLE">آماده همکاری</option><option value="BUSY">مشغول</option><option value="NOT_AVAILABLE">فعلاً در دسترس نیستم</option><option value="REMOTE">همکاری ریموت</option></select></div>
+            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="title"><span data-i18n-fa="عنوان حرفه‌ای" data-i18n-en="Professional title">عنوان حرفه‌ای</span></label><input type="text" id="title" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none" placeholder="مثلاً Full-Stack Developer" data-i18n-placeholder-fa="مثلاً Full-Stack Developer" data-i18n-placeholder-en="e.g. Full-Stack Developer"></div>
+            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="email"><span data-i18n-fa="ایمیل" data-i18n-en="Email">ایمیل</span></label><input type="email" id="email" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none" placeholder="email@example.com"></div>
+            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="phone"><span data-i18n-fa="شماره تماس" data-i18n-en="Phone number">شماره تماس</span></label><input type="text" id="phone" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></div>
+            <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="workingStatus"><span data-i18n-fa="وضعیت همکاری" data-i18n-en="Availability">وضعیت همکاری</span></label><select id="workingStatus" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"><option value="AVAILABLE" data-i18n-fa="آماده همکاری" data-i18n-en="Available for projects">آماده همکاری</option><option value="BUSY" data-i18n-fa="مشغول" data-i18n-en="Busy">مشغول</option><option value="NOT_AVAILABLE" data-i18n-fa="فعلاً در دسترس نیستم" data-i18n-en="Currently unavailable">فعلاً در دسترس نیستم</option><option value="REMOTE" data-i18n-fa="همکاری ریموت" data-i18n-en="Remote collaboration">همکاری ریموت</option></select></div>
           </div>
-          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="shortDescription">معرفی کوتاه</label><textarea id="shortDescription" rows="2" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
+          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="shortDescription"><span data-i18n-fa="معرفی کوتاه" data-i18n-en="Short introduction">معرفی کوتاه</span></label><textarea id="shortDescription" rows="2" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
           <div>
             <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="bio">
-              <span id="bioLabel">بیوگرافی</span>
+              <span id="bioLabel"><span data-i18n-fa="بیوگرافی" data-i18n-en="Biography">بیوگرافی</span></span>
             </label>
             <textarea id="bio" rows="3"
                       class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 resize-none"
-                      placeholder="درباره خودتان بنویسید..."></textarea>
+                      placeholder="درباره خودتان بنویسید..." data-i18n-placeholder-fa="درباره خودتان بنویسید..." data-i18n-placeholder-en="Tell us about yourself..."></textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="location">
-              <span id="locationLabel">موقعیت مکانی</span>
+              <span id="locationLabel"><span data-i18n-fa="موقعیت مکانی" data-i18n-en="Location">موقعیت مکانی</span></span>
             </label>
             <input type="text" id="location"
                    class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50"
-                   placeholder="شهر، کشور">
+                   placeholder="شهر، کشور" data-i18n-placeholder-fa="شهر، کشور" data-i18n-placeholder-en="City, country">
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="githubUrl">GitHub</label><input type="url" id="githubUrl" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></div><div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="linkedinUrl">LinkedIn</label><input type="url" id="linkedinUrl" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></div><div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="instagramUrl">Instagram</label><input type="url" id="instagramUrl" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></div></div>
-          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="aboutText">درباره من</label><textarea id="aboutText" rows="3" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
-          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="journeyText">مسیر حرفه‌ای</label><textarea id="journeyText" rows="3" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
+          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="aboutText"><span data-i18n-fa="درباره من" data-i18n-en="About me">درباره من</span></label><textarea id="aboutText" rows="3" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
+          <div><label class="block text-sm font-medium text-[#8A94A6] mb-1" for="journeyText"><span data-i18n-fa="مسیر حرفه‌ای" data-i18n-en="Career journey">مسیر حرفه‌ای</span></label><textarea id="journeyText" rows="3" class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none"></textarea></div>
           <button type="submit" id="updateProfileBtn"
                   class="w-full md:w-auto px-6 py-2.5 bg-[#00C26E] hover:bg-[#4DFFB8] text-[#0B0F14] font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#00C26E]/20">
             <i class="fas fa-save"></i>
-            <span id="saveProfileBtn">ذخیره تغییرات</span>
+            <span id="saveProfileBtn"><span data-i18n-fa="ذخیره تغییرات" data-i18n-en="Save changes">ذخیره تغییرات</span></span>
           </button>
         </form>
       </div>
@@ -180,17 +180,17 @@
       <div class="profile-card">
         <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <i class="fas fa-key text-[#FBBF24]"></i>
-          <span id="changePasswordTitle">تغییر رمز عبور</span>
+          <span id="changePasswordTitle"><span data-i18n-fa="تغییر رمز عبور" data-i18n-en="Change password">تغییر رمز عبور</span></span>
         </h3>
         <form id="passwordForm" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="currentPassword">
-              <span id="currentPasswordLabel">رمز عبور فعلی</span>
+              <span id="currentPasswordLabel"><span data-i18n-fa="رمز عبور فعلی" data-i18n-en="Current password">رمز عبور فعلی</span></span>
             </label>
             <div class="relative">
               <input type="password" id="currentPassword"
                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
-                     placeholder="رمز عبور فعلی را وارد کنید">
+                     placeholder="رمز عبور فعلی را وارد کنید" data-i18n-placeholder-fa="رمز عبور فعلی را وارد کنید" data-i18n-placeholder-en="Enter your current password">
               <button type="button" onclick="togglePasswordVisibility('currentPassword')"
                       class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
                 <i class="fas fa-eye" id="currentPasswordIcon"></i>
@@ -199,12 +199,12 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="newPassword">
-              <span id="newPasswordLabel">رمز عبور جدید</span>
+              <span id="newPasswordLabel"><span data-i18n-fa="رمز عبور جدید" data-i18n-en="New password">رمز عبور جدید</span></span>
             </label>
             <div class="relative">
               <input type="password" id="newPassword"
                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
-                     placeholder="رمز عبور جدید را وارد کنید">
+                     placeholder="رمز عبور جدید را وارد کنید" data-i18n-placeholder-fa="رمز عبور جدید را وارد کنید" data-i18n-placeholder-en="Enter your new password">
               <button type="button" onclick="togglePasswordVisibility('newPassword')"
                       class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
                 <i class="fas fa-eye" id="newPasswordIcon"></i>
@@ -225,17 +225,17 @@
                   <div id="strengthBar4" class="h-full w-0 transition-all duration-500"></div>
                 </div>
               </div>
-              <p id="strengthText" class="text-xs text-[#8A94A6] mt-1">ضعیف</p>
+              <p id="strengthText" class="text-xs text-[#8A94A6] mt-1"><span data-i18n-fa="ضعیف" data-i18n-en="Weak">ضعیف</span></p>
             </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-[#8A94A6] mb-1" for="confirmPassword">
-              <span id="confirmPasswordLabel">تکرار رمز عبور جدید</span>
+              <span id="confirmPasswordLabel"><span data-i18n-fa="تکرار رمز عبور جدید" data-i18n-en="Confirm new password">تکرار رمز عبور جدید</span></span>
             </label>
             <div class="relative">
               <input type="password" id="confirmPassword"
                      class="w-full px-4 py-2.5 bg-[#0B0F14] border border-[rgba(255,255,255,0.06)] rounded-xl text-[#F5F7FA] focus:border-[#00C26E] focus:outline-none transition-all duration-300 placeholder:text-[#8A94A6]/50 pr-10"
-                     placeholder="رمز عبور جدید را تکرار کنید">
+                     placeholder="رمز عبور جدید را تکرار کنید" data-i18n-placeholder-fa="رمز عبور جدید را تکرار کنید" data-i18n-placeholder-en="Repeat your new password">
               <button type="button" onclick="togglePasswordVisibility('confirmPassword')"
                       class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A94A6] hover:text-[#F5F7FA] transition-colors">
                 <i class="fas fa-eye" id="confirmPasswordIcon"></i>
@@ -245,7 +245,7 @@
           <button type="submit" id="changePasswordBtn"
                   class="w-full md:w-auto px-6 py-2.5 bg-[#FBBF24] hover:bg-[#FCD34D] text-[#0B0F14] font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#FBBF24]/20">
             <i class="fas fa-key"></i>
-            <span id="changePasswordBtnText">تغییر رمز عبور</span>
+            <span id="changePasswordBtnText"><span data-i18n-fa="تغییر رمز عبور" data-i18n-en="Change password">تغییر رمز عبور</span></span>
           </button>
         </form>
       </div>
@@ -254,7 +254,7 @@
       <div class="profile-card">
         <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <i class="fas fa-shield-alt text-[#8B5CF6]"></i>
-          <span id="securityTitle">تنظیمات امنیتی</span>
+          <span id="securityTitle"><span data-i18n-fa="تنظیمات امنیتی" data-i18n-en="Security settings">تنظیمات امنیتی</span></span>
         </h3>
         <div class="space-y-3">
           <div class="flex items-center justify-between p-3 rounded-xl bg-[#0B0F14] border border-[rgba(255,255,255,0.05)]">
@@ -263,8 +263,8 @@
                 <i class="fas fa-fingerprint text-sm"></i>
               </div>
               <div>
-                <p class="text-sm font-medium" id="twoFactorLabel">احراز هویت دو مرحله‌ای</p>
-                <p class="text-xs text-[#8A94A6]" id="twoFactorDesc">افزایش امنیت حساب کاربری</p>
+                <p class="text-sm font-medium" id="twoFactorLabel"><span data-i18n-fa="احراز هویت دو مرحله‌ای" data-i18n-en="Two-factor authentication">احراز هویت دو مرحله‌ای</span></p>
+                <p class="text-xs text-[#8A94A6]" id="twoFactorDesc"><span data-i18n-fa="افزایش امنیت حساب کاربری" data-i18n-en="Improve your account security">افزایش امنیت حساب کاربری</span></p>
               </div>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -278,12 +278,12 @@
                 <i class="fas fa-trash-alt text-sm"></i>
               </div>
               <div>
-                <p class="text-sm font-medium" id="deleteAccountLabel">حذف حساب کاربری</p>
-                <p class="text-xs text-[#8A94A6]" id="deleteAccountDesc">این عمل غیرقابل بازگشت است</p>
+                <p class="text-sm font-medium" id="deleteAccountLabel"><span data-i18n-fa="حذف حساب کاربری" data-i18n-en="Delete account">حذف حساب کاربری</span></p>
+                <p class="text-xs text-[#8A94A6]" id="deleteAccountDesc"><span data-i18n-fa="این عمل غیرقابل بازگشت است" data-i18n-en="This action cannot be undone">این عمل غیرقابل بازگشت است</span></p>
               </div>
             </div>
             <button type="button" onclick="confirmDeleteAccount()" class="px-4 py-1.5 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] rounded-lg text-sm transition-all duration-300 border border-[#EF4444]/20">
-              <span id="deleteAccountBtn">حذف</span>
+              <span id="deleteAccountBtn"><span data-i18n-fa="حذف" data-i18n-en="Delete">حذف</span></span>
             </button>
           </div>
         </div>
@@ -299,7 +299,7 @@
     <span class="mx-2">•</span>
     <span id="footerStatus" class="text-[#00C26E]">
             <i class="fas fa-circle text-[8px] ml-1"></i>
-            آنلاین
+            <span data-i18n-fa="آنلاین" data-i18n-en="Online">آنلاین</span>
         </span>
   </div>
 </div>

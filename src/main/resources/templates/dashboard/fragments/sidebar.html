@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"><body>
-<div th:fragment="sidebar"><aside id="sidebar" class="sidebar" aria-label="منوی اصلی">
+<div th:fragment="sidebar"><aside id="sidebar" class="sidebar" aria-label="منوی اصلی" data-i18n-aria-label-fa="منوی اصلی" data-i18n-aria-label-en="Main navigation">
     <div class="sidebar-content">
         <!-- Logo -->
         <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
@@ -14,13 +14,13 @@
         <div class="p-6 border-b border-[rgba(0,194,110,0.08)]">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00C26E] to-[#4DFFB8] flex items-center justify-center text-[#0B0F14] font-bold text-lg shadow-lg shadow-[#00C26E]/20">
-                    <img id="sidebarAvatar" alt="تصویر پروفایل مدیر" hidden><span id="userInitial">T</span>
+                    <img id="sidebarAvatar" alt="تصویر پروفایل مدیر" hidden data-i18n-alt-fa="تصویر پروفایل مدیر" data-i18n-alt-en="Admin profile picture"><span id="userInitial">T</span>
                 </div>
                 <div>
-                    <div class="font-semibold text-sm" id="userName">کاربر</div>
+                    <div class="font-semibold text-sm" id="userName"><span data-i18n-fa="کاربر" data-i18n-en="User">کاربر</span></div>
                     <div class="text-xs text-[#8A94A6] flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-[#00C26E] inline-block animate-pulse"></span>
-                        <span id="userRole">ادمین</span>
+                        <span id="userRole"><span data-i18n-fa="ادمین" data-i18n-en="Admin">ادمین</span></span>
                     </div>
                 </div>
             </div>
@@ -28,54 +28,54 @@
 
         <!-- Navigation -->
         <nav class="p-4 space-y-1">
-            <div class="text-[10px] text-[#8A94A6] px-4 py-2 uppercase tracking-wider font-semibold" id="navMainMenu">منوی اصلی</div>
+            <div class="text-[10px] text-[#8A94A6] px-4 py-2 uppercase tracking-wider font-semibold" id="navMainMenu"><span data-i18n-fa="منوی اصلی" data-i18n-en="Main navigation">منوی اصلی</span></div>
 
             <a href="/dashboard" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300">
                 <i class="fas fa-chart-pie w-5 text-center"></i>
-                <span>داشبورد</span>
+                <span><span data-i18n-fa="داشبورد" data-i18n-en="Dashboard">داشبورد</span></span>
             </a>
 
             <a href="/profile" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-user w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navProfile">پروفایل</span>
+                <span id="navProfile"><span data-i18n-fa="پروفایل" data-i18n-en="Profile">پروفایل</span></span>
             </a>
 
             <a href="/manage/projects" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-project-diagram w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navProjects">پروژه‌ها</span>
+                <span id="navProjects"><span data-i18n-fa="پروژه‌ها" data-i18n-en="Projects">پروژه‌ها</span></span>
             </a>
 
-            <a href="/manage/demos" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300"><i class="fas fa-rocket w-5 text-center"></i><span>دموساز</span></a>
+            <a href="/manage/demos" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300"><i class="fas fa-rocket w-5 text-center"></i><span><span data-i18n-fa="دموساز" data-i18n-en="Demo studio">دموساز</span></span></a>
 
             <a href="/manage/skills" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-code w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navSkills">مهارت‌ها</span>
+                <span id="navSkills"><span data-i18n-fa="مهارت‌ها" data-i18n-en="Skills">مهارت‌ها</span></span>
             </a>
 
             <a href="/manage/experience" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-briefcase w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navExperiences">سوابق کاری</span>
+                <span id="navExperiences"><span data-i18n-fa="سوابق کاری" data-i18n-en="Work experience">سوابق کاری</span></span>
             </a>
 
             <a href="/manage/services" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-cogs w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navServices">سرویس‌ها</span>
+                <span id="navServices"><span data-i18n-fa="سرویس‌ها" data-i18n-en="Services">سرویس‌ها</span></span>
             </a>
 
             <a href="/manage/statistics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-chart-bar w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navStatistics">آمارها</span>
+                <span id="navStatistics"><span data-i18n-fa="آمارها" data-i18n-en="Statistics">آمارها</span></span>
             </a>
 
             <a href="/manage/media" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
         <i class="fas fa-photo-film w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-        <span id="navMedia">رسانه‌ها</span>
+        <span id="navMedia"><span data-i18n-fa="رسانه‌ها" data-i18n-en="Media">رسانه‌ها</span></span>
       </a>
 
-      <a href="/manage/testimonials" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300"><i class="fas fa-comment-dots w-5 text-center"></i><span>نظرات کارفرمایان</span></a>
+      <a href="/manage/testimonials" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300"><i class="fas fa-comment-dots w-5 text-center"></i><span><span data-i18n-fa="نظرات کارفرمایان" data-i18n-en="Testimonials">نظرات کارفرمایان</span></span></a>
       <a href="/manage/contact" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#8A94A6] hover:bg-[#1A1F26] transition-all duration-300 group">
                 <i class="fas fa-envelope w-5 text-center group-hover:text-[#00C26E] transition-colors"></i>
-                <span id="navMessages">پیام‌ها</span>
+                <span id="navMessages"><span data-i18n-fa="پیام‌ها" data-i18n-en="Messages">پیام‌ها</span></span>
                 <span class="mr-auto bg-[#EF4444] text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse" id="unreadBadge">0</span>
             </a>
 
@@ -83,7 +83,7 @@
 
             <button type="button" id="logoutBtn" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-[#EF4444] hover:bg-[#EF4444]/10 transition-all duration-300 w-full">
                 <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                <span id="navLogout">خروج</span>
+                <span id="navLogout"><span data-i18n-fa="خروج" data-i18n-en="Logout">خروج</span></span>
             </button>
         </nav>
     </div>

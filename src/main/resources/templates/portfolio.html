@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>نمونه‌کارها | Hexora</title>
+  <title data-i18n-fa="نمونه‌کارها | Hexora" data-i18n-en="Work | Hexora">نمونه‌کارها | Hexora</title>
   <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
   <link rel="stylesheet" href="/css/portfolio-v2.css?v=projects-route-20261002">
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/loading.css">
   <script src="/js/loading.js"></script>
   <script src="/js/client.js"></script>
-<link rel="stylesheet" href="/css/public-shell.css?v=20261007"><script src="/js/public-profile.js?v=20261007"></script></head>
+<link rel="stylesheet" href="/css/public-shell.css?v=20261007"><script src="/js/public-profile.js?v=20261007"></script><script src="/js/i18n.js"></script></head>
 <body class="projects-page hx-cases-page" th:attr="data-section=${publicSection}">
   <div class="firefly-field" aria-hidden="true">
     <span class="firefly"></span><span class="firefly"></span><span class="firefly"></span>
@@ -34,22 +34,22 @@
       </div>
     </section>
 
-    <section id="work" class="hx-cases-section" aria-label="نمونه‌کارها">
+    <section id="work" class="hx-cases-section" aria-label="نمونه‌کارها" data-i18n-aria-label-fa="نمونه‌کارها" data-i18n-aria-label-en="Work">
       <div class="wrap hx-cases-shell">
         <div class="hx-cases-toolbar">
-          <div class="hx-cases-filters" role="group" aria-label="وضعیت پروژه">
+          <div class="hx-cases-filters" role="group" aria-label="وضعیت پروژه" data-i18n-aria-label-fa="وضعیت پروژه" data-i18n-aria-label-en="Project status">
             <button type="button" class="is-active" data-case-filter="ALL" aria-pressed="true" data-en="All projects">همه پروژه‌ها</button>
             <button type="button" data-case-filter="COMPLETED" aria-pressed="false" data-en="Completed">تکمیل‌شده</button>
             <button type="button" data-case-filter="IN_PROGRESS" aria-pressed="false" data-en="In progress">در حال انجام</button>
             <button type="button" data-case-filter="PLANNING" aria-pressed="false" data-en="Planning">برنامه‌ریزی</button>
           </div>
-          <label class="hx-cases-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="hx-cases-sr" data-en="Search projects">جست‌وجوی پروژه</span><input id="caseSearch" type="search" placeholder="جست‌وجوی پروژه..." autocomplete="off"></label>
+          <label class="hx-cases-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="hx-cases-sr" data-en="Search projects">جست‌وجوی پروژه</span><input id="caseSearch" type="search" placeholder="جست‌وجوی پروژه..." autocomplete="off" data-i18n-placeholder-fa="جست‌وجوی پروژه..." data-i18n-placeholder-en="Search projects..."></label>
         </div>
-        <div class="hx-cases-index"><span data-en="Selected work">نمونه‌کارهای منتخب</span><output id="caseCount" aria-live="polite" aria-atomic="true">در حال دریافت پروژه‌ها…</output></div>
+        <div class="hx-cases-index"><span data-en="Selected work">نمونه‌کارهای منتخب</span><output id="caseCount" aria-live="polite" aria-atomic="true"><span data-i18n-fa="در حال دریافت پروژه‌ها…" data-i18n-en="Loading projects…">در حال دریافت پروژه‌ها…</span></output></div>
         <div id="caseList" class="hx-cases-list" aria-busy="true">
           <div class="hx-cases-skeleton" aria-hidden="true"></div><div class="hx-cases-skeleton" aria-hidden="true"></div>
         </div>
-        <div id="caseMessage" class="hx-cases-message" hidden><p id="caseMessageText"></p><button id="caseRetry" type="button" hidden>تلاش دوباره</button></div>
+        <div id="caseMessage" class="hx-cases-message" hidden><p id="caseMessageText"></p><button id="caseRetry" type="button" hidden><span data-i18n-fa="تلاش دوباره" data-i18n-en="Try again">تلاش دوباره</span></button></div>
         <div class="hx-cases-cta">
           <p data-en="Have your next project in mind?">پروژه بعدی را در ذهن دارید؟</p>
           <a href="/contact"><span data-en="Let’s build it together">بیایید با هم بسازیم</span><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
@@ -58,11 +58,11 @@
     </section>
   </main>
   <dialog id="casePreview" class="hx-cases-dialog" aria-labelledby="casePreviewTitle">
-    <div class="hx-cases-dialog-bar"><h2 id="casePreviewTitle"></h2><button id="casePreviewClose" type="button" aria-label="بستن تصویر" autofocus>×</button></div>
+    <div class="hx-cases-dialog-bar"><h2 id="casePreviewTitle"></h2><button id="casePreviewClose" type="button" aria-label="بستن تصویر" autofocus data-i18n-aria-label-fa="بستن تصویر" data-i18n-aria-label-en="Close image">×</button></div>
     <img id="casePreviewImage" alt="">
   </dialog>
   <footer th:replace="~{home/fragments/public-shell :: footer}"></footer>
-  <div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری"><div class="cssload-cssload-spinner" aria-hidden="true"></div></div>
+  <div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری" data-i18n-aria-label-fa="در حال بارگذاری" data-i18n-aria-label-en="Loading"><div class="cssload-cssload-spinner" aria-hidden="true"></div></div>
   <script src="/js/projects-cases.js?v=20261002"></script>
 <script src="/js/public-shell.js?v=20261007"></script></body>
 </html>

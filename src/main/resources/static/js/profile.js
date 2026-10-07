@@ -147,17 +147,19 @@ function setupUserInfo() {
         const isAdmin = user.roles && user.roles.includes('ADMIN');
         const roleText = isAdmin ? 'ادمین' : 'کاربر';
         document.getElementById('userRole').textContent = roleText;
-        document.getElementById('profileRole').textContent = roleText;
+        document.getElementById('profileRole').innerHTML = window.HexoraI18n.markup(roleText);
         document.getElementById('profileEmail').textContent = user.email || '---';
         document.getElementById('profileUsername').textContent = user.username || '---';
-        document.getElementById('profileRoles').textContent = user.roles ? user.roles.join(', ') : '---';
+        document.getElementById('profileRoles').innerHTML = user.roles ? user.roles.map(role=>window.HexoraI18n.markup(role==='ADMIN'?'ادمین':role==='USER'?'کاربر':role)).join(', ') : '---';
 
         // Set avatar initial
         const initial = (user.username || 'کاربر')[0].toUpperCase();
         document.getElementById('avatarText').textContent = initial;
 
         // Set joined date (mock - should come from server)
-        document.getElementById('profileJoined').textContent = new Date(user.createdAt).toLocaleDateString('fa-IR');
+        const joined=document.getElementById('profileJoined'),date=new Date(user.createdAt);
+        joined.setAttribute('data-i18n-date',user.createdAt||'');
+        joined.textContent=Number.isNaN(+date)?'—':date.toLocaleDateString(currentLang==='en'?'en-US':'fa-IR');
 
     } catch (e) {
         console.error('Error parsing user data:', e);
@@ -329,7 +331,7 @@ async function uploadAvatar(input) {
     if (!allowedTypes.includes(file.type)) { showToast('error', t.invalidImage || 'فرمت تصویر نامعتبر است', ''); input.value = ''; return; }
     if (file.size > 5 * 1024 * 1024) { showToast('error', t.imageTooLarge || 'حجم تصویر باید کمتر از ۵ مگابایت باشد', ''); input.value = ''; return; }
     const avatar = document.getElementById('profileAvatar');
-    avatar.innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-[#00C26E]" aria-label="در حال آپلود"></i>';
+    avatar.innerHTML = `<i class="fas fa-spinner fa-spin text-2xl text-[#00C26E]" aria-label="${window.HexoraI18n.tr('در حال آپلود')}"></i>`;
     try {
         const formData = new FormData(); formData.append('file', file, file.name);
         const result = await fetchAPI('/api/profile/avatar', { method: 'POST', body: formData });
@@ -338,7 +340,7 @@ async function uploadAvatar(input) {
         window.dispatchEvent(new Event('profile-avatar-updated'));
         const user = JSON.parse(localStorage.getItem('user') || 'null');
         if (user) { user.avatarId = avatarId; localStorage.setItem('user', JSON.stringify(user)); }
-        avatar.innerHTML = `<img src="/api/media/public/${avatarId}?v=${Date.now()}" alt="تصویر پروفایل" class="w-full h-full rounded-full object-cover">`;
+        avatar.innerHTML = `<img src="/api/media/public/${avatarId}?v=${Date.now()}" alt="${window.HexoraI18n.tr('تصویر پروفایل')}" class="w-full h-full rounded-full object-cover">`;
         showToast('success', t.avatarUploadSuccess || 'تصویر پروفایل با موفقیت آپلود شد', '');
     } catch (error) {
         console.error('Upload error:', error);
@@ -438,7 +440,7 @@ document.getElementById('profileForm')?.addEventListener('submit', async functio
             showToast('success', t.saveSuccess, '');
             loadProfileData();
         } else {
-            showToast('error', t.saveError, result.message || '');
+            showToast('error', t.saveError, window.HexoraI18n.tr(result.message) || '');
         }
     } catch (error) {
         showToast('error', t.saveError, error.message || '');
@@ -474,8 +476,8 @@ document.getElementById('passwordForm')?.addEventListener('submit', async functi
         return;
     }
 
-    if (newPassword.length < 6) {
-        showToast('error', 'رمز عبور جدید باید حداقل 6 کاراکتر باشد', '');
+    if (newPassword.length < 8) {
+        showToast('error', window.HexoraI18n.tr('رمز عبور جدید باید حداقل 8 کاراکتر باشد'), '');
         return;
     }
 
@@ -496,7 +498,7 @@ document.getElementById('passwordForm')?.addEventListener('submit', async functi
             document.getElementById('passwordForm').reset();
             document.getElementById('passwordStrength').classList.add('hidden');
         } else {
-            showToast('error', t.passwordChangeError, result.message || '');
+            showToast('error', t.passwordChangeError, window.HexoraI18n.tr(result.message) || '');
         }
     } catch (error) {
         showToast('error', t.passwordChangeError, error.message || '');
@@ -510,7 +512,7 @@ document.getElementById('passwordForm')?.addEventListener('submit', async functi
 document.getElementById('twoFactorToggle')?.addEventListener('change', function() {
     const t = translations[currentLang];
     if (this.checked) {
-        showToast('info', 'در حال توسعه', 'احراز هویت دو مرحله‌ای به زودی فعال خواهد شد');
+        showToast('info', window.HexoraI18n.tr('در حال توسعه'), window.HexoraI18n.tr('احراز هویت دو مرحله‌ای به زودی فعال خواهد شد'));
         setTimeout(() => this.checked = false, 1000);
     }
 });
@@ -519,12 +521,13 @@ document.getElementById('twoFactorToggle')?.addEventListener('change', function(
 function confirmDeleteAccount() {
     const t = translations[currentLang];
     if (confirm(t.deleteConfirm)) {
-        showToast('warning', 'در حال توسعه', 'حذف حساب کاربری به زودی امکان‌پذیر خواهد بود');
+        showToast('warning', window.HexoraI18n.tr('در حال توسعه'), window.HexoraI18n.tr('حذف حساب کاربری به زودی امکان‌پذیر خواهد بود'));
     }
 }
 
 // ===== Toast System =====
 function showToast(type, title, message, duration = 4000) {
+    title=window.HexoraI18n.tr(title);message=window.HexoraI18n.tr(message);
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
@@ -600,9 +603,9 @@ window.showToast = showToast;
 // Save availability independently of unrelated profile field validation.
 document.getElementById('workingStatus')?.addEventListener('change', async event => {
  const select=event.currentTarget, previous=currentProfile?.workingStatus||'AVAILABLE';
- if(!currentProfile?.id){showToast('error','ابتدا پروفایل را ذخیره کنید','');select.value=previous;return;}
+ if(!currentProfile?.id){showToast('error',window.HexoraI18n.tr('ابتدا پروفایل را ذخیره کنید'),'');select.value=previous;return;}
  select.disabled=true;
- try {const result=await fetchAPI(`/api/profile/${currentProfile.id}/status?status=${encodeURIComponent(select.value)}`,{method:'PATCH'});if(!result.success)throw Error(result.message||'ذخیره ناموفق بود');currentProfile.workingStatus=result.data.workingStatus;showToast('success','وضعیت همکاری ذخیره شد','');}
- catch(error){select.value=previous;showToast('error','خطا در ذخیره وضعیت',error.message);}
+ try {const result=await fetchAPI(`/api/profile/${currentProfile.id}/status?status=${encodeURIComponent(select.value)}`,{method:'PATCH'});if(!result.success)throw Error(result.message||window.HexoraI18n.tr('ذخیره ناموفق بود'));currentProfile.workingStatus=result.data.workingStatus;showToast('success',window.HexoraI18n.tr('وضعیت همکاری ذخیره شد'),'');}
+ catch(error){select.value=previous;showToast('error',window.HexoraI18n.tr('خطا در ذخیره وضعیت'),error.message);}
  finally{select.disabled=false;}
 });
