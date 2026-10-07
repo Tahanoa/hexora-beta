@@ -94,19 +94,12 @@
   $('casePreviewClose').addEventListener('click',() => preview.close());
   preview.addEventListener('click',event => { if (event.target === preview) { const rect = preview.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) preview.close(); } });
   preview.addEventListener('close',() => $('casePreviewImage').removeAttribute('src'));
-  $('year').textContent = new Date().getFullYear();
-  $('menuBtn').setAttribute('aria-expanded','false'); $('menuBtn').setAttribute('aria-controls','mobileNav');
-  $('menuBtn').addEventListener('click',() => { $('mobileNav').classList.toggle('open'); $('menuBtn').setAttribute('aria-expanded',String($('mobileNav').classList.contains('open'))); });
-  document.querySelectorAll('.nav a[href="/projects"],.mobile-nav a[href="/projects"]').forEach(a => { a.classList.add('active'); a.setAttribute('aria-current','page'); });
   $('langBtn').addEventListener('click',() => {
-    const en = !english(); document.documentElement.lang = en ? 'en' : 'fa'; document.documentElement.dir = en ? 'ltr' : 'rtl'; $('langBtn').textContent = en ? 'FA' : 'EN';
+    const en = !english(); localStorage.setItem('hexora-lang',en ? 'en' : 'fa'); document.documentElement.lang = en ? 'en' : 'fa'; document.documentElement.dir = en ? 'ltr' : 'rtl'; $('langBtn').textContent = en ? 'FA' : 'EN';
     document.querySelectorAll('[data-en]').forEach(el => { el.dataset.fa ??= el.textContent; el.textContent = en ? el.dataset.en : el.dataset.fa; });
     $('caseSearch').placeholder = t().search; $('casePreviewClose').setAttribute('aria-label',t().close);
     document.title = en ? 'Work | Hexora' : 'نمونه‌کارها | Hexora'; render();
   });
   loadProjects();
-  fetch('/api/profile/public').then(r => r.ok ? r.json() : null).then(json => { const profile = json?.data ?? json; if (profile?.brandName) $('brandName').textContent = profile.brandName; }).catch(() => {});
-  if (localStorage.getItem('accessToken') && window.loadSession) window.loadSession().then(user => {
-    if (user?.roles?.includes('ADMIN')) { $('accountLink').href = '/dashboard'; $('accountLink').textContent = 'داشبورد مدیریت'; $('accountLink').classList.add('admin-link'); }
-  }).catch(() => {});
+
 })();

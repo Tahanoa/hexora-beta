@@ -19,7 +19,7 @@
 .contact-workspace .chat-socials{gap:10px;margin-top:12px}
 .contact-workspace .chat-socials a{display:flex;align-items:center;gap:8px;color:#c9dfd4;font-size:.72rem;padding:8px 12px;border:1px solid var(--contact-border);border-radius:10px;transition:border-color .2s,color .2s}
 .contact-workspace .chat-socials a:hover{color:#65ffc0;border-color:#00c26e88}
-.contact-panel{min-width:0;border:1px solid var(--contact-border);border-radius:24px;background:linear-gradient(150deg,#11241c,#0b1712 55%);box-shadow:0 24px 80px #0003;overflow:hidden}
+.contact-chat-panel{min-width:0;border:1px solid var(--contact-border);border-radius:24px;background:linear-gradient(150deg,#11241c,#0b1712 55%);box-shadow:0 24px 80px #0003;overflow:hidden}
 .contact-workspace .chat-app{border:0;border-radius:0;background:transparent;box-shadow:none}
 .contact-workspace .chat-room-header{padding:22px 24px;gap:14px;border-color:var(--contact-border);background:#14241d80}
 .contact-room-identity{display:flex;align-items:center;gap:12px;min-width:0}
@@ -59,9 +59,9 @@
 .contact-workspace .chat-status{color:var(--contact-muted);padding:0 24px 8px;min-height:24px;font-size:.72rem}
 .contact-workspace .chat-status.error{color:#ffabab}
 .contact-workspace .chat-service-request{margin:0;padding:16px 22px;border-radius:0;border-width:0 0 1px;font-size:.78rem}
-.contact-panel-foot{display:flex;align-items:center;gap:8px;border-top:1px solid var(--contact-border);padding:14px 22px;background:#09140f66;font-size:.62rem;color:var(--contact-muted)}
-.contact-panel-foot>i{color:#65ffc0}
-.contact-panel-brand{margin-inline-start:auto;direction:ltr;font-size:.52rem;letter-spacing:.1em;color:#94a99d}
+.contact-chat-panel-foot{display:flex;align-items:center;gap:8px;border-top:1px solid var(--contact-border);padding:14px 22px;background:#09140f66;font-size:.62rem;color:var(--contact-muted)}
+.contact-chat-panel-foot>i{color:#65ffc0}
+.contact-chat-panel-brand{margin-inline-start:auto;direction:ltr;font-size:.52rem;letter-spacing:.1em;color:#94a99d}
 .contact-workspace .contact-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:550px;padding:42px 28px;border:0;border-radius:0;margin:0;background:radial-gradient(ellipse at 50% 30%,#00c26e12,transparent 60%)}
 .contact-workspace .contact-gate:empty{display:none}
 .contact-gate-icon,.contact-empty-icon{display:grid;place-items:center;width:70px;height:70px;background:#00c26e0d;border:1px solid #00c26e33;border-radius:22px;color:#65ffc0;font-size:1.8rem;margin-bottom:24px;box-shadow:0 0 0 10px #00c26e04}
@@ -84,6 +84,10 @@
 .contact-workspace textarea:focus-visible{outline-offset:0}
 @media(min-width:1400px){.contact-workspace{width:min(1240px,calc(100% - 64px));gap:72px;padding-top:85px}}
 @media(max-width:1000px){.contact-workspace{grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr);gap:26px;padding-top:48px}.contact-room-label{display:none}.contact-intro h1{font-size:2.35rem}.contact-note{padding-block:22px;margin-top:24px}.contact-workspace .chat-messages{padding:20px}.contact-keyboard{display:none}}
-@media(max-width:760px){.contact-workspace{grid-template-columns:1fr;gap:28px;padding-block:30px 45px}.contact-intro{padding:0}.contact-intro h1{font-size:clamp(2.1rem,7vw,3rem);line-height:1.4;margin:16px 0}.contact-intro h1 br{display:none}.contact-intro h1 span,.contact-intro h1 strong{display:inline}.contact-intro h1 strong::before,.contact-intro h1 strong::after{content:' '}.contact-intro>p{max-width:520px;font-size:.84rem}.contact-note{display:none}.contact-process{font-size:.72rem;padding-bottom:0}.contact-social-block{margin-top:20px}.contact-workspace .chat-socials a{padding:6px 10px}.contact-panel{border-radius:20px}.contact-workspace .chat-room-header{padding:18px}.contact-room-label{display:block}.contact-workspace .chat-phone-settings{padding:12px 18px}.contact-workspace .chat-messages{height:clamp(310px,48dvh,420px);padding:18px;gap:16px}.contact-workspace .chat-bubble{max-width:92%}.contact-workspace .chat-composer{padding-inline:14px}.contact-workspace .contact-gate{min-height:420px;padding:32px 20px}.contact-panel-foot{padding:13px 18px}.contact-workspace .chat-service-request{padding:16px;margin:0;border-radius:0;border-width:0 0 1px;font-size:.78rem}.contact-empty h3{font-size:1rem}}
-@media(max-width:380px){.contact-room-label,.contact-panel-brand{display:none}.contact-workspace .chat-composer .contact-attach span{display:none}.contact-intro h1{font-size:2rem}.contact-workspace .chat-room-header p{font-size:.62rem}.contact-starters{gap:6px}.contact-starters button{font-size:.65rem}}
+@media(max-width:900px){.contact-workspace{grid-template-columns:1fr;gap:28px;padding-block:30px 45px}.contact-intro{padding:0}.contact-intro h1{font-size:clamp(2.1rem,7vw,3rem);line-height:1.4;margin:16px 0}.contact-intro h1 br{display:none}.contact-intro h1 span,.contact-intro h1 strong{display:inline}.contact-intro h1 strong::before,.contact-intro h1 strong::after{content:' '}.contact-intro>p{max-width:520px;font-size:.84rem}.contact-note{display:none}.contact-process{font-size:.72rem;padding-bottom:0}.contact-social-block{margin-top:20px}.contact-workspace .chat-socials a{padding:6px 10px}.contact-chat-panel{border-radius:20px}.contact-workspace .chat-room-header{padding:18px}.contact-room-label{display:block}.contact-workspace .chat-phone-settings{padding:12px 18px}.contact-workspace .chat-messages{height:clamp(310px,48dvh,420px);padding:18px;gap:16px}.contact-workspace .chat-bubble{max-width:92%}.contact-workspace .chat-composer{padding-inline:14px}.contact-workspace .contact-gate{min-height:420px;padding:32px 20px}.contact-chat-panel-foot{padding:13px 18px}.contact-workspace .chat-service-request{padding:16px;margin:0;border-radius:0;border-width:0 0 1px;font-size:.78rem}.contact-empty h3{font-size:1rem}}
+@media(max-width:380px){.contact-room-label,.contact-chat-panel-brand{display:none}.contact-workspace .chat-composer .contact-attach span{display:none}.contact-intro h1{font-size:2rem}.contact-workspace .chat-room-header p{font-size:.62rem}.contact-starters{gap:6px}.contact-starters button{font-size:.65rem}}
 @media(prefers-reduced-motion:reduce){.contact-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+@media(min-width:901px){.contact-workspace{grid-template-columns:minmax(240px,.8fr) minmax(0,1.6fr)}.contact-chat-panel{width:100%}}
+.contact-chat-panel{display:block;padding:0;gap:0}
+.contact-workspace .chat-socials a{max-width:100%;overflow-wrap:anywhere}

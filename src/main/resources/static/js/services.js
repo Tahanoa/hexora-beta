@@ -2,10 +2,6 @@
  const {esc,safeUrl,list,t,request,price,cover,card}=window.HexoraServices;
  const $=id=>document.getElementById(id);let items=[],detail=null,projects=[];
  document.documentElement.lang=localStorage.getItem('hexora-lang')||'fa';document.documentElement.dir=document.documentElement.lang==='en'?'ltr':'rtl';
- $('year').textContent=new Date().getFullYear();$('menuBtn').onclick=()=>{$('mobileNav').classList.toggle('open');$('menuBtn').setAttribute('aria-expanded',String($('mobileNav').classList.contains('open')));};
- document.querySelectorAll('.nav a[href="/services"]').forEach(a=>{a.classList.add('active');a.setAttribute('aria-current','page');});
- const navWords={'صفحه اصلی':'Home','نمونه‌کارها':'Work','درباره من و سوابق':'About','خدمات':'Services','مهارت‌ها':'Skills','فرایند همکاری':'Collaboration','سؤالات متداول':'FAQ','ارتباط':'Contact','ورود':'Sign in'};
- document.querySelectorAll('.nav a,.mobile-nav a').forEach(a=>{if(navWords[a.textContent.trim()]){a.dataset.fa=a.textContent.trim();a.dataset.en=navWords[a.dataset.fa];}});
  function language(){document.querySelectorAll('[data-fa][data-en]').forEach(el=>el.textContent=t(el.dataset.fa,el.dataset.en));$('langBtn').textContent=t('EN','FA');if($('serviceSearch')){$('serviceSearch').placeholder=t('جست‌وجوی خدمت…','Search services…');$('serviceSearch').setAttribute('aria-label',t('جست‌وجوی خدمات','Search services'));}if(detail)renderDetail();else if($('serviceList')?.dataset.loaded==='true')renderList();}
  $('langBtn').onclick=()=>{document.documentElement.lang=document.documentElement.lang==='en'?'fa':'en';document.documentElement.dir=document.documentElement.lang==='en'?'ltr':'rtl';localStorage.setItem('hexora-lang',document.documentElement.lang);language();};language();
  async function api(path){const r=await fetch(path),json=await r.json().catch(()=>({}));if(!r.ok){const error=Error(json.message||'Request failed');error.status=r.status;throw error;}return json.data;}
@@ -18,6 +14,5 @@
  const slug=document.body.dataset.serviceSlug;
  async function load(){const target=slug?$('serviceDetail'):$('serviceList');target.setAttribute('aria-busy','true');try{if(slug){detail=await api(/^\d+$/.test(slug)?'/api/services/public/'+encodeURIComponent(slug):'/api/services/public/slug/'+encodeURIComponent(slug));const all=detail.relatedProjectIds?.length?await api('/api/projects/public'):[];projects=(detail.relatedProjectIds||[]).map(id=>all.find(p=>p.id===id)).filter(Boolean);renderDetail();}else{items=await api('/api/services/public');items.sort((a,b)=>Number(!!b.featured)-Number(!!a.featured));target.dataset.loaded='true';renderList();}}catch(error){target.innerHTML=`<div class="hx-svc-state"><h2>${error.status===404?t('این خدمت در دسترس نیست.','This service is unavailable.'):t('دریافت اطلاعات ناموفق بود.','Unable to load services.')}</h2><p>${t('می‌توانید فهرست خدمات را بررسی کنید یا دوباره تلاش کنید.','Browse services or try again.')}</p><a class="hx-svc-link" href="/services">${t('همه خدمات','All services')}</a> <button class="hx-svc-button" id="serviceRetry" type="button">${t('تلاش دوباره','Retry')}</button></div>`;$('serviceRetry').onclick=load;}finally{target.setAttribute('aria-busy','false');}}
  $('serviceSearch')?.addEventListener('input',renderList);
- if(localStorage.getItem('accessToken')&&window.loadSession)window.loadSession().then(user=>{if(user?.roles?.includes('ADMIN')){$('accountLink').href='/dashboard';$('accountLink').dataset.fa='داشبورد مدیریت';$('accountLink').dataset.en='Dashboard';language();}}).catch(()=>{});
  await load();
 })();

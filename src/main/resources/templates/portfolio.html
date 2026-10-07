@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/loading.css">
   <script src="/js/loading.js"></script>
   <script src="/js/client.js"></script>
-</head>
+<link rel="stylesheet" href="/css/public-shell.css?v=20261007"><script src="/js/public-profile.js?v=20261007"></script></head>
 <body class="projects-page hx-cases-page" th:attr="data-section=${publicSection}">
   <div class="firefly-field" aria-hidden="true">
     <span class="firefly"></span><span class="firefly"></span><span class="firefly"></span>
@@ -21,20 +21,7 @@
     <span class="firefly"></span><span class="firefly"></span><span class="firefly"></span>
   </div>
 
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a href="/" class="brand"><img src="/images/logo.png" alt="Hexora"><span id="brandName">Hexora</span></a>
-      <nav>
-        <a href="/" data-en="Home">صفحه اصلی</a><a href="/projects" data-en="Work">نمونه‌کارها</a><a href="/about" data-en="About">درباره من و سوابق</a>
-        <a href="/services" data-en="Services">خدمات</a><a href="/skills" data-en="Skills">مهارت‌ها</a><a href="/contact" data-en="Contact">ارتباط</a>
-      </nav>
-      <div class="nav-actions"><button id="langBtn" type="button">EN</button><a href="/login" class="login" id="accountLink">ورود</a><button id="menuBtn" class="menu" type="button" aria-label="فهرست صفحات">☰</button></div>
-    </div>
-    <div id="mobileNav" class="mobile-nav wrap">
-      <a href="/" data-en="Home">صفحه اصلی</a><a href="/projects" data-en="Work">نمونه‌کارها</a><a href="/about" data-en="About">درباره من و سوابق</a>
-      <a href="/services" data-en="Services">خدمات</a><a href="/skills" data-en="Skills">مهارت‌ها</a><a href="/contact" data-en="Contact">ارتباط</a>
-    </div>
-  </header>
+  <header th:replace="~{home/fragments/public-shell :: header}"></header>
 
   <main id="top">
     <section id="pageIntro" class="page-intro">
@@ -74,8 +61,8 @@
     <div class="hx-cases-dialog-bar"><h2 id="casePreviewTitle"></h2><button id="casePreviewClose" type="button" aria-label="بستن تصویر" autofocus>×</button></div>
     <img id="casePreviewImage" alt="">
   </dialog>
-  <footer><div class="wrap"><span>© <span id="year"></span> Hexora</span><span>ساخته‌شده با دقت</span></div></footer>
+  <footer th:replace="~{home/fragments/public-shell :: footer}"></footer>
   <div id="loadingOverlay" class="cssload-wrap" role="status" aria-label="در حال بارگذاری"><div class="cssload-cssload-spinner" aria-hidden="true"></div></div>
   <script src="/js/projects-cases.js?v=20261002"></script>
-</body>
+<script src="/js/public-shell.js?v=20261007"></script></body>
 </html>

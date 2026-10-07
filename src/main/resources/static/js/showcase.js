@@ -1,14 +1,10 @@
 (async()=>{
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=v=>{if(!v)return '';try{const u=new URL(v,location.origin);return ['https:','http:'].includes(u.protocol)?esc(u.href):''}catch{return ''}};
-let en=localStorage.getItem('hexora-showcase-language')==='en';
+let en=localStorage.getItem('hexora-lang')==='en';
 const text=(fa,english)=>`data-fa="${esc(fa)}" data-en="${esc(english)}"`;
 function language(){document.documentElement.lang=en?'en':'fa';document.documentElement.dir=en?'ltr':'rtl';$('langBtn').textContent=en?'FA':'EN';document.querySelectorAll('[data-fa]').forEach(el=>{const value=en?el.dataset.en:el.dataset.fa;el.innerHTML=value.split(/<br\s*\/?>/i).map(esc).join('<br>')})}
-const navWords={'صفحه اصلی':'Home','نمونه‌کارها':'Projects','درباره من و سوابق':'About & career','خدمات':'Services','مهارت‌ها':'Skills','فرایند همکاری':'Collaboration','ارتباط':'Contact','سؤالات متداول':'FAQ','ورود':'Login'};
-document.querySelectorAll('.nav a').forEach(a=>{if(navWords[a.textContent.trim()]){a.dataset.fa=a.textContent.trim();a.dataset.en=navWords[a.textContent.trim()]}if(a.getAttribute('href')===(({collaboration:'/collaboration',faq:'/faq',contact:'/contact'})[document.body.dataset.page]|| (document.body.dataset.projectSlug?'/projects':''))){a.classList.add('active');a.setAttribute('aria-current','page')}});
-$('menuBtn').setAttribute('aria-label','نمایش منو');$('menuBtn').setAttribute('aria-expanded','false');$('menuBtn').onclick=()=>{$('menuBtn').setAttribute('aria-expanded',String($('mobileNav').classList.toggle('open')))};
 $('year').textContent=new Date().getFullYear();$('langBtn').onclick=()=>{en=!en;localStorage.setItem('hexora-showcase-language',en?'en':'fa');language()};language();
-if(localStorage.getItem('accessToken')){try{const session=await window.loadSession();if(session?.roles?.includes('ADMIN')){const a=$('accountLink');a.href='/dashboard';a.dataset.fa='داشبورد';a.dataset.en='Dashboard';language()}}catch{}}
 const area=$('projectDetail');if(area){const release=window.holdPageLoader?.()||(()=>{});try{
  const slug=document.body.dataset.projectSlug;let response=await fetch('/api/projects/public/'+encodeURIComponent(slug));if(response.status===404&&/^\d+$/.test(slug))response=await fetch('/api/projects/public/by-id/'+slug);if(!response.ok)throw new Error(String(response.status));const json=await response.json(),p=json.data??json;if(!p||!p.title)throw new Error('404');
  document.title=p.title+' | Hexora';
