@@ -40,6 +40,12 @@
     document.querySelectorAll('#sidebar a[href]').forEach(link => { const active=link.pathname===location.pathname; link.classList.toggle('active',active); if(active)link.setAttribute('aria-current','page'); });
     let user;try{user=JSON.parse(localStorage.getItem('user')||'null');}catch{}
     if(user){const name=document.getElementById('userName'),initial=document.getElementById('userInitial');if(name)name.textContent=user.username;if(initial)initial.textContent=(user.username||'H')[0];}
+    // Bind fixed functions in JavaScript. Thymeleaf rejects string variables
+    // in event attributes such as th:onclick, even for fragment parameters.
+    for(const id of ['dashboardLanguage','profileLanguage']){
+      document.getElementById(id)?.addEventListener('click',()=>window.toggleLanguage());
+    }
+    document.getElementById('dashboardRefresh')?.addEventListener('click',()=>window.refreshData());
     refreshSidebarAvatar();
     const lang=localStorage.getItem('hexora-lang')==='en'?'en':'fa';
     document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';
