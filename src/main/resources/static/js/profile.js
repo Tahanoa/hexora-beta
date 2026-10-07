@@ -263,6 +263,20 @@ async function fetchAPI(url, options = {}) {
     }
 }
 
+function renderProfileSocials(profile) {
+    const area = document.getElementById('profileSocials');
+    if (!area) return;
+    area.replaceChildren();
+    window.HexoraPublicProfile.links(profile).filter(link => link.external).forEach(item => {
+        const link = document.createElement('a');
+        link.href = item.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', item.label); link.title = item.label;
+        const icon = document.createElement('i'); icon.className = item.icon; icon.setAttribute('aria-hidden', 'true');
+        link.append(icon); area.append(link);
+    });
+    area.hidden = area.children.length === 0;
+}
+
 // ===== Load Profile Data =====
 async function loadProfileData() {
     try {
@@ -271,6 +285,7 @@ async function loadProfileData() {
         if (profile && profile.success) {
             const data = profile.data;
             currentProfile = data;
+            renderProfileSocials(data);
             const savedUser=JSON.parse(localStorage.getItem('user')||'null');if(savedUser){savedUser.avatarId=data.avatarId;localStorage.setItem('user',JSON.stringify(savedUser));}loadUserAvatar();
             document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('brandName').value = data.brandName || '';

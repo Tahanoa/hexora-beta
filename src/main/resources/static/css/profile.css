@@ -182,3 +182,4 @@
 [dir="rtl"] .profile-card textarea {
     text-align: right;
 }
+.profile-social-icons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:24px}.profile-social-icons[hidden]{display:none}.profile-social-icons a{display:grid;place-items:center;width:42px;height:42px;border:1px solid #00C26E33;border-radius:50%;color:#4DFFB8;background:#0B0F14;text-decoration:none;transition:transform .25s,border-color .25s,background .25s}.profile-social-icons a:hover{transform:translateY(-3px);border-color:#4DFFB8;background:#00C26E12}.profile-social-icons a:focus-visible{outline:2px solid #4DFFB8;outline-offset:4px}@media(prefers-reduced-motion:reduce){.profile-social-icons a{transition:none}}

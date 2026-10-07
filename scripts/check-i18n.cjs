@@ -20,7 +20,7 @@ const original=fs.readFileSync('src/main/resources/static/js/manage.js','utf8');
 // Exercise the production renderers without mounting network/event handlers.
 const renderer=original.replace("  $('#editorForm').addEventListener('submit', save);","  window.testRenderers={fieldHtml,renderRows,meta};return;\n  $('#editorForm').addEventListener('submit', save);");
 for(const section of ['projects','skills','services','statistics','experience','media','testimonials','contact','profile'])for(const lang of ['en','fa']){
- const {ctx,element}=context(lang);ctx.window.HEXORA_SECTION=section;vm.runInContext(renderer,ctx);
+ const {ctx,element}=context(lang);ctx.window.HEXORA_SECTION=section;vm.runInContext(fs.readFileSync('src/main/resources/static/js/jalali-picker.js','utf8'),ctx);vm.runInContext(renderer,ctx);
  const {fieldHtml,renderRows,meta}=ctx.window.testRenderers;
  const html=meta.fields.map(field=>fieldHtml(field)).join('');
  if(lang==='en')assert(!/[\u0600-\u06ff]/.test(html),`${section}: untranslated form in English`);
@@ -38,7 +38,7 @@ console.log('FA/EN: all 9 management form/table renderers, enum values, errors, 
   ctx.document.getElementById=id=>element(id);ctx.location.hash='';
   ctx.MutationObserver=class{constructor(callback){callbacks.push(callback)}observe(){}};
   const payloads={
-   '/api/profile/public':{fullName:'نام اختصاصی',brandName:'Hexora',title:'عنوان اختصاصی',workingStatus:'AVAILABLE',aboutText:'محتوای نوشته‌شده توسط مدیر',journeyText:'مسیر اختصاصی'},
+   '/api/profile/public':{fullName:'نام اختصاصی',brandName:'Hexora',title:'عنوان اختصاصی',workingStatus:'AVAILABLE',githubUrl:null,linkedinUrl:'null',instagramUrl:'https://instagram.com/hexora',aboutText:'محتوای نوشته‌شده توسط مدیر',journeyText:'مسیر اختصاصی'},
    '/api/experience/public':[{position:'سمت اختصاصی',company:'شرکت اختصاصی',startDate:'2024-01-01',isCurrent:true}],
    '/api/skills/public':[{name:'مهارت اختصاصی',category:'BACKEND',icon:'fa-solid fa-code'}],
    '/api/statistics/public':[], '/api/services/public':[], '/api/projects/public':[]
@@ -46,6 +46,9 @@ console.log('FA/EN: all 9 management form/table renderers, enum values, errors, 
   ctx.fetch=async path=>({ok:true,json:async()=>({data:payloads[path]})});
   await vm.runInContext(fs.readFileSync('src/main/resources/static/js/biography.js','utf8'),ctx);
   assert(element('profileArea').innerHTML.includes('محتوای نوشته‌شده توسط مدیر'));
+  assert(!element('profileArea').innerHTML.includes('/null'));
+  assert(element('profileArea').innerHTML.includes('aria-label="Instagram"'));
+  assert(!element('profileArea').innerHTML.includes('<span>Instagram</span>'));
   assert(element('profileArea').innerHTML.includes(lang==='en'?'>My professional story<':'>داستان حرفه‌ای من<'));
   assert(element('detailArea').innerHTML.includes(lang==='en'?'Present':'اکنون'));
   assert(element('detailArea').innerHTML.includes(lang==='en'?'January':'دی'));

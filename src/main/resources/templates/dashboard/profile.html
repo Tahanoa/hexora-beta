@@ -10,7 +10,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
   <link rel="stylesheet" th:href="@{/css/profile.css}">
-<script src="/js/client.js"></script>
+<script src="/js/client.js"></script><script src="/js/public-profile.js"></script>
 <script src="/js/dashboard-shell.js" defer></script>
 <link rel="stylesheet" href="/css/admin-shell.css"><script src="/js/i18n.js"></script></head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
@@ -56,6 +56,8 @@
                         </span>
           </div>
         </div>
+
+        <div id="profileSocials" class="profile-social-icons" hidden aria-label="شبکه‌های اجتماعی" data-i18n-aria-label-fa="شبکه‌های اجتماعی" data-i18n-aria-label-en="Social networks"></div>
 
         <!-- Info Items -->
         <div class="space-y-3">
