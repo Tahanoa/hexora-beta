@@ -11,7 +11,7 @@
   <img alt="Bearer JWT" src="https://img.shields.io/badge/Auth-Bearer_JWT-00c26e?style=flat-square">
   <img alt="Beta" src="https://img.shields.io/badge/Status-Beta-65ffc0?style=flat-square">
 </p>
-<p align="center"><a href="#the-experience">Experience</a> · <a href="#services">Services</a> · <a href="#demo-studio">Demo studio</a> · <a href="#project-overview">Infographic</a> · <a href="#quick-start">Quick start</a> · <a href="#routes">Routes</a> · <a href="#architecture">Architecture</a> · <a href="#validation">Validation</a></p>
+<p align="center"><a href="#the-experience">Experience</a> · <a href="#services">Services</a> · <a href="#demo-studio">Demo studio</a> · <a href="#screenshots">Screenshots</a> · <a href="#project-overview">Infographic</a> · <a href="#quick-start">Quick start</a> · <a href="#routes">Routes</a> · <a href="#architecture">Architecture</a> · <a href="#validation">Validation</a></p>
 
 <div dir="rtl">
 
@@ -147,6 +147,84 @@ Admin APIs under `/api/demos` require the ADMIN role. Public requests serve only
 ### Optional dedicated domain
 
 For a dedicated demo domain, route it to this app's demo paths and set `DEMO_PUBLIC_BASE_URL=https://demo.example.com` and `DEMO_PANEL_ORIGIN=https://portfolio.example.com`. Use a separate registrable domain for maximum separation and keep portfolio cookies scoped to the portfolio host. No external DNS/hosting account is provisioned by the demo studio. With these variables empty, demo links work on the current app host using the opaque sandbox origin.
+
+## Screenshots
+
+Actual screenshots of the running application, supplied on October 7, 2026. These images are kept in `docs/screenshots` for GitHub documentation.
+
+### Public website
+
+<details open>
+<summary>Homepage</summary>
+
+![Homepage — Hexora](docs/screenshots/home-hero.webp)
+
+</details>
+
+<details>
+<summary>Homepage project showcase</summary>
+
+![Homepage project showcase — Hexora](docs/screenshots/home-projects.webp)
+
+</details>
+
+<details>
+<summary>Homepage skills</summary>
+
+![Homepage skills — Hexora](docs/screenshots/home-skills.webp)
+
+</details>
+
+<details>
+<summary>Client testimonials</summary>
+
+![Client testimonials — Hexora](docs/screenshots/home-testimonials.webp)
+
+</details>
+
+<details>
+<summary>Skills by category</summary>
+
+![Skills by category — Hexora](docs/screenshots/skills.webp)
+
+</details>
+
+<details>
+<summary>Contact and private conversation</summary>
+
+![Contact and private conversation — Hexora](docs/screenshots/contact-chat.webp)
+
+</details>
+
+### Administration
+
+<details>
+<summary>Admin dashboard</summary>
+
+![Admin dashboard — Hexora](docs/screenshots/admin-dashboard.webp)
+
+</details>
+
+<details>
+<summary>Demo studio</summary>
+
+![Demo studio — Hexora](docs/screenshots/admin-demo-studio.webp)
+
+</details>
+
+<details>
+<summary>Media library</summary>
+
+![Media library — Hexora](docs/screenshots/admin-media-library.webp)
+
+</details>
+
+<details>
+<summary>Admin conversations</summary>
+
+![Admin conversations — Hexora](docs/screenshots/admin-chat.webp)
+
+</details>
 
 ## Project overview
 
