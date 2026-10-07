@@ -12,7 +12,7 @@
   <link rel="stylesheet" th:href="@{/css/profile.css}">
 <script src="/js/client.js"></script>
 <script src="/js/dashboard-shell.js" defer></script>
-</head>
+<link rel="stylesheet" href="/css/admin-shell.css"></head>
 <body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
 
 <!-- ===== Sidebar ===== -->
@@ -22,21 +22,7 @@
 <!-- ===== Main Content ===== -->
 <div class="dashboard-main">
   <!-- Top Bar -->
-  <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
-    <div>
-      <h1 class="text-2xl lg:text-3xl font-bold" id="pageTitle">پروفایل</h1>
-      <p class="text-[#8A94A6] text-sm" id="pageSubtitle">مدیریت اطلاعات شخصی و تنظیمات</p>
-    </div>
-    <div class="flex items-center gap-3 flex-wrap">
-      <button type="button" onclick="toggleLanguage()" aria-label="تغییر زبان / Change Language" class="bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] px-3 py-2 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
-        <i class="fas fa-globe"></i>
-        <span id="profileLangText">فارسی</span>
-      </button>
-      <button type="button" onclick="toggleSidebar()" aria-label="باز کردن منو" aria-controls="sidebar" aria-expanded="false" class="sidebar-toggle lg:hidden bg-[#1A1F26] hover:bg-[#2A2F36] text-[#F5F7FA] p-2.5 rounded-xl transition-all duration-300 border border-[rgba(0,194,110,0.08)] hover:border-[rgba(0,194,110,0.2)]">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-  </header>
+  <div th:replace="~{dashboard/fragments/topbar :: topbar('pageTitle', 'pageSubtitle', 'پروفایل', 'مدیریت اطلاعات شخصی و تنظیمات', 'profileLanguage', 'profileLangText', 'toggleLanguage()', '', '')}"></div>
 
   <!-- ===== Profile Content ===== -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

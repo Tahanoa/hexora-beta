@@ -1,0 +1,10 @@
+<!doctype html><html xmlns:th="http://www.thymeleaf.org"><body>
+<header class="admin-topbar" th:fragment="topbar(titleId, subtitleId, title, subtitle, languageId, languageTextId, languageHandler, refreshId, refreshHandler)">
+  <div class="admin-heading"><h1 th:id="${titleId}" th:text="${title}">داشبورد</h1><p th:id="${subtitleId}" th:text="${subtitle}"></p></div>
+  <div class="admin-actions">
+    <span th:if="${refreshHandler == 'refreshData()'}" class="admin-update"><i class="fas fa-clock" aria-hidden="true"></i><span id="updateTime">--:--</span></span>
+    <button th:if="${refreshId != ''}" th:id="${refreshId}" th:onclick="${refreshHandler}" type="button" class="admin-control" aria-label="تازه‌سازی" data-admin-refresh><i class="fas fa-sync-alt" aria-hidden="true"></i></button>
+    <button th:id="${languageId}" th:onclick="${languageHandler}" type="button" class="admin-control" aria-label="تغییر زبان / Change language"><i class="fas fa-globe" aria-hidden="true"></i><span th:id="${languageTextId}" data-admin-language>فارسی</span></button>
+    <button type="button" class="admin-control sidebar-toggle" onclick="toggleSidebar()" aria-controls="sidebar" aria-expanded="false" aria-label="باز کردن منو"><i class="fas fa-bars" aria-hidden="true"></i></button>
+  </div>
+</header></body></html>

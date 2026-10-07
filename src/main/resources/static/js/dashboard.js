@@ -150,36 +150,9 @@ function applyLanguage(lang) {
     });
 }
 
-// ===== Sidebar =====
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const shouldOpen = !sidebar.classList.contains('open');
-    setSidebarState(shouldOpen);
-}
-
-function setSidebarState(isOpen) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open', isOpen);
-    overlay.classList.toggle('show', isOpen);
-    document.body.classList.toggle('sidebar-open', isOpen && window.innerWidth < 1024);
-    document.querySelectorAll('.sidebar-toggle').forEach((button) => {
-        button.setAttribute('aria-expanded', String(isOpen));
-        button.setAttribute('aria-label', isOpen ? 'بستن منو' : 'باز کردن منو');
-    });
-}
-
-document.addEventListener('click', function (e) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const isSidebarClick = sidebar.contains(e.target);
-    const isMenuBtn = e.target.closest('[onclick="toggleSidebar()"]');
-
-    if (!isSidebarClick && !isMenuBtn && window.innerWidth < 1024) {
-        setSidebarState(false);
-    }
-});
+// Sidebar state is shared by every management page.
+function toggleSidebar() { window.HexoraAdminShell.toggle(); }
+function setSidebarState(open) { window.HexoraAdminShell.setOpen(open); }
 
 // ===== Fetch API with FormData support =====
 async function fetchAPI(url, options = {}) {

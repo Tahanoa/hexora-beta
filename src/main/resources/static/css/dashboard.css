@@ -404,7 +404,7 @@ textarea:focus-visible {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     #sidebar {
         transform: translateX(-100%);
         width: min(280px, 86vw);
@@ -542,7 +542,7 @@ textarea:focus-visible {
     transform: rotate(180deg);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     [dir="rtl"] .mr-\[280px\] {
         margin-left: 0 !important;
     }
@@ -616,7 +616,7 @@ textarea:focus-visible {
 }
 
 /* ===== Mobile Fix ===== */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     #sidebar {
         transform: translateX(-100%);
     }
