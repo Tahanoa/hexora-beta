@@ -24,14 +24,15 @@ public class ProductService {
  private ApiException bad(String message){return new ApiException(HttpStatus.BAD_REQUEST,message);}
  private User user(String name){return users.findByUsernameIgnoreCase(name).orElseThrow(ApiException::notFound);}
  private User lockedUser(String name){return users.lockedByUsername(name).orElseThrow(ApiException::notFound);}
- private Product locked(Long id){return products.locked(id).orElseThrow(ApiException::notFound);}
+ private Product locked(Long id){return products.locked(id).filter(p->!p.deleted).orElseThrow(ApiException::notFound);}
  public Map<String,Object> view(Product p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("slug",p.slug);m.put("title",p.title);m.put("titleEn",p.titleEn);m.put("description",p.description);m.put("descriptionEn",p.descriptionEn);m.put("category",p.category);m.put("features",p.features);m.put("featuresEn",p.featuresEn);m.put("requirements",p.requirements);m.put("demoUrl",p.demoUrl);m.put("coverId",p.coverId);m.put("price",p.price);m.put("published",p.published);return m;}
  public Object releaseView(ProductRelease v){return Map.of("id",v.id,"version",v.version,"changelog",v.changelog==null?"":v.changelog,"published",v.published,"sha256",v.sha256,"size",v.size,"createdAt",v.createdAt);}
- public Object list(boolean admin,int page){var paging=PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending());return (admin?products.findAll(paging):products.findByPublishedTrue(paging)).map(this::view);}
+ public Object list(boolean admin,int page){var paging=PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending());return (admin?products.findByDeletedFalse(paging):products.findByPublishedTrueAndDeletedFalse(paging)).map(this::view);}
  public Object adminList(String q,String state,int page){if(q.length()>100)throw bad("Search is too long");Boolean published=switch(state){case "ALL"->null;case "PUBLISHED"->true;case "DRAFT"->false;default->throw bad("Invalid publication filter");};return products.search(q.trim().toLowerCase(Locale.ROOT),published,PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending())).map(this::view);}
- public Object stats(){long total=products.count(),published=products.countByPublishedTrue();return Map.of("total",total,"published",published,"drafts",total-published,"releases",releases.count());}
- public Object detail(String slug){var p=products.findBySlugAndPublishedTrue(slug).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdAndPublishedTrueOrderByCreatedAtDesc(p.id).stream().map(this::releaseView).toList());return out;}
- public Object adminDetail(Long id){var p=products.findById(id).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdOrderByCreatedAtDesc(id).stream().map(this::releaseView).toList());return out;}
+ public Object stats(){long total=products.countByDeletedFalse(),published=products.countByPublishedTrueAndDeletedFalse();return Map.of("total",total,"published",published,"drafts",total-published,"releases",releases.countActive());}
+ public Object detail(String slug){var p=products.findBySlugAndPublishedTrueAndDeletedFalse(slug).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdAndPublishedTrueOrderByCreatedAtDesc(p.id).stream().map(this::releaseView).toList());return out;}
+ public Object adminDetail(Long id){var p=products.findById(id).filter(p->!p.deleted).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdOrderByCreatedAtDesc(id).stream().map(this::releaseView).toList());return out;}
+ @Transactional public Object delete(Long id){var p=locked(id);p.deleted=true;p.published=false;products.saveAndFlush(p);return Map.of("deleted",true);}
  @Transactional public Object save(Long id,ProductRequest r){
   if(r.slug().equals("library"))throw bad("This product URL is reserved");
   if(r.price()>0&&r.price()<1000)throw bad("Paid product price must be at least 1000 toman");
@@ -64,7 +65,7 @@ public class ProductService {
  @Transactional public Object buy(Long id,String username){
   var user=lockedUser(username);var product=locked(id);if(!product.published||!releases.existsByProductIdAndPublishedTrue(id))throw ApiException.notFound();
   if(payments.existsByProductIdAndPurchaserIdAndStatus(id,user.getId(),"PAID"))return Map.of("owned",true);
-  var existing=payments.findFirstByProductIdAndPurchaserIdAndStatusInOrderByCreatedAtDesc(id,user.getId(),List.of("CREATED","PENDING","REQUEST_FAILED"));
+  var existing=payments.findFirstByProductIdAndPurchaserIdAndStatusInAndDeletedFalseOrderByCreatedAtDesc(id,user.getId(),List.of("CREATED","PENDING","REQUEST_FAILED"));
   Payment p=existing.orElseGet(Payment::new);if(existing.isEmpty()){p.productId=id;p.purchaserId=user.getId();p.buyer=user.getUsername();p.amount=product.price;p.description=("Product: "+product.title);
    payments.saveAndFlush(p);
   }
@@ -72,16 +73,16 @@ public class ProductService {
   return Map.of("orderId",p.id,"status",p.status,"invoicePath","/account/orders/"+p.id,"invoiceType",p.invoiceType(),"shareable",false);
  }
  private Payment ownedOrder(String id,Long userId,boolean lock){return (lock?payments.locked(id):payments.findById(id)).filter(p->userId.equals(p.purchaserId)&&p.productId!=null).orElseThrow(ApiException::notFound);}
- public Object order(String id,String username){return gateway.invoiceView(ownedOrder(id,user(username).getId(),false));}
+ public Object order(String id,String username){var p=ownedOrder(id,user(username).getId(),false);if(p.deleted&&!p.status.equals("PAID"))throw ApiException.notFound();return gateway.invoiceView(p);}
  @Transactional public Object checkoutOrder(String id,String username,PaymentConsentRequest consent){
-  var u=lockedUser(username);var p=ownedOrder(id,u.getId(),true);if(p.status.equals("PAID"))return gateway.invoiceView(p);
+  var u=lockedUser(username);var p=ownedOrder(id,u.getId(),true);if(p.deleted&&!p.status.equals("PAID"))throw ApiException.notFound();if(p.status.equals("PAID"))return gateway.invoiceView(p);
   var product=locked(p.productId);if(!product.published||!releases.existsByProductIdAndPublishedTrue(product.id))throw ApiException.notFound();
   gateway.acceptTerms(p,consent);
   if(p.amount==0){p.status="PAID";p.refId="FREE";p.paidAt=Instant.now();payments.saveAndFlush(p);return gateway.invoiceView(p);}
   var result=(Map<?,?>)gateway.checkout(p.id);var out=gateway.invoiceView(p);if(result.get("redirectUrl")!=null)out.put("redirectUrl",result.get("redirectUrl"));return out;
  }
  public Object library(String username,int page){var u=user(username);return products.owned(u.getId(),PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending())).map(p->{var m=view(p);m.put("releases",releases.findByProductIdAndPublishedTrueOrderByCreatedAtDesc(p.id).stream().map(this::releaseView).toList());return m;});}
- public Object orders(String username,int page){var u=user(username);return payments.findByPurchaserIdOrderByCreatedAtDesc(u.getId(),PageRequest.of(Math.max(0,page),20)).map(p->Map.of("id",p.id,"productId",p.productId,"description",p.description,"amount",p.amount,"status",p.status,"refId",p.refId==null?"":p.refId,"createdAt",p.createdAt));}
+ public Object orders(String username,int page){var u=user(username);return payments.findByPurchaserIdOrderByCreatedAtDesc(u.getId(),PageRequest.of(Math.max(0,page),20)).map(p->Map.of("id",p.id,"productId",p.productId,"description",p.description,"amount",p.amount,"status",p.status,"refId",p.refId==null?"":p.refId,"createdAt",p.createdAt,"deleted",p.deleted,"canVerify",p.authority!=null&&!p.status.equals("PAID")));}
  @Transactional public Object verifyOrder(String id,String username){var u=user(username);var p=payments.locked(id).filter(x->u.getId().equals(x.purchaserId)&&x.productId!=null).orElseThrow(ApiException::notFound);gateway.verify(id);return gateway.invoiceView(p);}
  public record Download(byte[] data,String filename,String sha256) {}
  @Transactional public Download download(Long productId,Long releaseId,String username,boolean admin){

@@ -17,7 +17,7 @@ PostgreSQL only, using the project's existing `JPA_DDL_AUTO=update`. New tables:
 
 File bytes are PostgreSQL `bytea` in `product_private_files`; they are not stored in the media table or static web directory. Version metadata and file bytes are separate, so catalog/library responses never serialize binary data. Covers use the existing validated public image-media flow. No new gateway credentials or external storage service is needed.
 
-No product/file hard-delete endpoint is provided: draft/unpublish and release withdrawal preserve paid-order history.
+Admin product deletion removes the product from the store and management lists using an archive flag. Files and confirmed buyer entitlements remain available; draft/unpublish and release withdrawal still control publication.
 
 ## Security review and implemented controls
 
@@ -93,3 +93,11 @@ Public `/terms` and `/privacy` pages use the shared site layout, explicit FA/EN 
 - `DIRECT_LINK`: issued by administrators, with no product or purchaser reference. `/invoice/{uuid}` and its public APIs support viewing, payment and verification without login. Possession of the invoice link grants access. Admin UI exposes copy/share actions only for this type.
 - `PRODUCT_PRIVATE`: created by the buyer’s authenticated purchase flow. `/account/orders/{uuid}` is a generic site shell; all invoice data and checkout/verification requests require the owner’s authenticated principal. Another account, including an administrator using the buyer-facing API, cannot access the invoice. Admin transaction reporting remains separate.
 - Type and `shareable` metadata are derived from persisted ownership, never supplied by the client. A record with either product or purchaser set is rejected by public invoice APIs. Private invoice detail, checkout and verification responses use no-store. No schema migration is introduced.
+
+## Admin removal
+
+- `DELETE /api/products/admin/{id}` archives a product and stops publication/new checkout. Catalog, public reviews, admin search and counters exclude archived products. Published releases remain downloadable by existing verified buyers. Slugs and original files are retained with purchase history.
+- `DELETE /api/payments/admin/transactions/{uuid}` archives an invoice. Admin lists hide it and public link access/new gateway requests stop. Confirmed entitlements, transaction reports and callback/reconciliation records are retained. An authority issued before removal can still settle at the gateway; callback verification must remain able to record that payment. An unpaid archived product order is shown as cancelled in the buyer’s orders and can only be verified if it already has an authority. A new purchase can create a fresh invoice.
+- `products.deleted` and `payments.deleted` use PostgreSQL boolean defaults of false through the existing Hibernate update workflow. No migration framework is added.
+- Deletion actions require ADMIN and an explicit UI confirmation. Ordinary read/navigation in generic CRUD management does not show load-progress or item-count success notifications.
+- Validation: JS syntax/whitespace checks and source review. No automated tests or live payments were run.

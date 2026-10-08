@@ -20,6 +20,8 @@ public class ChatController{
  @PreAuthorize("hasRole('ADMIN')") @GetMapping("/admin/conversations") Object conversations(){return ApiResponse.success(service.conversations());}
  @PreAuthorize("hasRole('ADMIN')") @GetMapping("/admin/stats") Object stats(){return ApiResponse.success(Map.of("unread",service.unread(),"total",service.total()));}
  @PreAuthorize("hasRole('ADMIN')") @GetMapping("/admin/{userId}/messages") Object adminHistory(@PathVariable Long userId,@RequestParam(required=false)Long after,@RequestParam(required=false)Long before){return ApiResponse.success(service.history(userId,true,after,before));}
+ @PreAuthorize("hasRole('ADMIN')") @DeleteMapping("/admin/{userId}/messages/{messageId}") Object deleteIncoming(@PathVariable Long userId,@PathVariable Long messageId){return ApiResponse.success(service.deleteIncoming(userId,messageId));}
+ @PreAuthorize("hasRole('ADMIN')") @DeleteMapping("/admin/{userId}/incoming") Object clearIncoming(@PathVariable Long userId){return ApiResponse.success(service.clearIncoming(userId));}
  @PreAuthorize("hasRole('ADMIN')") @PostMapping("/admin/{userId}/messages") Object reply(@PathVariable Long userId,@Valid @RequestBody MessageRequest request){return ApiResponse.created(service.send(userId,true,request.text(),null));}
  @PreAuthorize("hasRole('ADMIN')") @PostMapping("/admin/{userId}/files") Object adminFile(@PathVariable Long userId,@RequestParam MultipartFile file){return ApiResponse.created(service.upload(userId,true,file));}
 }

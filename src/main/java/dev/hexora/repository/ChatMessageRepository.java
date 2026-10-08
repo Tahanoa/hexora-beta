@@ -9,6 +9,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage,Long>{
  List<ChatMessage> findByUserIdAndIdGreaterThanOrderByIdAsc(Long userId,Long after,Pageable page);
  List<ChatMessage> findByUserIdAndIdLessThanOrderByIdDesc(Long userId,Long before,Pageable page);
  Optional<ChatMessage> findTopByUserIdOrderByIdDesc(Long userId);
+ long deleteByUserIdAndFromAdminFalse(Long userId);
  long countByUserIdAndFromAdminAndReadByRecipientFalse(Long userId,boolean fromAdmin);
  long countByFromAdminFalseAndReadByRecipientFalse();
  @Query("select distinct m.userId from ChatMessage m") List<Long> conversationUsers();

@@ -9,3 +9,7 @@ Every full site, account and admin template loads `/js/notifications.js` and `/c
 - Messages, titles and confirmation text use textContent; only fixed local icon markup is inserted as HTML. Form validation uses a warning notification, focuses the invalid control and marks the field.
 - Product, invoice, payment, account, media, chat, CRUD, demo, profile, login/register and public loading failure paths use the common system. Contextual empty states, retry controls, upload queue state, order status and actual chat messages remain page content.
 - Validation: JavaScript syntax checks across all scripts, template inclusion review and whitespace checks. Automated tests and live application/gateway verification were not run.
+
+Routine CRUD page loading does not create progress/count notifications; skeletons show loading in place, while failures and explicit user actions still notify.
+
+Admin chat supports permanent deletion of one incoming message (including its stored attachment) or all incoming messages in the selected conversation. Replies are preserved. Routes are ADMIN-only and validate message/conversation ownership. The current admin conversation refreshes after deletion; other open clients reflect hard-deleted messages after refreshing their history.

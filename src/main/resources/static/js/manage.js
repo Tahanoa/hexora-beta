@@ -126,9 +126,9 @@
   }
   function unwrap(json) { return json?.data ?? []; }
   async function load(path = endpoint) {
-    setStatus(t('در حال دریافت اطلاعات...','Loading data...'));
+
     if(path===endpoint) $('#rows').innerHTML=Array.from({length:5},()=>'<tr class="skeleton-row"><td colspan="5"><div class="skeleton-block"></div></td></tr>').join('');
-    try { const response = await fetch(typeof path==='string'?path:endpoint); if (!response.ok) throw Error(response.status === 403 ? tr('دسترسی مدیریت ندارید') : tr('دریافت اطلاعات ناموفق بود')); let data = unwrap(await response.json()); if (data?.content) data = data.content; renderRows(Array.isArray(data) ? data : []); setStatus(t(`${Array.isArray(data) ? data.length : 0} مورد بارگذاری شد`, `${Array.isArray(data) ? data.length : 0} items loaded`)); }
+    try { const response = await fetch(typeof path==='string'?path:endpoint); if (!response.ok) throw Error(response.status === 403 ? tr('دسترسی مدیریت ندارید') : tr('دریافت اطلاعات ناموفق بود')); let data = unwrap(await response.json()); if (data?.content) data = data.content; renderRows(Array.isArray(data) ? data : []);  }
     catch (error) { setStatus(error.message, true); $('#rows').innerHTML = `<tr><td colspan="5" class="empty">${esc(error.message)}</td></tr>`; }
   }
   function renderRows(items) {

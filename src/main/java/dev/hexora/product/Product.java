@@ -18,5 +18,6 @@ public class Product {
  @Column(nullable=false) public long price;
  @Column(nullable=false) public boolean published=false;
  @Column(nullable=false) public Instant createdAt=Instant.now();
+ @Column(nullable=false,columnDefinition="boolean default false") public boolean deleted=false;
  @Version public long rowVersion;
 }

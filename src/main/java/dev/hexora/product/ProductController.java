@@ -23,6 +23,7 @@ public class ProductController {
  @GetMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object adminDetail(@PathVariable Long id){return ApiResponse.success(service.adminDetail(id));}
  @PostMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object create(@Valid @RequestBody ProductRequest r){return ApiResponse.created(service.save(null,r));}
  @PutMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object update(@PathVariable Long id,@Valid @RequestBody ProductRequest r){return ApiResponse.success(service.save(id,r));}
+ @DeleteMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object delete(@PathVariable Long id){return ApiResponse.success(service.delete(id));}
  @PostMapping(value="/admin/{id}/releases",consumes=MediaType.MULTIPART_FORM_DATA_VALUE) @PreAuthorize("hasRole('ADMIN')") Object upload(@PathVariable Long id,@RequestParam String version,@RequestParam(defaultValue="") String changelog,@RequestParam MultipartFile file){return ApiResponse.created(service.upload(id,version,changelog,file));}
  public record ReleaseState(boolean published) {}
  @PutMapping("/admin/{id}/releases/{releaseId}") @PreAuthorize("hasRole('ADMIN')") Object state(@PathVariable Long id,@PathVariable Long releaseId,@RequestBody ReleaseState r){return ApiResponse.success(service.releaseState(id,releaseId,r.published()));}

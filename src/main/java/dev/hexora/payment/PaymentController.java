@@ -17,5 +17,6 @@ public class PaymentController {
  @GetMapping("/admin/transactions") @PreAuthorize("hasRole('ADMIN')") Object list(@RequestParam(required=false) String status,@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.list(status,page));}
  @GetMapping("/admin/report") @PreAuthorize("hasRole('ADMIN')") Object report(@RequestParam LocalDate from,@RequestParam LocalDate to){return ApiResponse.success(service.report(from,to));}
  @PostMapping("/admin/transactions/{id}/verify") @PreAuthorize("hasRole('ADMIN')") Object verify(@PathVariable String id){return ApiResponse.success(service.verify(id));}
+ @DeleteMapping("/admin/transactions/{id}") @PreAuthorize("hasRole('ADMIN')") Object delete(@PathVariable java.util.UUID id){return ApiResponse.success(service.deleteInvoice(id.toString()));}
  @PostMapping("/admin/reconcile") @PreAuthorize("hasRole('ADMIN')") Object reconcile(){return ApiResponse.success(service.reconcile());}
 }

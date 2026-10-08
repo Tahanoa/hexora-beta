@@ -3,3 +3,5 @@
 .chat-socials{display:flex;flex-wrap:wrap;gap:15px;margin-top:18px}.chat-socials a,.chat-socials a:visited{color:#65ffc0;text-decoration:none;font-size:.8rem}
 
 .chat-service-request{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;margin-bottom:24px;border:1px solid #31704e;background:#103721;border-radius:14px;color:#a7f9ca;flex-wrap:wrap}.chat-service-request button{border:1px solid #40745a;background:#0c2418;color:#e3f8eb;padding:8px 12px;border-radius:8px;cursor:pointer;font:inherit}
+
+.chat-delete-message{color:#ff9a9a;background:#ff9a9a09;border:1px solid #ff9a9a33;border-radius:8px;padding:7px 12px;font:inherit;font-size:11px;cursor:pointer;margin-top:10px}.chat-delete-message:disabled{opacity:.4;cursor:default}.chat-delete-message:focus-visible{outline:2px solid #ff9a9a;outline-offset:2px}.chat-room-header .chat-delete-message{margin:0}
