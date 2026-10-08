@@ -25,9 +25,11 @@ public class ProductService {
  private User user(String name){return users.findByUsernameIgnoreCase(name).orElseThrow(ApiException::notFound);}
  private User lockedUser(String name){return users.lockedByUsername(name).orElseThrow(ApiException::notFound);}
  private Product locked(Long id){return products.locked(id).orElseThrow(ApiException::notFound);}
- public Map<String,Object> view(Product p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("slug",p.slug);m.put("title",p.title);m.put("titleEn",p.titleEn);m.put("description",p.description);m.put("descriptionEn",p.descriptionEn);m.put("category",p.category);m.put("requirements",p.requirements);m.put("demoUrl",p.demoUrl);m.put("coverId",p.coverId);m.put("price",p.price);m.put("published",p.published);return m;}
+ public Map<String,Object> view(Product p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("slug",p.slug);m.put("title",p.title);m.put("titleEn",p.titleEn);m.put("description",p.description);m.put("descriptionEn",p.descriptionEn);m.put("category",p.category);m.put("features",p.features);m.put("featuresEn",p.featuresEn);m.put("requirements",p.requirements);m.put("demoUrl",p.demoUrl);m.put("coverId",p.coverId);m.put("price",p.price);m.put("published",p.published);return m;}
  public Object releaseView(ProductRelease v){return Map.of("id",v.id,"version",v.version,"changelog",v.changelog==null?"":v.changelog,"published",v.published,"sha256",v.sha256,"size",v.size,"createdAt",v.createdAt);}
  public Object list(boolean admin,int page){var paging=PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending());return (admin?products.findAll(paging):products.findByPublishedTrue(paging)).map(this::view);}
+ public Object adminList(String q,String state,int page){if(q.length()>100)throw bad("Search is too long");Boolean published=switch(state){case "ALL"->null;case "PUBLISHED"->true;case "DRAFT"->false;default->throw bad("Invalid publication filter");};return products.search(q.trim().toLowerCase(Locale.ROOT),published,PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending())).map(this::view);}
+ public Object stats(){long total=products.count(),published=products.countByPublishedTrue();return Map.of("total",total,"published",published,"drafts",total-published,"releases",releases.count());}
  public Object detail(String slug){var p=products.findBySlugAndPublishedTrue(slug).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdAndPublishedTrueOrderByCreatedAtDesc(p.id).stream().map(this::releaseView).toList());return out;}
  public Object adminDetail(Long id){var p=products.findById(id).orElseThrow(ApiException::notFound);var out=view(p);out.put("releases",releases.findByProductIdOrderByCreatedAtDesc(id).stream().map(this::releaseView).toList());return out;}
  @Transactional public Object save(Long id,ProductRequest r){
@@ -38,7 +40,7 @@ public class ProductService {
   Product p=id==null?new Product():locked(id);
   if(id==null){if(products.existsBySlug(r.slug()))throw bad("Product slug already exists");p.slug=r.slug();}else if(!p.slug.equals(r.slug()))throw bad("Product URL cannot change after creation");
   if(r.published()&&(id==null||!releases.existsByProductIdAndPublishedTrue(id)))throw bad("Publish a reviewed release before publishing the product");
-  p.title=r.title().trim();p.titleEn=r.titleEn();p.description=r.description();p.descriptionEn=r.descriptionEn();p.category=r.category();p.requirements=r.requirements();p.demoUrl=r.demoUrl();p.coverId=r.coverId();p.price=r.price();p.published=r.published();return view(products.saveAndFlush(p));
+  p.title=r.title().trim();p.titleEn=r.titleEn();p.description=r.description();p.descriptionEn=r.descriptionEn();p.category=r.category();p.features=r.features();p.featuresEn=r.featuresEn();p.requirements=r.requirements();p.demoUrl=r.demoUrl();p.coverId=r.coverId();p.price=r.price();p.published=r.published();return view(products.saveAndFlush(p));
  }
  @Transactional public Object upload(Long id,String version,String changelog,MultipartFile file){
   locked(id);if(version==null||!version.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,49}"))throw bad("Invalid release version");

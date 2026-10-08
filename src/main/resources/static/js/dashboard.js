@@ -41,7 +41,8 @@ let refreshInterval = null;
 const releaseInitialLoader = window.holdPageLoader?.() || (() => {});
 document.addEventListener('DOMContentLoaded', async function () {
     const session = await loadSession();
-    if (!session || !session.roles.includes('ADMIN')) { window.location.href = '/login'; return; }
+    if (!session) { window.location.href = '/login'; return; }
+    if (!session.roles.includes('ADMIN')) { window.location.href = '/account'; return; }
     setupUserInfo();
     setupNavigation();
     applyLanguage(currentLang);

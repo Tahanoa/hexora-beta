@@ -88,14 +88,14 @@ async function handleLogin(form) {
             localStorage.setItem('user', JSON.stringify(result.data.user));
 
             const successMsg = lang === 'fa'
-                ? 'به پنل مدیریت خوش آمدید'
+                ? 'به حساب کاربری خوش آمدید'
                 : 'Welcome to the dashboard';
             showToast('success', lang === 'fa' ? 'موفق!' : 'Success!', successMsg);
 
             setTimeout(() => {
                 const pending=sessionStorage.getItem('hexora-service-request');
                 const productReturn=sessionStorage.getItem('hexora-product-return');sessionStorage.removeItem('hexora-product-return');
-                window.location.href = productReturn&&/^\/products(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/.test(productReturn)?productReturn:pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):'/';
+                window.location.href = productReturn&&/^(?:\/products(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?|\/account(?:\/(?:orders|products))?)$/.test(productReturn)?productReturn:pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):result.data.user.roles?.includes('ADMIN')?'/':'/account';
             }, 500);
         } else {
             const errorMsg = window.HexoraI18n.tr(result.message) || (lang === 'fa'

@@ -8,7 +8,9 @@ public class PageController {
  @GetMapping("/home") String legacyHome(){return "redirect:/";}
  @GetMapping("/projects") String projects(Model model){model.addAttribute("publicSection","projects");return "portfolio";}
  @GetMapping("/products") String productCatalog(){return "home/products";}
- @GetMapping("/products/library") String productLibrary(Model model){model.addAttribute("productLibrary",true);return "home/products";}
+ @GetMapping("/products/library") String productLibrary(){return "redirect:/account/products";}
+ @GetMapping("/account") String account(Model model){model.addAttribute("accountSection","overview");return "account/index";}
+ @GetMapping("/account/{section}") String accountSection(@PathVariable String section,Model model){if(!java.util.Set.of("orders","products").contains(section))throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND);model.addAttribute("accountSection",section);return "account/index";}
  @GetMapping("/products/{slug}") String productDetail(@PathVariable String slug,Model model){model.addAttribute("productSlug",slug);return "home/products";}
  @GetMapping("/services") String services(){return "home/services";}
  @GetMapping("/services/{slug}") String serviceDetail(@PathVariable String slug,Model model){model.addAttribute("serviceSlug",slug);return "home/service";}

@@ -9,6 +9,8 @@ public class Product {
  @Column(length=150) public String titleEn;
  @Column(columnDefinition="text") public String description;
  @Column(columnDefinition="text") public String descriptionEn;
+ @Column(columnDefinition="text") public String features;
+ @Column(columnDefinition="text") public String featuresEn;
  @Column(length=80) public String category;
  @Column(columnDefinition="text") public String requirements;
  @Column(length=500) public String demoUrl;

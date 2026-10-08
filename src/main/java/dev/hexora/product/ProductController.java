@@ -13,7 +13,8 @@ public class ProductController {
  public ProductController(ProductService service){this.service=service;}
  @GetMapping("/public") Object list(@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.list(false,page));}
  @GetMapping("/public/{slug}") Object detail(@PathVariable String slug){return ApiResponse.success(service.detail(slug));}
- @GetMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object admin(@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.list(true,page));}
+ @GetMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object admin(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="") String q,@RequestParam(defaultValue="ALL") String state){return ApiResponse.success(service.adminList(q,state,page));}
+ @GetMapping("/admin/stats") @PreAuthorize("hasRole('ADMIN')") Object stats(){return ApiResponse.success(service.stats());}
  @GetMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object adminDetail(@PathVariable Long id){return ApiResponse.success(service.adminDetail(id));}
  @PostMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object create(@Valid @RequestBody ProductRequest r){return ApiResponse.created(service.save(null,r));}
  @PutMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object update(@PathVariable Long id,@Valid @RequestBody ProductRequest r){return ApiResponse.success(service.save(id,r));}

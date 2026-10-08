@@ -476,9 +476,9 @@ See [payment setup and API reference](docs/payments.md) for callback configurati
 
 ## Digital products
 
-- `/manage/products`: bilingual product metadata, cover from the media library, free or paid pricing, draft/publication state and HTTPS demo links. Create the product as a draft, upload a ZIP, download/review and publish the release, then publish the product.
+- `/manage/products`: bilingual product metadata and feature highlights, direct cover upload with preview or media-library selection, server-side search and publication filtering, global counters, free or paid pricing, draft/publication state and HTTPS demo links. Create the product as a draft, upload a ZIP, download/review and publish the release, then publish the product.
 - `/products` and `/products/{slug}`: public catalog and product details using the main website shell.
-- `/products/library`: authenticated purchases, order verification recovery and private release downloads.
+- `/account`: a simple user dashboard with separate `/account/orders` and `/account/products` pages. The old `/products/library` route redirects to purchased products.
 - ZIP releases are immutable, SHA-256 fingerprinted and stored separately from public media. New versions preserve the purchase history; withdrawn releases cannot be downloaded by buyers.
 - Single-product purchases reuse Zarinpal. Prices are snapshotted server-side, repeated checkout reuses the pending order, and every download checks the authenticated purchaser against a PAID order.
 

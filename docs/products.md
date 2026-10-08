@@ -3,11 +3,11 @@
 ## Workflow
 
 1. Configure the existing Zarinpal gateway at `/manage/payments`.
-2. Create a draft at `/manage/products`: permanent slug, FA/EN titles and descriptions, category, image cover, requirements/installation instructions, optional HTTPS demo and whole-toman price. Price zero means free; paid products require at least 1,000 toman.
+2. Create a draft at `/manage/products`: permanent slug, FA/EN titles, descriptions and per-line feature highlights, category, an image cover (upload with preview inside the editor or choose from the media library), requirements/installation instructions, optional HTTPS demo and whole-toman price. Price zero means free; paid products require at least 1,000 toman.
 3. Upload a ZIP release up to 8 MB with a unique version label and changelog. Releases start as drafts. Download and review it before using “Reviewed; publish release”. File bytes cannot be replaced; upload a new version for changes.
 4. Edit the product and enable publication. A product cannot be published until it has a published release. Withdrawing the last published release automatically removes the product from the catalog.
-5. Buyers open `/products`, sign in/register, purchase one product and pay through the existing Zarinpal gateway. After successful login, the app safely returns to the requested product page. Gateway callbacks verify server-side and return product buyers to `/products/library`.
-6. The library shows paid purchases, published releases, pending orders and manual verification recovery. Existing buyers retain downloads of published releases when the product is hidden from the public catalog. Purchase includes access to subsequent published versions; there is no expiry/licensing in this stage.
+5. Buyers open `/products`, sign in/register, purchase one product and pay through the existing Zarinpal gateway. After successful login, the app safely returns to the requested product page. Gateway callbacks verify server-side and return product buyers to `/account/orders`.
+6. The user dashboard at `/account` has separate pages: `/account/products` for purchased products/releases and `/account/orders` for payment status, references, checkout recovery and verification. `/products/library` redirects to the new purchases page. Normal users enter their dashboard from the website account link and after login; `/dashboard` also routes normal users there. Existing buyers retain downloads of published releases when the product is hidden from the public catalog. Purchase includes access to subsequent published versions; there is no expiry/licensing in this stage.
 
 Free products create a PAID, zero-value order with reference FREE without calling the gateway. These count as purchases in the existing sales metrics, with zero revenue. Catalog prices changing do not change the amount of a previously initiated pending order.
 
@@ -57,3 +57,10 @@ Per user instruction, no automated tests, penetration traffic or real payment we
 | GET | `/api/products/orders?page=0` | Current buyer's orders, 20 per page |
 | POST | `/api/products/orders/{id}/verify` | Retry own order verification |
 | GET | `/api/products/{id}/releases/{releaseId}/download` | Authorized attachment and SHA-256 header |
+
+
+## Product presentation and admin tools
+
+The detail page uses a two-column product hero, full cover, latest-release facts, a sticky purchase panel, section navigation, feature highlights, installation guidance and expandable release notes. Text is escaped and demo/payment URL validation remains in place.
+
+The admin panel includes server-side search and publication filters, global product/release counters, cover previews on cards, direct cover upload with the existing validated image API, and quick publish/unpublish actions. Uploaded covers remain reusable media assets if editing is cancelled. New `features`/`featuresEn` columns use the existing PostgreSQL schema-update configuration. Admin statistics and search routes require ADMIN; account pages continue to use principal-scoped APIs for every order and download.

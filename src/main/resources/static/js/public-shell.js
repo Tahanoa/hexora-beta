@@ -80,9 +80,9 @@
     window.loadSession().then(user => {
       if (!user) return;
       const admin = user.roles?.includes('ADMIN');
-      account.href = admin ? '/dashboard' : '/contact';
-      account.dataset.fa = admin ? 'داشبورد' : 'گفتگوهای شما';
-      account.dataset.en = admin ? 'Dashboard' : 'Your conversation';
+      account.href = admin ? '/dashboard' : '/account';
+      account.dataset.fa = admin ? 'داشبورد' : 'حساب کاربری';
+      account.dataset.en = admin ? 'Dashboard' : 'My account';
       language();
     }).catch(() => {});
   }
