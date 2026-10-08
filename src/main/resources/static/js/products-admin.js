@@ -25,6 +25,6 @@
  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{if(!busy)b.closest('dialog').close();});document.querySelectorAll('.pd-dialog').forEach(d=>d.addEventListener('cancel',e=>{if(busy)e.preventDefault();}));
  let searchTimer;$('pdSearch').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{page=0;mutate(async()=>{});},350);};$('pdState').onchange=()=>{page=0;mutate(async()=>{});};
  $('pdNew').onclick=()=>openEdit();$('pdRefresh').onclick=()=>mutate(async()=>{});$('pdPrev').onclick=()=>{page--;mutate(async()=>{});};$('pdNext').onclick=()=>{page++;mutate(async()=>{});};
- $('pdLanguage').onclick=()=>{const lang=document.documentElement.lang==='en'?'fa':'en';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';localStorage.setItem('hexora-lang',lang);language();};$('logoutBtn').onclick=()=>{localStorage.removeItem('accessToken');localStorage.removeItem('user');location.href='/login';};
+ $('pdLanguage').onclick=()=>{const lang=document.documentElement.lang==='en'?'fa':'en';document.documentElement.lang=lang;document.documentElement.dir=lang==='fa'?'rtl':'ltr';localStorage.setItem('hexora-lang',lang);language();};$('logoutBtn').onclick=async()=>{if(await window.logoutSession())location.href='/login';};
  (async()=>{try{const user=await loadSession();if(!user?.roles?.includes('ADMIN')){location.href='/login';return;}ready=true;language();await load();}catch(e){message(e.message,true);}})();
 })();

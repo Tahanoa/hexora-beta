@@ -413,6 +413,9 @@
   "میانگین تسلط": "Average proficiency"
 };
   const persian = {
+  "Too many requests; try again later": "تعداد درخواست‌ها بیش از حد مجاز است؛ بعداً تلاش کنید.",
+  "Too many login attempts; wait before retrying": "تلاش‌های ورود بیش از حد مجاز است؛ کمی صبر کنید.",
+  "Conversation storage limit reached; contact support": "ظرفیت پیام‌های حساب شما تکمیل شده است؛ با پشتیبانی تماس بگیرید.",
   "keyword": "کلیدواژه",
   "start": "تاریخ شروع",
   "end": "تاریخ پایان",

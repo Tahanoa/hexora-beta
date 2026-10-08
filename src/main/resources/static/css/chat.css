@@ -5,3 +5,7 @@
 .chat-service-request{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;margin-bottom:24px;border:1px solid #31704e;background:#103721;border-radius:14px;color:#a7f9ca;flex-wrap:wrap}.chat-service-request button{border:1px solid #40745a;background:#0c2418;color:#e3f8eb;padding:8px 12px;border-radius:8px;cursor:pointer;font:inherit}
 
 .chat-delete-message{color:#ff9a9a;background:#ff9a9a09;border:1px solid #ff9a9a33;border-radius:8px;padding:7px 12px;font:inherit;font-size:11px;cursor:pointer;margin-top:10px}.chat-delete-message:disabled{opacity:.4;cursor:default}.chat-delete-message:focus-visible{outline:2px solid #ff9a9a;outline-offset:2px}.chat-room-header .chat-delete-message{margin:0}
+
+.chat-thread-pagination{display:flex;gap:.5rem;padding:.75rem;justify-content:space-between}
+.chat-thread-pagination button{border:1px solid #ffffff20;background:#ffffff08;color:inherit;border-radius:.6rem;padding:.45rem .8rem;cursor:pointer}
+.chat-thread-pagination button:disabled{opacity:.4;cursor:default}

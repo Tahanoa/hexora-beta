@@ -34,6 +34,6 @@
   if(d.delete&&await HexoraNotify.confirm(t('دمو و تمام نسخه‌های آن برای همیشه حذف شوند؟','Permanently delete this demo and all its versions?'))){await mutate(()=>api('/api/demos/'+d.delete,{method:'DELETE'}));}
  };
  $('dmCreate').onclick=()=>openEdit();$('dmRefresh').onclick=()=>{if(!busy)load();};$('dmSearch').oninput=render;$('dmFilter').onchange=render;$('dmLanguage').onclick=()=>{lang=lang==='fa'?'en':'fa';localStorage.setItem('hexora-lang',lang);language();};
- $('logoutBtn').onclick=()=>{localStorage.removeItem('accessToken');localStorage.removeItem('user');location.href='/login';};
+ $('logoutBtn').onclick=async()=>{if(await window.logoutSession())location.href='/login';};
  language();(async()=>{try{const user=await window.loadSession();if(!user?.roles?.includes('ADMIN')){location.href='/login';return;}authorized=true;await load();}catch(error){status(error.message,true);}})();
 })();

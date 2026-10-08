@@ -7,6 +7,8 @@ public class User extends BaseEntity {
  @Column(nullable=false,unique=true,length=150) private String email;
  @Column(length=16) private String phone;
  @Column(nullable=false) private boolean enabled=true;
+ @Column(nullable=false,columnDefinition="bigint default 0") private long tokenVersion=0;
+ public long getTokenVersion(){return tokenVersion;} public void setTokenVersion(long value){tokenVersion=value;}
  @ManyToMany(fetch=FetchType.EAGER) @JoinTable(name="user_roles",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="role_id")) private Set<Role> roles=new HashSet<>();
  public String getPhone(){return phone;} public void setPhone(String value){phone=value;}
  public String getUsername(){return username;} public void setUsername(String v){username=v;}

@@ -510,14 +510,7 @@ async function handleLogout(e) {
     const t = translations[currentLang];
     if (!await HexoraNotify.confirm(t.logoutConfirm)) return;
 
-    try {
-        await fetch('/api/auth/logout', { method: 'POST' });
-            localStorage.removeItem('accessToken');
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
-
-    localStorage.removeItem('user');
+    if(!await window.logoutSession())return;
     showToast('success', t.logoutSuccess, '');
     setTimeout(() => window.location.href = '/login', 500);
 }

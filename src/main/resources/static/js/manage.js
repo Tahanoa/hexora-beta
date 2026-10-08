@@ -212,6 +212,6 @@
   });
   $('#cancelBtn').onclick = () => { editing = null; renderForm(); bindIconPicker(); setStatus(tr('فرم پاک شد')); };
   $('#refreshBtn').onclick = load;
-  $('#logoutBtn').onclick = async () => { await fetch('/api/auth/logout', {method:'POST'}); localStorage.clear(); location = '/login'; };
+  $('#logoutBtn').onclick = async () => { if(await window.logoutSession())location = '/login'; };
   (async () => { const user = await loadSession(); if (!user || !Array.isArray(user.roles) || !user.roles.includes('ADMIN')) { location = '/login'; return; } applyLanguage(); renderForm(); bindIconPicker(); setupQueries(); if (section === 'contact') $('#editorPanel').style.display = 'none'; if (section === 'media') { $('#editorPanel').style.display = 'none'; $('#mediaUploadPanel').style.display = 'block'; } await load(); releaseLoader(); })().catch(error=>{setStatus(error.message,true);releaseLoader();});
 })();

@@ -509,7 +509,9 @@ document.getElementById('passwordForm')?.addEventListener('submit', async functi
         });
 
         if (result.success) {
+            localStorage.removeItem('accessToken');localStorage.removeItem('user');
             showToast('success', t.passwordChangeSuccess, '');
+            setTimeout(()=>location.href='/login',1000);
             document.getElementById('passwordForm').reset();
             document.getElementById('passwordStrength').classList.add('hidden');
         } else {
@@ -550,15 +552,7 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
 
     if (!await HexoraNotify.confirm(t.logoutConfirm)) return;
 
-    try {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-        });
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
-
-    localStorage.removeItem('user');
+    if(!await window.logoutSession())return;
     showToast('success', t.logoutSuccess, '');
     setTimeout(() => window.location.href = '/login', 500);
 });

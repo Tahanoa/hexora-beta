@@ -172,7 +172,7 @@
     $('mediaDetails').addEventListener('close',()=>{state.selected=null;state.replace=null;});
     $('mediaDetails').addEventListener('click',event=>{if(event.target!==$('mediaDetails'))return;const box=event.target.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)event.target.close();});
     document.addEventListener('error',event=>{if(event.target.matches?.('.hx-media-preview img,.hx-media-detail-preview img')){event.target.parentElement.innerHTML=`<span class="hx-media-file-icon"><i class="fa-regular fa-image" aria-hidden="true"></i><small>${t('پیش‌نمایش در دسترس نیست','Preview unavailable')}</small></span>`;}},true);
-    $('logoutBtn').onclick=async()=>{try{await fetch('/api/auth/logout',{method:'POST'});}finally{localStorage.removeItem('accessToken');localStorage.removeItem('user');location.href='/login';}};
+    $('logoutBtn').onclick=async()=>{if(await window.logoutSession())location.href='/login';};
     setView(localStorage.getItem('hexora-media-view'));
     new MutationObserver(language).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
   }
