@@ -22,7 +22,7 @@
   window.HexoraAdminShell={setOpen,toggle};
   window.toggleSidebar=toggle;
   const close=()=>setOpen(false);
-  const routes={dashboard:['داشبورد','Dashboard'],profile:['پروفایل','Profile'],projects:['پروژه‌ها','Projects'],demos:['دموساز','Demo studio'],skills:['مهارت‌ها','Skills'],experience:['سوابق کاری','Experience'],services:['خدمات','Services'],statistics:['آمارها','Statistics'],media:['رسانه‌ها','Media'],testimonials:['نظرات کارفرمایان','Testimonials'],contact:['پیام‌ها','Messages']};
+  const routes={payments:['درگاه و فروش','Payments & sales'],dashboard:['داشبورد','Dashboard'],profile:['پروفایل','Profile'],projects:['پروژه‌ها','Projects'],demos:['دموساز','Demo studio'],skills:['مهارت‌ها','Skills'],experience:['سوابق کاری','Experience'],services:['خدمات','Services'],statistics:['آمارها','Statistics'],media:['رسانه‌ها','Media'],testimonials:['نظرات کارفرمایان','Testimonials'],contact:['پیام‌ها','Messages']};
   function language(){
     const fa=document.documentElement.lang!=='en';
     const page=routes[location.pathname.split('/').pop()];if(page)document.title=page[fa?0:1]+' | Hexora';

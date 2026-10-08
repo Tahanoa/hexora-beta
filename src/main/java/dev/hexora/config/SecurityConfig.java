@@ -25,6 +25,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                         .requestMatchers(HttpMethod.GET, "/testimonials", "/api/testimonials/public", "/faq", "/", "/about", "/experience", "/projects", "/projects/*", "/collaboration", "/services", "/skills", "/contact", "/login", "/register", "/home", "/dashboard", "/profile", "/manage/**", "/css/**", "/js/**", "/data/fontawesome-icons.json", "/images/**", "/favicon.ico", "/actuator/health", "/api/auth/csrf", "/api/profile/public/**", "/api/projects/public/**", "/api/skills/public/**", "/api/services/public/**", "/api/experience/public/**", "/api/statistics/public/**", "/api/media/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/payments/callback").permitAll()
+                        .requestMatchers("/api/payments/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/payments/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/chat/admin/**").hasRole("ADMIN").requestMatchers("/api/chat/**").authenticated().requestMatchers("/api/auth/**").authenticated().requestMatchers("/api/**").hasRole("ADMIN").requestMatchers("/actuator/**").denyAll().requestMatchers(HttpMethod.GET, "/**").permitAll().anyRequest().denyAll())
                 .exceptionHandling(e -> e.authenticationEntryPoint((req,res,ex) -> { if (!req.getServletPath().startsWith("/api/")) { res.sendRedirect("/login"); return; } res.setStatus(401); res.setContentType("application/json"); res.getWriter().write("{\"success\":false,\"statusCode\":401,\"message\":\"Authentication required\"}"); })
