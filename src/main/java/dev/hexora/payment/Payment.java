@@ -24,5 +24,7 @@ public class Payment {
  @Column(length=100) public String error;
  @Column(name="created_at",nullable=false) public Instant createdAt=Instant.now();
  @Column(name="paid_at") public Instant paidAt;
+ public boolean isShareable(){return productId==null&&purchaserId==null;}
+ public String invoiceType(){return isShareable()?"DIRECT_LINK":"PRODUCT_PRIVATE";}
  @Version public long version;
 }

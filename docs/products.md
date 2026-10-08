@@ -87,3 +87,9 @@ The admin panel includes server-side search and publication filters, global prod
 ## Policy pages and motion
 
 Public `/terms` and `/privacy` pages use the shared site layout, explicit FA/EN copy, section navigation and authoritative reference links. Footer and invoice links expose both policies. Content describes current order, payment, review, account/browser storage and download behavior, with no invented retention, refund deadline or security certification. Consent version is now `2026-10-09`. Invoice consent and payment actions have explicit vertical spacing. Product tab transitions animate panel opacity, position and height while keeping only the selected panel visible and respecting reduced-motion settings. Validation: JS syntax and whitespace checks; no automated tests or live gateway calls.
+
+## Two invoice types
+
+- `DIRECT_LINK`: issued by administrators, with no product or purchaser reference. `/invoice/{uuid}` and its public APIs support viewing, payment and verification without login. Possession of the invoice link grants access. Admin UI exposes copy/share actions only for this type.
+- `PRODUCT_PRIVATE`: created by the buyer’s authenticated purchase flow. `/account/orders/{uuid}` is a generic site shell; all invoice data and checkout/verification requests require the owner’s authenticated principal. Another account, including an administrator using the buyer-facing API, cannot access the invoice. Admin transaction reporting remains separate.
+- Type and `shareable` metadata are derived from persisted ownership, never supplied by the client. A record with either product or purchaser set is rejected by public invoice APIs. Private invoice detail, checkout and verification responses use no-store. No schema migration is introduced.

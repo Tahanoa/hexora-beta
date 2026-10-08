@@ -69,7 +69,7 @@ public class ProductService {
    payments.saveAndFlush(p);
   }
   if(p.status.equals("PAID"))return Map.of("owned",true);
-  return Map.of("orderId",p.id,"status",p.status,"invoicePath","/account/orders/"+p.id);
+  return Map.of("orderId",p.id,"status",p.status,"invoicePath","/account/orders/"+p.id,"invoiceType",p.invoiceType(),"shareable",false);
  }
  private Payment ownedOrder(String id,Long userId,boolean lock){return (lock?payments.locked(id):payments.findById(id)).filter(p->userId.equals(p.purchaserId)&&p.productId!=null).orElseThrow(ApiException::notFound);}
  public Object order(String id,String username){return gateway.invoiceView(ownedOrder(id,user(username).getId(),false));}

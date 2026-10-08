@@ -5,13 +5,16 @@
  async function api(action='',method='GET',body){
   const base=product?'/api/products/orders/':'/api/payments/invoices/';
   const response=await fetch(base+encodeURIComponent(id)+action,{method,cache:'no-store',referrerPolicy:'no-referrer',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
-  const result=await response.json();if(!response.ok||!result.success)throw Error('invoice');return result.data;
+  const result=await response.json();if(!response.ok||!result.success)throw Error('invoice');const data=result.data;if(data.invoiceType!==(product?'PRODUCT_PRIVATE':'DIRECT_LINK')||data.shareable!==!product)throw Error('invoice type');return data;
  }
  function message(fa,en,error=false){notice=[fa,en];noticeError=error;paintMessage();}
  function paintMessage(){$('invoiceMessage').textContent=t(...notice);$('invoiceMessage').style.color=noticeError?'#ff9a9a':'#4dffb8';}
  function render(){
   paintMessage();if(!payment)return;
   const paid=payment.status==='PAID',locale=document.documentElement.lang==='en'?'en-US':'fa-IR';
+  $('invoiceKind').hidden=$('invoiceAccessNote').hidden=false;
+  $('invoiceKind').textContent=product?t('فاکتور خصوصی خرید محصول','Private product invoice'):t('فاکتور قابل ارسال','Shareable invoice');
+  $('invoiceAccessNote').textContent=product?t('این فاکتور فقط برای حساب خریدار قابل مشاهده و پرداخت است.','Only the buyer’s account can view and pay this invoice.'):t('این فاکتور توسط مدیریت صادر شده است؛ هر دریافت‌کننده لینک می‌تواند بدون ورود آن را مشاهده و پرداخت کند.','Issued by the administrator. Anyone with its link can view and pay it without signing in.');
   $('invoiceDescription').textContent=payment.description;
   $('invoiceAmount').textContent=Number(payment.amount).toLocaleString(locale);
   $('invoiceNumber').textContent=payment.id;
