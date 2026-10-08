@@ -5,7 +5,6 @@ const api=async path=>{const r=await fetch(path);if(!r.ok)throw Error('دریا�
 const tr=value=>window.HexoraI18n.tr(value),ui=value=>window.HexoraI18n.markup(value);
 const release=window.holdPageLoader?.()||(()=>{});
 const icon=value=>/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+$/i.test(String(value||""))?value:"fa-solid fa-code";
-$('langBtn').onclick=()=>{const en=document.documentElement.lang!=='en';document.documentElement.lang=en?'en':'fa';document.documentElement.dir=en?'ltr':'rtl';};
 const results=await Promise.allSettled(['/api/profile/public','/api/experience/public','/api/skills/public','/api/statistics/public','/api/services/public','/api/projects/public'].map(api));if(results.some(r=>r.status==='rejected'))HexoraNotify.show('error',window.HexoraI18n.tr('دریافت اطلاعات ناموفق بود. لطفاً دوباره تلاش کنید.'),{key:'biography-load'});
 const get=i=>results[i].status==='fulfilled'?results[i].value:null,profile=get(0),experiences=Array.isArray(get(1))?get(1):[],skills=Array.isArray(get(2))?get(2):[],stats=Array.isArray(get(3))?get(3):[],services=Array.isArray(get(4))?get(4):[];
 function renderBiography(){

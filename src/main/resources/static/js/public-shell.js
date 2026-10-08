@@ -45,8 +45,13 @@
     setOpen(menu.classList.contains('open'));
   }
   new MutationObserver(language).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
-  // Page scripts still translate their own content; the shared shell restores its canonical labels afterward.
-  langButton.addEventListener('click', () => queueMicrotask(language));
+  // The shared header owns the language switch on every public page.
+  langButton.addEventListener('click', () => {
+    const lang = english() ? 'fa' : 'en';
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
+    language();
+  });
   language();
   function contactLink(item, compact) {
     const link = document.createElement('a');
