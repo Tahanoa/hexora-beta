@@ -64,3 +64,13 @@ Per user instruction, no automated tests, penetration traffic or real payment we
 The detail page uses a two-column product hero, full cover, latest-release facts, a sticky purchase panel, section navigation, feature highlights, installation guidance and expandable release notes. Text is escaped and demo/payment URL validation remains in place.
 
 The admin panel includes server-side search and publication filters, global product/release counters, cover previews on cards, direct cover upload with the existing validated image API, and quick publish/unpublish actions. Uploaded covers remain reusable media assets if editing is cancelled. New `features`/`featuresEn` columns use the existing PostgreSQL schema-update configuration. Admin statistics and search routes require ADMIN; account pages continue to use principal-scoped APIs for every order and download.
+
+## Product reviews and detail tabs
+
+- Catalog and detail covers use `object-fit: contain` so the entire image stays visible in a consistent frame.
+- Overview, features, setup, releases and reviews use accessible tabs with a single visible panel; selection does not navigate to an anchor or scroll the page. Arrow keys, Home and End select tabs.
+- Public reviews are paginated (10 per page) with a real average rating and count. A verified paid/free purchase is required to submit a rating from 1–5 and plain text up to 3000 characters. Each account can have one review per product, edit it (30-second cooldown), or delete it. Public responses do not contain usernames or user IDs.
+- Review ownership is resolved from the authenticated principal. Writes serialize on the user row and enforce a database uniqueness constraint. Review text is escaped in both public and admin UI. Administrators can inspect paginated reviews and delete them from product management; deletion checks that the review belongs to that product.
+- New JPA entity `product_reviews` follows the existing Hibernate schema update workflow (`JPA_DDL_AUTO=update`). For externally managed schemas, provision the equivalent table, uniqueness constraint and index before rollout.
+- Endpoints: `GET /api/products/public/{slug}/reviews`, authenticated `GET/PUT/DELETE /api/products/{id}/review`, admin `GET /api/products/admin/{id}/reviews` and `DELETE /api/products/admin/{id}/reviews/{reviewId}`.
+- Validation for this change: JavaScript syntax and whitespace checks only. No automated tests or live payment tests were run; application runtime verification remains unavailable because the Maven parent dependency cannot be resolved in this environment.

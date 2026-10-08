@@ -9,10 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 @RestController @RequestMapping("/api/products")
 public class ProductController {
- private final ProductService service;
- public ProductController(ProductService service){this.service=service;}
+ private final ProductService service;private final ProductReviewService reviews;
+ public ProductController(ProductService service,ProductReviewService reviews){this.service=service;this.reviews=reviews;}
  @GetMapping("/public") Object list(@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.list(false,page));}
  @GetMapping("/public/{slug}") Object detail(@PathVariable String slug){return ApiResponse.success(service.detail(slug));}
+ @GetMapping("/public/{slug}/reviews") Object reviews(@PathVariable String slug,@RequestParam(defaultValue="0") int page){return ApiResponse.success(reviews.list(slug,page));}
+ @GetMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object ownReview(@PathVariable Long id,Principal user){return ApiResponse.success(reviews.mine(id,user.getName()));}
+ @PutMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object saveReview(@PathVariable Long id,Principal user,@Valid @RequestBody ProductReviewService.Request r){return ApiResponse.success(reviews.save(id,user.getName(),r));}
+ @DeleteMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object deleteReview(@PathVariable Long id,Principal user){reviews.delete(id,user.getName());return ApiResponse.success(java.util.Map.of("deleted",true));}
+ @GetMapping("/admin/{id}/reviews") @PreAuthorize("hasRole('ADMIN')") Object adminReviews(@PathVariable Long id,@RequestParam(defaultValue="0") int page){return ApiResponse.success(reviews.adminList(id,page));}
+ @DeleteMapping("/admin/{id}/reviews/{reviewId}") @PreAuthorize("hasRole('ADMIN')") Object removeReview(@PathVariable Long id,@PathVariable Long reviewId){reviews.adminDelete(id,reviewId);return ApiResponse.success(java.util.Map.of("deleted",true));}
  @GetMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object admin(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="") String q,@RequestParam(defaultValue="ALL") String state){return ApiResponse.success(service.adminList(q,state,page));}
  @GetMapping("/admin/stats") @PreAuthorize("hasRole('ADMIN')") Object stats(){return ApiResponse.success(service.stats());}
  @GetMapping("/admin/{id}") @PreAuthorize("hasRole('ADMIN')") Object adminDetail(@PathVariable Long id){return ApiResponse.success(service.adminDetail(id));}
