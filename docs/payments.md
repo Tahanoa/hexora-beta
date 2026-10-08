@@ -1,6 +1,6 @@
 # Zarinpal payments
 
-This stage adds payment infrastructure and admin-issued invoices, ready for a future digital-product checkout. It does not yet add a product catalog, licenses or download entitlements.
+This stage adds payment infrastructure and admin-issued invoices, ready for a future digital-product checkout. Digital products now use this infrastructure through `/api/products`, while guest invoices remain independent. Product orders require an authenticated purchaser and are excluded from public guest-invoice endpoints. Licenses are outside this stage.
 
 ## Setup
 

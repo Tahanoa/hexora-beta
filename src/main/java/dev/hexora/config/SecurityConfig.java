@@ -25,6 +25,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                         .requestMatchers(HttpMethod.GET, "/testimonials", "/api/testimonials/public", "/faq", "/", "/about", "/experience", "/projects", "/projects/*", "/collaboration", "/services", "/skills", "/contact", "/login", "/register", "/home", "/dashboard", "/profile", "/manage/**", "/css/**", "/js/**", "/data/fontawesome-icons.json", "/images/**", "/favicon.ico", "/actuator/health", "/api/auth/csrf", "/api/profile/public/**", "/api/projects/public/**", "/api/skills/public/**", "/api/services/public/**", "/api/experience/public/**", "/api/statistics/public/**", "/api/media/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/public", "/api/products/public/*").permitAll()
+                        .requestMatchers("/api/products/admin/**", "/api/products/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/products/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/payments/callback").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/payments/invoices/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/payments/invoices/*/checkout", "/api/payments/invoices/*/verify").permitAll()

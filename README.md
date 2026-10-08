@@ -471,4 +471,15 @@ Built by [Tahanoa](https://github.com/Tahanoa) · [Hexora repository](https://gi
 
 The new `/manage/payments` panel manages encrypted merchant credentials, gateway activation, admin-issued invoices, paginated transactions, verification recovery, daily revenue charts and invoice status reports. Each invoice has a copyable direct link at `/invoice/{id}`; buyers pay and view receipts without signing in. Prices are stored server-side in toman (IRT); only server-confirmed payments enter revenue reports, and repeated callbacks are idempotent.
 
-See [payment setup and API reference](docs/payments.md) for callback configuration and `PAYMENT_ENCRYPTION_KEY` setup. This stage provides the payment foundation; product catalog and private downloads can connect to it next.
+See [payment setup and API reference](docs/payments.md) for callback configuration and `PAYMENT_ENCRYPTION_KEY` setup. The product catalog and private downloads now use this same payment foundation.
+
+
+## Digital products
+
+- `/manage/products`: bilingual product metadata, cover from the media library, free or paid pricing, draft/publication state and HTTPS demo links. Create the product as a draft, upload a ZIP, download/review and publish the release, then publish the product.
+- `/products` and `/products/{slug}`: public catalog and product details using the main website shell.
+- `/products/library`: authenticated purchases, order verification recovery and private release downloads.
+- ZIP releases are immutable, SHA-256 fingerprinted and stored separately from public media. New versions preserve the purchase history; withdrawn releases cannot be downloaded by buyers.
+- Single-product purchases reuse Zarinpal. Prices are snapshotted server-side, repeated checkout reuses the pending order, and every download checks the authenticated purchaser against a PAID order.
+
+See [product workflow, API and security review](docs/products.md). No automated test suite or live payment was run for this change.

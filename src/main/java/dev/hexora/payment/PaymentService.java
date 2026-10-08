@@ -20,17 +20,20 @@ public class PaymentService {
   if(enabled&&s.merchantEncrypted==null)throw bad("Merchant ID is required");s.enabled=enabled;s.callbackUrl=callback;gateways.saveAndFlush(s);return settingsView();
  }
  @Transactional public Object create(long amount,String description){var p=new Payment();p.amount=amount;p.description=description;return view(payments.saveAndFlush(p));}
- public Map<String,Object> view(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("invoicePath","/invoice/"+p.id);m.put("description",p.description);m.put("amount",p.amount);m.put("currency","IRT");m.put("status",p.status);m.put("authority",p.authority);m.put("refId",p.refId);m.put("cardPan",p.cardPan);m.put("fee",p.fee);m.put("gatewayCode",p.gatewayCode);m.put("error",p.error);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
+ public Map<String,Object> view(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("invoicePath",p.productId==null?"/invoice/"+p.id:"/products/library");m.put("productId",p.productId);m.put("description",p.description);m.put("amount",p.amount);m.put("currency","IRT");m.put("status",p.status);m.put("authority",p.authority);m.put("refId",p.refId);m.put("cardPan",p.cardPan);m.put("fee",p.fee);m.put("gatewayCode",p.gatewayCode);m.put("error",p.error);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
  public Map<String,Object> invoiceView(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("description",p.description);m.put("amount",p.amount);m.put("status",p.status);m.put("refId",p.refId);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
- public Object invoice(String id){return invoiceView(payments.findById(id).orElseThrow(ApiException::notFound));}
- @Transactional public Object publicCheckout(String id){var result=(Map<String,Object>)checkout(id);var p=payments.findById(id).orElseThrow(ApiException::notFound);var out=invoiceView(p);if(result.containsKey("redirectUrl"))out.put("redirectUrl",result.get("redirectUrl"));return out;}
- @Transactional public Object publicVerify(String id){var p=lock(id);verifyLocked(p);return invoiceView(p);}
+ private Payment direct(Payment p){if(p.productId!=null)throw ApiException.notFound();return p;}
+ public Object invoice(String id){return invoiceView(direct(payments.findById(id).orElseThrow(ApiException::notFound)));}
+ @Transactional public Object publicCheckout(String id){direct(lock(id));var result=(Map<String,Object>)checkout(id);var p=payments.findById(id).orElseThrow(ApiException::notFound);var out=invoiceView(p);if(result.containsKey("redirectUrl"))out.put("redirectUrl",result.get("redirectUrl"));return out;}
+ @Transactional public Object publicVerify(String id){var p=direct(lock(id));verifyLocked(p);return invoiceView(p);}
  public Object list(String status,int page){var paging=PageRequest.of(Math.max(0,page),20,Sort.by("createdAt").descending());return (status!=null&&!status.isBlank()?payments.findByStatus(status,paging):payments.findAll(paging)).map(this::view);}
  private Payment lock(String id){return payments.locked(id).orElseThrow(ApiException::notFound);}
  @Transactional public Object checkout(String id){
   var p=lock(id);
   if(p.status.equals("PAID"))return view(p);
   if(p.authority!=null){var result=view(p);result.put("redirectUrl","https://payment.zarinpal.com/pg/StartPay/"+p.authority);return result;}
+  if(p.lastRequestAt!=null&&p.lastRequestAt.isAfter(Instant.now().minusSeconds(5)))throw new ApiException(HttpStatus.TOO_MANY_REQUESTS,"Wait a few seconds before retrying payment");
+  p.lastRequestAt=Instant.now();
   var s=settings();if(!s.enabled||s.merchantEncrypted==null)throw bad("Payment gateway is disabled");
   var metadata=Map.of("order_id",p.id);
   p.merchantEncrypted=s.merchantEncrypted;
@@ -44,6 +47,8 @@ public class PaymentService {
   if(!"OK".equals(status)){p.error="Payment was cancelled or not completed";return view(p);}return verifyLocked(p);
  }
  private Object verifyLocked(Payment p){if(p.status.equals("PAID"))return view(p);if(p.authority==null)throw bad("No gateway authority to verify");
+  if(p.lastVerifyAt!=null&&p.lastVerifyAt.isAfter(Instant.now().minusSeconds(5)))throw new ApiException(HttpStatus.TOO_MANY_REQUESTS,"Wait a few seconds before retrying verification");
+  p.lastVerifyAt=Instant.now();
   var r=client.call("verify",Map.of("merchant_id",secrets.decrypt(p.merchantEncrypted),"amount",p.amount,"authority",p.authority));p.gatewayCode=r.code();
   Object ref=r.data().get("ref_id");if((r.code()==100||r.code()==101)&&ref!=null&&ref.toString().matches("[1-9][0-9]*")){p.status="PAID";p.refId=ref.toString();p.paidAt=Instant.now();p.cardPan=Objects.toString(r.data().get("card_pan"),null);if(r.data().get("fee") instanceof Number fee)p.fee=fee.longValue();p.error=null;}else{p.error=r.code()==-999?"Verification unavailable; retry later":"Payment not verified ("+r.code()+")";}
   payments.saveAndFlush(p);return view(p);

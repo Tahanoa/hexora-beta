@@ -6,6 +6,9 @@ import jakarta.persistence.LockModeType;
 import java.util.*;
 import java.time.Instant;
 public interface PaymentRepository extends JpaRepository<Payment,String> {
+ boolean existsByProductIdAndPurchaserIdAndStatus(Long productId,Long purchaserId,String status);
+ Optional<Payment> findFirstByProductIdAndPurchaserIdAndStatusInOrderByCreatedAtDesc(Long productId,Long purchaserId,List<String> statuses);
+ Page<Payment> findByPurchaserIdOrderByCreatedAtDesc(Long purchaserId,Pageable page);
  @Lock(LockModeType.PESSIMISTIC_WRITE) @Query("select p from Payment p where p.id=:id") Optional<Payment> locked(@Param("id") String id);
  @Lock(LockModeType.PESSIMISTIC_WRITE) @Query("select p from Payment p where p.authority=:authority") Optional<Payment> lockedByAuthority(@Param("authority") String authority);
  Page<Payment> findByStatus(String status,Pageable page);

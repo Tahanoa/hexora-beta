@@ -27,7 +27,7 @@ public class ApiErrors {
  @ExceptionHandler(DataIntegrityViolationException.class) ResponseEntity<?> conflict() { return error(HttpStatus.CONFLICT, "Duplicate value or resource is still in use"); }
  @ExceptionHandler(AuthenticationException.class) ResponseEntity<?> auth() { return error(HttpStatus.UNAUTHORIZED, "Invalid credentials or account disabled"); }
  @ExceptionHandler(AccessDeniedException.class) ResponseEntity<?> access() { return error(HttpStatus.FORBIDDEN, "Access denied"); }
- @ExceptionHandler(MaxUploadSizeExceededException.class) ResponseEntity<?> size() { return error(HttpStatus.PAYLOAD_TOO_LARGE, "Maximum upload size is 10 MB; media files are limited to 5 MB"); }
+ @ExceptionHandler(MaxUploadSizeExceededException.class) ResponseEntity<?> size() { return error(HttpStatus.PAYLOAD_TOO_LARGE, "Maximum upload size is 10 MB; media files are limited to 5 MB and product ZIP files to 8 MB"); }
  @ExceptionHandler({org.springframework.web.servlet.resource.NoResourceFoundException.class, org.springframework.web.servlet.NoHandlerFoundException.class})
  Object missing(Exception ex,jakarta.servlet.http.HttpServletRequest request,jakarta.servlet.http.HttpServletResponse response){
   if(request.getRequestURI().startsWith("/api/"))return error(HttpStatus.NOT_FOUND,"Resource not found");

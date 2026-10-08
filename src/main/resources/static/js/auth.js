@@ -94,7 +94,8 @@ async function handleLogin(form) {
 
             setTimeout(() => {
                 const pending=sessionStorage.getItem('hexora-service-request');
-                window.location.href = pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):'/';
+                const productReturn=sessionStorage.getItem('hexora-product-return');sessionStorage.removeItem('hexora-product-return');
+                window.location.href = productReturn&&/^\/products(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/.test(productReturn)?productReturn:pending&&/^\d+$/.test(pending)?'/contact?service='+encodeURIComponent(pending):'/';
             }, 500);
         } else {
             const errorMsg = window.HexoraI18n.tr(result.message) || (lang === 'fa'

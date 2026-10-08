@@ -7,6 +7,9 @@ public class PageController {
  @GetMapping("/") String publicHome(){return "home/index";}
  @GetMapping("/home") String legacyHome(){return "redirect:/";}
  @GetMapping("/projects") String projects(Model model){model.addAttribute("publicSection","projects");return "portfolio";}
+ @GetMapping("/products") String productCatalog(){return "home/products";}
+ @GetMapping("/products/library") String productLibrary(Model model){model.addAttribute("productLibrary",true);return "home/products";}
+ @GetMapping("/products/{slug}") String productDetail(@PathVariable String slug,Model model){model.addAttribute("productSlug",slug);return "home/products";}
  @GetMapping("/services") String services(){return "home/services";}
  @GetMapping("/services/{slug}") String serviceDetail(@PathVariable String slug,Model model){model.addAttribute("serviceSlug",slug);return "home/service";}
  @GetMapping("/skills") String publicSection(jakarta.servlet.http.HttpServletRequest request,Model model){model.addAttribute("publicSection",request.getRequestURI().substring(1));return "home/index";}
@@ -22,7 +25,8 @@ public class PageController {
  @GetMapping("/dashboard") String dashboard(){return "dashboard/index";}
  @GetMapping("/profile") String profile(){return "dashboard/profile";}
  @GetMapping("/manage/{section}") String manage(@PathVariable String section,Model model){
-  if(!java.util.Set.of("payments","demos","testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
+  if(!java.util.Set.of("products","payments","demos","testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
+  if(section.equals("products"))return "dashboard/products";
   if(section.equals("payments"))return "dashboard/payments";
   if(section.equals("demos"))return "dashboard/demos";
   if(section.equals("contact"))return "dashboard/chat";
