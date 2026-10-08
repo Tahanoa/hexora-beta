@@ -19,7 +19,7 @@
   if(home)window.HexoraCarousel?.mount(area,'testimonials');
   area.querySelectorAll('.testimonial-author img').forEach(img=>{img.onerror=()=>{const fallback=document.createElement('span');fallback.className='testimonial-initial';fallback.textContent=Array.from(img.alt)[0]||'';fallback.setAttribute('aria-hidden','true');img.replaceWith(fallback);};});
  }
-  async function load(){failed=false;try{const response=await fetch('/api/testimonials/public');if(!response.ok)throw Error();const json=await response.json();items=Array.isArray(json.data)?json.data:[];}catch{failed=true;}render();}
+  async function load(){failed=false;try{const response=await fetch('/api/testimonials/public');if(!response.ok)throw Error();const json=await response.json();items=Array.isArray(json.data)?json.data:[];}catch{failed=true;HexoraNotify.show('error',t('دریافت نظرات ناموفق بود؛ دوباره تلاش کنید.','Unable to load testimonials. Please retry.'),{key:'testimonials-load'});}render();}
  try{await load();requestAnimationFrame(()=>{const target=location.hash?document.getElementById(decodeURIComponent(location.hash.slice(1))):null;if(target){target.scrollIntoView({block:'center'});target.classList.add('is-target');}});}finally{release();}
  new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 })();

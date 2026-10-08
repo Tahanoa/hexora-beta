@@ -8,7 +8,7 @@
   const result=await response.json();if(!response.ok||!result.success)throw Error('invoice');const data=result.data;if(data.invoiceType!==(product?'PRODUCT_PRIVATE':'DIRECT_LINK')||data.shareable!==!product)throw Error('invoice type');return data;
  }
  function message(fa,en,error=false){notice=[fa,en];noticeError=error;paintMessage();}
- function paintMessage(){$('invoiceMessage').textContent=t(...notice);$('invoiceMessage').style.color=noticeError?'#ff9a9a':'#4dffb8';}
+ function paintMessage(){HexoraNotify.feedback(t(...notice),noticeError,{source:'invoiceMessage'});}
  function render(){
   paintMessage();if(!payment)return;
   const paid=payment.status==='PAID',locale=document.documentElement.lang==='en'?'en-US':'fa-IR';

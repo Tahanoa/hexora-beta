@@ -4,7 +4,7 @@
  const title=p=>document.documentElement.lang==='en'?(p.titleEn||p.title):p.title;
  const description=p=>document.documentElement.lang==='en'?(p.descriptionEn||p.description):p.description;
  const cover=p=>p.coverId?`<img class="pd-cover" src="/api/media/public/${Number(p.coverId)}" alt="${esc(title(p))}">`:'<div class="pd-cover pd-placeholder"><i class="fa-solid fa-box-open" aria-hidden="true"></i></div>';
- function message(value='',error=false){$('pdPublicMessage').textContent=value;$('pdPublicMessage').classList.toggle('pd-error',error);}
+ function message(value='',error=false){HexoraNotify.feedback(value,error,{source:'pdPublicMessage'});}
  function render(){
   document.querySelector('.pd-heading').hidden=!!detail;
   if(detail){const p=detail,v=p.releases[0],features=((document.documentElement.lang==='en'?(p.featuresEn||p.features):p.features)||'').split('\n').map(s=>s.trim()).filter(Boolean);if((activeTab==='features'&&!features.length)||(activeTab==='install'&&!p.requirements))activeTab='overview';let demo='';try{const url=new URL(p.demoUrl);if(url.protocol==='https:')demo=`<a class="pd-button pd-demo-button" href="${esc(url.href)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${t('مشاهده دموی زنده','Explore live demo')}</a>`;}catch{}

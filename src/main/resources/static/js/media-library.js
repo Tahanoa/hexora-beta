@@ -30,7 +30,7 @@
     $('mediaDropzone').tabIndex=locked?-1:0;
     document.querySelectorAll('[data-media-copy],[data-media-delete],[data-media-replace],[data-queue-remove]').forEach(button=>button.disabled=locked);
   }
-  function status(fa,english,error=false){state.message={fa,english,error};$('mediaStatus').textContent=t(fa,english);$('mediaStatus').classList.toggle('is-error',error);}
+  function status(fa,english,error=false){state.message={fa,english,error};HexoraNotify.feedback(t(fa,english),error,{source:'mediaStatus'});}
   function errorText(error){
     const known={
       'Invalid file size':t('حجم فایل نامعتبر است؛ حداکثر ۵ مگابایت.','Invalid file size; maximum 5 MB.'),
@@ -118,7 +118,7 @@
     catch{state.selected=item.id;details(item);if(!$('mediaDetails').open)$('mediaDetails').showModal();status('کپی خودکار ممکن نبود؛ لینک را از جزئیات فایل کپی کنید.','Automatic copying failed. Copy the link from file details.',true);}
   }
   async function remove(item){
-    if(!confirm(t(`«${item.fileName}» حذف شود؟ این فایل ممکن است در سایت استفاده شده باشد.`,`Delete “${item.fileName}”? This file may already be used on your site.`)))return;
+    if(!await HexoraNotify.confirm(t(`«${item.fileName}» حذف شود؟ این فایل ممکن است در سایت استفاده شده باشد.`,`Delete “${item.fileName}”? This file may already be used on your site.`)))return;
     state.busy=true;controls();
     try{await request('/api/media/'+item.id,{method:'DELETE'});state.items=state.items.filter(value=>value.id!==item.id);$('mediaDetails').close();state.selected=null;status('فایل حذف شد.','File deleted.');render();}
     catch(error){status(errorText(error),errorText(error),true);}

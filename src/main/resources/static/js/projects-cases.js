@@ -22,7 +22,7 @@
   const filters = [...document.querySelectorAll('[data-case-filter]')];
   function message(text, retry = false) {
     $('caseMessage').hidden = !text;
-    $('caseMessageText').textContent = text;
+    $('caseMessageText').hidden=true;HexoraNotify.feedback(text,retry,{key:'project-catalog'});
     $('caseRetry').hidden = !retry;
     $('caseRetry').textContent = t().retry;
   }

@@ -32,7 +32,7 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   let editing = null;
 
-  function setStatus(message, error = false) { $('#status').textContent = tr(message); $('#status').className = `status ${error ? 'error' : 'ok'}`; }
+  function setStatus(message,error=false){HexoraNotify.feedback(tr(message),error,{source:'status'});}
   function iconPickerHtml(value = '') {
     const current = String(value || '');
     return `<div class="field full icon-picker"><label>${esc(tr("آیکون انتخاب‌شده"))}</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="${esc(tr("آیکون را از فهرست انتخاب کنید"))}" autocomplete="off"><span class="icon-preview" aria-label="${esc(tr("پیش‌نمایش آیکون"))}"><i class="${esc(current || 'fa-solid fa-code')}"></i></span></div><div class="icon-picker-row"><input class="icon-search" type="search" placeholder="${esc(tr("جست‌وجو: نام، برند یا کلمه مرتبط مانند user، java، heart"))}" aria-label="${esc(tr("جست‌وجوی آیکون"))}"><select class="icon-style" aria-label="${esc(tr("نوع آیکون"))}"><option value="">${esc(tr("همه انواع"))}</option value="solid">Solid</option><option value="regular">Regular</option><option value="brands">Brands</option></select></div><span class="icon-help" role="status">${esc(tr("در حال دریافت فهرست کامل آیکون‌ها..."))}</span><div class="icon-options"></div><div class="icon-pagination"><button class="btn icon-prev" type="button">${esc(tr("قبلی"))}</button><span class="icon-page"></span><button class="btn icon-next" type="button">${esc(tr("بعدی"))}</button></div></div>`;
@@ -57,7 +57,7 @@
   function serviceListRow(value=''){return `<div class="svc-editor-row"><input aria-label="${t('متن مورد','Item text')}" value="${esc(value)}" maxlength="1000"><button class="btn danger" type="button" data-remove-row aria-label="${t('حذف مورد','Remove item')}">×</button></div>`;}
   function serviceFaqRow(value={}){return `<div class="svc-editor-row svc-faq-row"><input data-question aria-label="${t('پرسش','Question')}" placeholder="${t('پرسش','Question')}" value="${esc(value.question)}" maxlength="500"><textarea data-answer aria-label="${t('پاسخ','Answer')}" placeholder="${t('پاسخ','Answer')}" maxlength="5000">${esc(value.answer)}</textarea><button class="btn danger" type="button" data-remove-row aria-label="${t('حذف پرسش','Remove question')}">×</button></div>`;}
   document.addEventListener('click',event=>{if(section!=='services')return;const add=event.target.closest('[data-list-add]'),faq=event.target.closest('[data-faq-add]'),remove=event.target.closest('[data-remove-row]');if(add){add.previousElementSibling.insertAdjacentHTML('beforeend',serviceListRow());add.previousElementSibling.lastElementChild.querySelector('input').focus();}if(faq){faq.previousElementSibling.insertAdjacentHTML('beforeend',serviceFaqRow());faq.previousElementSibling.lastElementChild.querySelector('input').focus();}if(remove)remove.closest('.svc-editor-row').remove();});
-  async function serviceProjects(){const area=$('#serviceProjects');if(!area)return;try{const response=await fetch('/api/projects');const json=await response.json();if(!response.ok)throw Error(t('دریافت نمونه‌کارها ناموفق بود؛ دوباره تلاش کنید.','Unable to load projects. Please retry.'));if(!area.isConnected)return;const selected=JSON.parse(area.dataset.selected);area.innerHTML=(json.data||[]).map(x=>`<label class="svc-project-option"><input type="checkbox" data-related-project value="${x.id}" ${selected.includes(x.id)?'checked':''}>${esc(x.title)}</label>`).join('')||t('هنوز پروژه‌ای ثبت نشده است.','No projects yet.');area.dataset.ready='true';}catch(error){area.textContent=error.message;const retry=document.createElement('button');retry.type='button';retry.className='btn';retry.textContent=t('تلاش دوباره','Retry');retry.onclick=serviceProjects;area.append(retry);}}
+  async function serviceProjects(){const area=$('#serviceProjects');if(!area)return;try{const response=await fetch('/api/projects');const json=await response.json();if(!response.ok)throw Error(t('دریافت نمونه‌کارها ناموفق بود؛ دوباره تلاش کنید.','Unable to load projects. Please retry.'));if(!area.isConnected)return;const selected=JSON.parse(area.dataset.selected);area.innerHTML=(json.data||[]).map(x=>`<label class="svc-project-option"><input type="checkbox" data-related-project value="${x.id}" ${selected.includes(x.id)?'checked':''}>${esc(x.title)}</label>`).join('')||t('هنوز پروژه‌ای ثبت نشده است.','No projects yet.');area.dataset.ready='true';}catch(error){area.textContent='';HexoraNotify.feedback(error.message,true,{key:'service-projects'});const retry=document.createElement('button');retry.type='button';retry.className='btn';retry.textContent=t('تلاش دوباره','Retry');retry.onclick=serviceProjects;area.append(retry);}}
   function renderForm(item = {}) {
     const form=$('#editorForm');
     if(section==='services'){
@@ -77,17 +77,17 @@
     const grid=dialog.querySelector('.media-picker-grid');
     try{const response=await fetch('/api/media/type/IMAGE');const json=await response.json();if(!response.ok)throw Error(json.message||t('دریافت رسانه‌ها ناموفق بود','Unable to load media'));const items=Array.isArray(json.data)?json.data:[];
       const render=()=>{const query=dialog.querySelector('input').value.trim().toLowerCase();grid.innerHTML=items.filter(x=>imageUrl(x.url)&&String(x.fileName).toLowerCase().includes(query)).map(x=>`<button type="button" class="media-picker-item" data-url="${esc(imageUrl(x.url))}" title="${esc(x.fileName)}"><img src="${esc(imageUrl(x.url))}" alt="" loading="lazy"><span>${esc(x.fileName)}</span></button>`).join('')||`<p>${t('تصویری یافت نشد. می‌توانید از فرم پروژه آپلود کنید.','No images found. Upload one from the project form.')}</p>`;};render();dialog.querySelector('input').oninput=render;grid.onclick=event=>{const button=event.target.closest('[data-url]');if(button){selectProjectImage(button.dataset.url);dialog.close();}};
-    }catch(error){grid.textContent=error.message;}
+    }catch(error){grid.textContent='';HexoraNotify.feedback(error.message,true,{key:'media-picker'});}
   }
   document.addEventListener('input',event=>{if(event.target.matches('.project-image-field input[name]'))updateProjectImagePreview();});
   document.addEventListener('click',event=>{if(event.target.closest('[data-media-picker]'))openMediaPicker();if(event.target.closest('[data-clear-project-image]'))selectProjectImage('');});
   document.addEventListener('change',async event=>{
     if(event.target.id!=='projectImageUpload')return;const input=event.target,file=input.files?.[0];if(!file)return;
     const field=input.closest('.project-image-field'),status=field.querySelector('.project-image-status'),save=$('#saveBtn');
-    if(!['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)||file.size>5*1024*1024){status.textContent=t('تصویر معتبر تا ۵ مگابایت انتخاب کنید.','Choose a supported image up to 5 MB.');input.value='';return;}
-    const controls=[...field.querySelectorAll('input,button')];controls.forEach(el=>el.disabled=true);save.disabled=true;status.textContent=t('در حال آپلود…','Uploading…');
-    try{const body=new FormData();body.append('file',file,file.name);const response=await fetch('/api/media/upload/image',{method:'POST',body});const json=await response.json();if(!response.ok||!imageUrl(json.data?.url))throw Error(json.message||t('آپلود ناموفق بود','Upload failed'));if(!field.isConnected)return;field.querySelector('[name="image"],[name="cover"]').value=json.data.url;updateProjectImagePreview();status.textContent=t('تصویر آپلود شد؛ برای اتصال کاور، ذخیره را بزنید.','Image uploaded. Save to attach the cover.');}
-    catch(error){status.textContent=error.message;}finally{controls.forEach(el=>el.disabled=false);save.disabled=false;input.value='';}
+    if(!['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)||file.size>5*1024*1024){status.hidden=true;HexoraNotify.feedback(t('تصویر معتبر تا ۵ مگابایت انتخاب کنید.','Choose a supported image up to 5 MB.'),false,{key:'project-cover',type:'warning'});input.value='';return;}
+    const controls=[...field.querySelectorAll('input,button')];controls.forEach(el=>el.disabled=true);save.disabled=true;status.hidden=true;HexoraNotify.feedback(t('در حال آپلود…','Uploading…'),false,{key:'project-cover'});
+    try{const body=new FormData();body.append('file',file,file.name);const response=await fetch('/api/media/upload/image',{method:'POST',body});const json=await response.json();if(!response.ok||!imageUrl(json.data?.url))throw Error(json.message||t('آپلود ناموفق بود','Upload failed'));if(!field.isConnected)return;field.querySelector('[name="image"],[name="cover"]').value=json.data.url;updateProjectImagePreview();HexoraNotify.feedback(t('تصویر آپلود شد؛ برای اتصال کاور، ذخیره را بزنید.','Image uploaded. Save to attach the cover.'),false,{key:'project-cover'});}
+    catch(error){status.hidden=true;HexoraNotify.feedback(error.message,true,{key:'project-cover'});}finally{controls.forEach(el=>el.disabled=false);save.disabled=false;input.value='';}
   });
   async function bindIconPicker() {
     const picker = $('.icon-picker'); if (!picker) return;
@@ -122,7 +122,7 @@
     next.onclick = () => { page++; render(); options.scrollTop = 0; };
     prev.disabled = next.disabled = true;
     try { all = await loadIcons(); if (picker.isConnected) render(); }
-    catch (error) { if (picker.isConnected) help.textContent = error.message; }
+    catch (error) { if(picker.isConnected){help.hidden=true;HexoraNotify.feedback(error.message,true,{key:'icon-picker'});} }
   }
   function unwrap(json) { return json?.data ?? []; }
   async function load(path = endpoint) {
@@ -157,15 +157,17 @@
     if(section==='experience'&&data.startDate&&data.endDate&&data.endDate<data.startDate){setStatus(t('تاریخ پایان نباید پیش از شروع باشد.','End date cannot be before start date.'),true);return;}
     const url = editing ? `${endpoint}/${editing.id}` : endpoint;
     if($('#saveBtn').disabled)return;$('#saveBtn').disabled=true;
-    try { const response = await fetch(url, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} }); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(section==='services'&&json.errors&&typeof json.errors==='object'?Object.entries(json.errors).map(([key,value])=>`${key}: ${value}`).join(' · '):json.message||tr('ذخیره انجام نشد')); setStatus(tr('با موفقیت ذخیره شد')); editing = null; renderForm(); bindIconPicker(); await load(); }
+    try { const response = await fetch(url, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} }); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(section==='services'&&json.errors&&typeof json.errors==='object'?Object.entries(json.errors).map(([key,value])=>`${key}: ${value}`).join(' · '):json.message||tr('ذخیره انجام نشد')); editing = null; renderForm(); bindIconPicker(); await load();setStatus(tr('با موفقیت ذخیره شد')); }
     catch (error) { setStatus(error.message, true); }
     finally{$('#saveBtn').disabled=false;}
   }
   document.addEventListener('click', async event => {
+    try {
     const edit = event.target.closest('[data-edit]'), del = event.target.closest('[data-delete]'), read = event.target.closest('[data-read]');
     if (edit) { editing = JSON.parse(edit.dataset.edit); renderForm(editing); bindIconPicker(); scrollTo({top:0, behavior:'smooth'}); }
-    if (del && confirm(tr('این مورد حذف شود؟'))) { const response = await fetch(`${endpoint}/${del.dataset.delete}`, {method:'DELETE'}); if (response.ok) { setStatus(tr('حذف شد')); load(); } else setStatus(tr('حذف انجام نشد'), true); }
-    if (read) { const response = await fetch(`${endpoint}/${read.dataset.read}/read`, {method:'PATCH'}); if (response.ok) load(); }
+    if (del && await HexoraNotify.confirm(tr('این مورد حذف شود؟'))) { const response = await fetch(`${endpoint}/${del.dataset.delete}`, {method:'DELETE'}); if (response.ok) { await load();setStatus(tr('حذف شد')); } else setStatus(tr('حذف انجام نشد'), true); }
+    if (read) { const response = await fetch(`${endpoint}/${read.dataset.read}/read`, {method:'PATCH'}); if(response.ok){await load();setStatus(tr('خوانده شد'));}else setStatus(tr('عملیات ناموفق بود'),true); }
+    }catch(error){setStatus(error.message||tr('عملیات ناموفق بود'),true);}
   });
   const queries = {
     testimonials:[[t('همه','All'),''],[t('منتشرشده','Published'),'/public']],
@@ -190,7 +192,7 @@
     };
     if(section==='contact'){
       const button=document.createElement('button');button.className='btn';button.textContent=tr('علامت‌گذاری همه به‌عنوان خوانده‌شده');button.onclick=async()=>{try{const r=await fetch(endpoint+'/mark-all-read',{method:'PATCH'});if(!r.ok)throw Error(tr('عملیات انجام نشد'));await load();}catch(e){setStatus(e.message,true);}};panel.append(button);
-      const cleanup=document.createElement('button');cleanup.className='btn danger';cleanup.textContent=tr('پاک‌سازی پیام‌های قدیمی');cleanup.onclick=async()=>{const days=prompt('پیام‌های قدیمی‌تر از چند روز حذف شوند؟','90');if(!days||!Number.isInteger(Number(days))||Number(days)<1)return;if(!confirm(tr('حذف پیام‌های قدیمی قابل بازگشت نیست. ادامه دهید؟')))return;try{const r=await fetch(endpoint+'/cleanup/'+days,{method:'DELETE'});if(!r.ok)throw Error(tr('پاک‌سازی انجام نشد'));await load();}catch(e){setStatus(e.message,true);}};panel.append(cleanup);
+      const cleanup=document.createElement('button');cleanup.className='btn danger';cleanup.textContent=tr('پاک‌سازی پیام‌های قدیمی');cleanup.onclick=async()=>{const days=await HexoraNotify.prompt(t('پیام‌های قدیمی‌تر از چند روز حذف شوند؟','Delete messages older than how many days?'),'90',{type:'number',min:1,step:1});if(!days||!Number.isInteger(Number(days))||Number(days)<1)return;if(!await HexoraNotify.confirm(tr('حذف پیام‌های قدیمی قابل بازگشت نیست. ادامه دهید؟')))return;try{const r=await fetch(endpoint+'/cleanup/'+days,{method:'DELETE'});if(!r.ok)throw Error(tr('پاک‌سازی انجام نشد'));await load();setStatus(t('پیام‌های قدیمی پاک شدند.','Old messages removed.'));}catch(e){setStatus(e.message,true);}};panel.append(cleanup);
     }
   }
   document.addEventListener('click',async event=>{
@@ -203,10 +205,10 @@
   $('#editorForm').addEventListener('submit', save);
   $('#mediaUploadForm')?.addEventListener('submit', async event => {
     event.preventDefault(); const form = event.currentTarget, file = $('#mediaFile').files[0], status = $('#mediaUploadStatus');
-    if (!file) return; status.textContent = tr('در حال آپلود...');
+    if (!file) return; HexoraNotify.feedback(tr('در حال آپلود...'),false,{source:'mediaUploadStatus'});
     const body = new FormData(); body.append('file', file, file.name); body.append('type', $('#mediaType').value);
-    try { const response = await fetch('/api/media/upload', {method:'POST', body}); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(json.message || tr('آپلود انجام نشد')); const media = json.data || {}; status.innerHTML = `${esc(tr('آپلود شد:'))} <a href="${esc(media.url)}" target="_blank" rel="noreferrer">${esc(tr("مشاهده فایل"))}</a>`; status.className = 'status ok'; form.reset(); await load(); }
-    catch (error) { status.textContent = error.message; status.className = 'status error'; }
+    try { const response = await fetch('/api/media/upload', {method:'POST', body}); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(json.message || tr('آپلود انجام نشد')); const media = json.data || {}; HexoraNotify.feedback(tr('آپلود شد'),false,{source:'mediaUploadStatus'}); form.reset(); await load(); }
+    catch (error) { HexoraNotify.feedback(error.message,true,{source:'mediaUploadStatus'}); }
   });
   $('#cancelBtn').onclick = () => { editing = null; renderForm(); bindIconPicker(); setStatus(tr('فرم پاک شد')); };
   $('#refreshBtn').onclick = load;

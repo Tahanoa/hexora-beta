@@ -1,39 +1,7 @@
 // ===== Auth Handler =====
 
 // ===== Toast System =====
-function showToast(type, title, message, duration = 4000) {
-    title=window.HexoraI18n.tr(title);message=window.HexoraI18n.tr(message);
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-
-    const icons = {
-        success: '<i class="fas fa-check-circle"></i>',
-        error: '<i class="fas fa-times-circle"></i>',
-        warning: '<i class="fas fa-exclamation-triangle"></i>',
-        info: '<i class="fas fa-info-circle"></i>'
-    };
-
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-        <span class="toast-icon">${icons[type] || icons.info}</span>
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close" onclick="this.closest('.toast').remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.remove();
-        }
-    }, duration);
-}
+function showToast(type,title,message,duration=4500){return window.HexoraNotify.show(type,message,{title,duration});}
 
 // ===== Password Toggle =====
 function togglePassword() {

@@ -6,7 +6,7 @@
  const statuses={CREATED:['صادرشده','Issued'],PENDING:['در انتظار تأیید','Awaiting verification'],PAID:['پرداخت‌شده','Paid'],REQUEST_FAILED:['خطای اتصال','Request failed']};
  const label=s=>statuses[s]?.[lang==='fa'?0:1]||s;
  async function api(path,method='GET',body){const response=await fetch('/api/payments'+path,{method,headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});let json;try{json=await response.json();}catch{throw Error(t('پاسخ سرور قابل دریافت نیست.','Invalid server response.'));}if(!response.ok||!json.success)throw Error(json.message||t('عملیات ناموفق بود.','Operation failed.'));return json.data;}
- function message(text='',error=false){$('payMessage').textContent=text;$('payMessage').classList.toggle('error',error);}
+ function message(text='',error=false){HexoraNotify.feedback(text,error,{source:'payMessage'});}
  async function mutate(task){if(busy||!ready)return;busy=true;document.querySelectorAll('.pay-shell button').forEach(b=>b.disabled=true);message(t('در حال انجام…','Working…'));try{await task();await refresh();message(t('انجام شد.','Done.'));}catch(e){message(e.message,true);try{await loadRows();}catch{}}finally{busy=false;document.querySelectorAll('.pay-shell button').forEach(b=>b.disabled=false);renderRows();}}
  function renderRows(){
   if(!lastPage)return;

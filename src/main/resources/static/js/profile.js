@@ -533,55 +533,22 @@ document.getElementById('twoFactorToggle')?.addEventListener('change', function(
 });
 
 // ===== Delete Account =====
-function confirmDeleteAccount() {
+async function confirmDeleteAccount() {
     const t = translations[currentLang];
-    if (confirm(t.deleteConfirm)) {
+    if (await HexoraNotify.confirm(t.deleteConfirm)) {
         showToast('warning', window.HexoraI18n.tr('در حال توسعه'), window.HexoraI18n.tr('حذف حساب کاربری به زودی امکان‌پذیر خواهد بود'));
     }
 }
 
 // ===== Toast System =====
-function showToast(type, title, message, duration = 4000) {
-    title=window.HexoraI18n.tr(title);message=window.HexoraI18n.tr(message);
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-
-    const icons = {
-        success: '<i class="fas fa-check-circle text-[#00C26E]"></i>',
-        error: '<i class="fas fa-times-circle text-[#EF4444]"></i>',
-        warning: '<i class="fas fa-exclamation-triangle text-[#FBBF24]"></i>',
-        info: '<i class="fas fa-info-circle text-[#3B82F6]"></i>'
-    };
-
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-        <span class="toast-icon">${icons[type] || icons.info}</span>
-        <div class="toast-content">
-            ${title ? `<div class="toast-title">${title}</div>` : ''}
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close" onclick="this.closest('.toast').remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.classList.add('hide');
-            setTimeout(() => toast.remove(), 400);
-        }
-    }, duration);
-}
+function showToast(type,title,message,duration=4500){return window.HexoraNotify.show(type,message,{title,duration});}
 
 // ===== Logout =====
 document.getElementById('logoutBtn')?.addEventListener('click', async function(e) {
     e.preventDefault();
     const t = translations[currentLang];
 
-    if (!confirm(t.logoutConfirm)) return;
+    if (!await HexoraNotify.confirm(t.logoutConfirm)) return;
 
     try {
         await fetch('/api/auth/logout', {
