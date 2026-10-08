@@ -9,7 +9,7 @@ import java.time.*;
 import java.net.URI;
 @Service
 public class PaymentService {
- public static final String TERMS_VERSION="2026-10-08";
+ public static final String TERMS_VERSION="2026-10-09";
  private final PaymentRepository payments;private final GatewayRepository gateways;private final PaymentSecrets secrets;private final ZarinpalClient client;
  public PaymentService(PaymentRepository p,GatewayRepository g,PaymentSecrets s,ZarinpalClient c){payments=p;gateways=g;secrets=s;client=c;}
  public GatewaySettings settings(){return gateways.findById(1L).orElseGet(GatewaySettings::new);}

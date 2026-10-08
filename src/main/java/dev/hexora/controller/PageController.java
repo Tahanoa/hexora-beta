@@ -22,6 +22,8 @@ public class PageController {
  @GetMapping("/collaboration") String collaboration(){return "home/collaboration";}
  @GetMapping("/contact") String contact(){return "home/contact";}
  @GetMapping("/testimonials") String testimonials(){return "home/testimonials";}
+ @GetMapping("/terms") String terms(){return "home/terms";}
+ @GetMapping("/privacy") String privacy(){return "home/privacy";}
  @GetMapping("/faq") String faq(){return "home/faq";}
  @GetMapping("/login") String login(){return "auth/login";}
  @GetMapping("/register") String register(){return "auth/register";}
