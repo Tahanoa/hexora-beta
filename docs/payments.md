@@ -43,6 +43,6 @@ The responsive FA/EN panel shows verified revenue, successful payment count, ave
 | POST | `/api/payments/invoices/{id}/verify` | Retry invoice verification |
 | GET | `/api/payments/callback?Authority=...&Status=OK` | Public gateway callback / receipt |
 
-The `/payments` account page and its public-header link have been removed. The admin page uses the shared sidebar and topbar, with payment CSS scoped to content so navigation remains consistent with the other dashboard pages. The old buyer column is retained internally for compatibility with existing PostgreSQL installations; new invoices are independent of users.
+The `/payments` account page and its public-header link have been removed. The admin page uses the shared sidebar and topbar, with payment CSS scoped to content so navigation remains consistent with the other dashboard pages. The direct invoice and gateway-return pages use the main website header, footer and visual theme. Report date filters reuse the Solar Hijri calendar from the experience manager; selected values are converted to ISO dates for the API, and graph labels display Solar Hijri dates. The old buyer column is retained internally for compatibility with existing PostgreSQL installations; new invoices are independent of users.
 
 No gateway payment or automated test was run for this implementation. JavaScript syntax and patch whitespace were checked. Maven compilation could not reach Maven Central to resolve the existing Spring Boot parent dependency in this environment.
