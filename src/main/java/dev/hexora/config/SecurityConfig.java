@@ -26,6 +26,8 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                         .requestMatchers(HttpMethod.GET, "/testimonials", "/api/testimonials/public", "/faq", "/", "/about", "/experience", "/projects", "/projects/*", "/collaboration", "/services", "/skills", "/contact", "/login", "/register", "/home", "/dashboard", "/profile", "/manage/**", "/css/**", "/js/**", "/data/fontawesome-icons.json", "/images/**", "/favicon.ico", "/actuator/health", "/api/auth/csrf", "/api/profile/public/**", "/api/projects/public/**", "/api/skills/public/**", "/api/services/public/**", "/api/experience/public/**", "/api/statistics/public/**", "/api/media/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/payments/callback").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/payments/invoices/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payments/invoices/*/checkout", "/api/payments/invoices/*/verify").permitAll()
                         .requestMatchers("/api/payments/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/payments/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()

@@ -469,6 +469,6 @@ Built by [Tahanoa](https://github.com/Tahanoa) · [Hexora repository](https://gi
 
 ## Zarinpal gateway and sales
 
-The new `/manage/payments` panel manages encrypted merchant credentials, gateway activation, admin-issued invoices, paginated transactions, verification recovery, daily revenue charts and invoice status reports. Buyers pay and view receipts at `/payments`. Prices are stored server-side in toman (IRT); only server-confirmed payments enter revenue reports, and repeated callbacks are idempotent.
+The new `/manage/payments` panel manages encrypted merchant credentials, gateway activation, admin-issued invoices, paginated transactions, verification recovery, daily revenue charts and invoice status reports. Each invoice has a copyable direct link at `/invoice/{id}`; buyers pay and view receipts without signing in. Prices are stored server-side in toman (IRT); only server-confirmed payments enter revenue reports, and repeated callbacks are idempotent.
 
 See [payment setup and API reference](docs/payments.md) for callback configuration and `PAYMENT_ENCRYPTION_KEY` setup. This stage provides the payment foundation; product catalog and private downloads can connect to it next.

@@ -4,7 +4,8 @@ import java.time.Instant;
 @Entity @Table(name="payments", indexes={@Index(name="payments_created_idx",columnList="created_at"),@Index(name="payments_paid_idx",columnList="paid_at")})
 public class Payment {
  @Id public String id=java.util.UUID.randomUUID().toString();
- @Column(nullable=false,length=50) public String buyer;
+ // Retained for existing database compatibility; direct invoices do not require a user.
+ @Column(nullable=false,length=50) public String buyer="DIRECT_LINK";
  @Column(nullable=false,length=250) public String description;
  @Column(nullable=false) public long amount;
  @Column(nullable=false,length=20) public String status="CREATED";
