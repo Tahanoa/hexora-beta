@@ -15,8 +15,7 @@ public class ProductController {
  @GetMapping("/public/{slug}") Object detail(@PathVariable String slug){return ApiResponse.success(service.detail(slug));}
  @GetMapping("/public/{slug}/reviews") Object reviews(@PathVariable String slug,@RequestParam(defaultValue="0") int page){return ApiResponse.success(reviews.list(slug,page));}
  @GetMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object ownReview(@PathVariable Long id,Principal user){return ApiResponse.success(reviews.mine(id,user.getName()));}
- @PutMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object saveReview(@PathVariable Long id,Principal user,@Valid @RequestBody ProductReviewService.Request r){return ApiResponse.success(reviews.save(id,user.getName(),r));}
- @DeleteMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object deleteReview(@PathVariable Long id,Principal user){reviews.delete(id,user.getName());return ApiResponse.success(java.util.Map.of("deleted",true));}
+ @PostMapping("/{id}/review") @PreAuthorize("isAuthenticated()") Object saveReview(@PathVariable Long id,Principal user,@Valid @RequestBody ProductReviewService.Request r){return ApiResponse.success(reviews.save(id,user.getName(),r));}
  @GetMapping("/admin/{id}/reviews") @PreAuthorize("hasRole('ADMIN')") Object adminReviews(@PathVariable Long id,@RequestParam(defaultValue="0") int page){return ApiResponse.success(reviews.adminList(id,page));}
  @DeleteMapping("/admin/{id}/reviews/{reviewId}") @PreAuthorize("hasRole('ADMIN')") Object removeReview(@PathVariable Long id,@PathVariable Long reviewId){reviews.adminDelete(id,reviewId);return ApiResponse.success(java.util.Map.of("deleted",true));}
  @GetMapping("/admin") @PreAuthorize("hasRole('ADMIN')") Object admin(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="") String q,@RequestParam(defaultValue="ALL") String state){return ApiResponse.success(service.adminList(q,state,page));}
@@ -30,6 +29,8 @@ public class ProductController {
  @PostMapping("/{id}/purchase") @PreAuthorize("isAuthenticated()") Object buy(@PathVariable Long id,Principal user){return ApiResponse.success(service.buy(id,user.getName()));}
  @GetMapping("/mine") @PreAuthorize("isAuthenticated()") Object mine(Principal user,@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.library(user.getName(),page));}
  @GetMapping("/orders") @PreAuthorize("isAuthenticated()") Object orders(Principal user,@RequestParam(defaultValue="0") int page){return ApiResponse.success(service.orders(user.getName(),page));}
+ @GetMapping("/orders/{id}") @PreAuthorize("isAuthenticated()") ResponseEntity<?> order(@PathVariable java.util.UUID id,Principal user){return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(ApiResponse.success(service.order(id.toString(),user.getName())));}
+ @PostMapping("/orders/{id}/checkout") @PreAuthorize("isAuthenticated()") ResponseEntity<?> checkout(@PathVariable java.util.UUID id,Principal user,@Valid @RequestBody dev.hexora.payment.PaymentConsentRequest consent){return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(ApiResponse.success(service.checkoutOrder(id.toString(),user.getName(),consent)));}
  @PostMapping("/orders/{id}/verify") @PreAuthorize("isAuthenticated()") Object verify(@PathVariable String id,Principal user){return ApiResponse.success(service.verifyOrder(id,user.getName()));}
  @GetMapping("/{id}/releases/{releaseId}/download") @PreAuthorize("isAuthenticated()") ResponseEntity<byte[]> download(@PathVariable Long id,@PathVariable Long releaseId,Authentication user){
   boolean admin=user.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_ADMIN"));var file=service.download(id,releaseId,user.getName(),admin);

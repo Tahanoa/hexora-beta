@@ -10,5 +10,6 @@ public class ProductReview {
  @Column(nullable=false,length=3000) public String text;
  @Column(name="created_at",nullable=false) public Instant createdAt=Instant.now();
  @Column(nullable=false) public Instant updatedAt=Instant.now();
+ @Column(nullable=false,columnDefinition="boolean default false") public boolean hidden=false;
  @Version public long rowVersion;
 }

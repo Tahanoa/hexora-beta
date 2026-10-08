@@ -11,6 +11,7 @@ public class PageController {
  @GetMapping("/products/library") String productLibrary(){return "redirect:/account/products";}
  @GetMapping("/account") String account(Model model){model.addAttribute("accountSection","overview");return "account/index";}
  @GetMapping("/account/{section}") String accountSection(@PathVariable String section,Model model){if(!java.util.Set.of("orders","products").contains(section))throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND);model.addAttribute("accountSection",section);return "account/index";}
+ @GetMapping("/account/orders/{id}") String productInvoice(@PathVariable java.util.UUID id,Model model,jakarta.servlet.http.HttpServletResponse response){model.addAttribute("invoiceId",id.toString());model.addAttribute("productInvoice",true);response.setHeader("Cache-Control","no-store");response.setHeader("Referrer-Policy","no-referrer");return "home/invoice";}
  @GetMapping("/products/{slug}") String productDetail(@PathVariable String slug,Model model){model.addAttribute("productSlug",slug);return "home/products";}
  @GetMapping("/services") String services(){return "home/services";}
  @GetMapping("/services/{slug}") String serviceDetail(@PathVariable String slug,Model model){model.addAttribute("serviceSlug",slug);return "home/service";}

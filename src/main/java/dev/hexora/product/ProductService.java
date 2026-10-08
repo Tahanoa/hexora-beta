@@ -66,14 +66,23 @@ public class ProductService {
   if(payments.existsByProductIdAndPurchaserIdAndStatus(id,user.getId(),"PAID"))return Map.of("owned",true);
   var existing=payments.findFirstByProductIdAndPurchaserIdAndStatusInOrderByCreatedAtDesc(id,user.getId(),List.of("CREATED","PENDING","REQUEST_FAILED"));
   Payment p=existing.orElseGet(Payment::new);if(existing.isEmpty()){p.productId=id;p.purchaserId=user.getId();p.buyer=user.getUsername();p.amount=product.price;p.description=("Product: "+product.title);
-   if(product.price==0){p.status="PAID";p.refId="FREE";p.paidAt=Instant.now();}payments.saveAndFlush(p);
+   payments.saveAndFlush(p);
   }
   if(p.status.equals("PAID"))return Map.of("owned",true);
-  var result=(Map<?,?>)gateway.checkout(p.id);var out=new LinkedHashMap<String,Object>();out.put("orderId",p.id);out.put("status",result.get("status"));out.put("redirectUrl",result.get("redirectUrl"));return out;
+  return Map.of("orderId",p.id,"status",p.status,"invoicePath","/account/orders/"+p.id);
+ }
+ private Payment ownedOrder(String id,Long userId,boolean lock){return (lock?payments.locked(id):payments.findById(id)).filter(p->userId.equals(p.purchaserId)&&p.productId!=null).orElseThrow(ApiException::notFound);}
+ public Object order(String id,String username){return gateway.invoiceView(ownedOrder(id,user(username).getId(),false));}
+ @Transactional public Object checkoutOrder(String id,String username,PaymentConsentRequest consent){
+  var u=lockedUser(username);var p=ownedOrder(id,u.getId(),true);if(p.status.equals("PAID"))return gateway.invoiceView(p);
+  var product=locked(p.productId);if(!product.published||!releases.existsByProductIdAndPublishedTrue(product.id))throw ApiException.notFound();
+  gateway.acceptTerms(p,consent);
+  if(p.amount==0){p.status="PAID";p.refId="FREE";p.paidAt=Instant.now();payments.saveAndFlush(p);return gateway.invoiceView(p);}
+  var result=(Map<?,?>)gateway.checkout(p.id);var out=gateway.invoiceView(p);if(result.get("redirectUrl")!=null)out.put("redirectUrl",result.get("redirectUrl"));return out;
  }
  public Object library(String username,int page){var u=user(username);return products.owned(u.getId(),PageRequest.of(Math.max(0,page),12,Sort.by("createdAt").descending())).map(p->{var m=view(p);m.put("releases",releases.findByProductIdAndPublishedTrueOrderByCreatedAtDesc(p.id).stream().map(this::releaseView).toList());return m;});}
  public Object orders(String username,int page){var u=user(username);return payments.findByPurchaserIdOrderByCreatedAtDesc(u.getId(),PageRequest.of(Math.max(0,page),20)).map(p->Map.of("id",p.id,"productId",p.productId,"description",p.description,"amount",p.amount,"status",p.status,"refId",p.refId==null?"":p.refId,"createdAt",p.createdAt));}
- @Transactional public Object verifyOrder(String id,String username){var u=user(username);var p=payments.locked(id).filter(x->u.getId().equals(x.purchaserId)&&x.productId!=null).orElseThrow(ApiException::notFound);gateway.verify(id);return Map.of("status",p.status);}
+ @Transactional public Object verifyOrder(String id,String username){var u=user(username);var p=payments.locked(id).filter(x->u.getId().equals(x.purchaserId)&&x.productId!=null).orElseThrow(ApiException::notFound);gateway.verify(id);return gateway.invoiceView(p);}
  public record Download(byte[] data,String filename,String sha256) {}
  @Transactional public Download download(Long productId,Long releaseId,String username,boolean admin){
   var u=lockedUser(username);if(!admin&&!payments.existsByProductIdAndPurchaserIdAndStatus(productId,u.getId(),"PAID"))throw new ApiException(HttpStatus.FORBIDDEN,"A verified purchase is required");

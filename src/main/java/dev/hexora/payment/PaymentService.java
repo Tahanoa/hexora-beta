@@ -9,6 +9,7 @@ import java.time.*;
 import java.net.URI;
 @Service
 public class PaymentService {
+ public static final String TERMS_VERSION="2026-10-08";
  private final PaymentRepository payments;private final GatewayRepository gateways;private final PaymentSecrets secrets;private final ZarinpalClient client;
  public PaymentService(PaymentRepository p,GatewayRepository g,PaymentSecrets s,ZarinpalClient c){payments=p;gateways=g;secrets=s;client=c;}
  public GatewaySettings settings(){return gateways.findById(1L).orElseGet(GatewaySettings::new);}
@@ -20,17 +21,19 @@ public class PaymentService {
   if(enabled&&s.merchantEncrypted==null)throw bad("Merchant ID is required");s.enabled=enabled;s.callbackUrl=callback;gateways.saveAndFlush(s);return settingsView();
  }
  @Transactional public Object create(long amount,String description){var p=new Payment();p.amount=amount;p.description=description;return view(payments.saveAndFlush(p));}
- public Map<String,Object> view(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("invoicePath",p.productId==null?"/invoice/"+p.id:"/account/orders");m.put("productId",p.productId);m.put("description",p.description);m.put("amount",p.amount);m.put("currency","IRT");m.put("status",p.status);m.put("authority",p.authority);m.put("refId",p.refId);m.put("cardPan",p.cardPan);m.put("fee",p.fee);m.put("gatewayCode",p.gatewayCode);m.put("error",p.error);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
- public Map<String,Object> invoiceView(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("description",p.description);m.put("amount",p.amount);m.put("status",p.status);m.put("refId",p.refId);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
+ public Map<String,Object> view(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("invoicePath",p.productId==null?"/invoice/"+p.id:"/account/orders/"+p.id);m.put("productId",p.productId);m.put("description",p.description);m.put("amount",p.amount);m.put("currency","IRT");m.put("status",p.status);m.put("authority",p.authority);m.put("refId",p.refId);m.put("cardPan",p.cardPan);m.put("fee",p.fee);m.put("gatewayCode",p.gatewayCode);m.put("error",p.error);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);return m;}
+ public Map<String,Object> invoiceView(Payment p){var m=new LinkedHashMap<String,Object>();m.put("id",p.id);m.put("description",p.description);m.put("amount",p.amount);m.put("status",p.status);m.put("refId",p.refId);m.put("createdAt",p.createdAt);m.put("paidAt",p.paidAt);m.put("termsVersion",TERMS_VERSION);return m;}
+ public void acceptTerms(Payment p,PaymentConsentRequest consent){if(consent==null||!consent.accepted()||!TERMS_VERSION.equals(consent.termsVersion()))throw bad("Read and accept the current privacy, security and purchase terms before payment");p.termsAcceptedAt=Instant.now();p.termsVersion=TERMS_VERSION;}
  private Payment direct(Payment p){if(p.productId!=null)throw ApiException.notFound();return p;}
  public Object invoice(String id){return invoiceView(direct(payments.findById(id).orElseThrow(ApiException::notFound)));}
- @Transactional public Object publicCheckout(String id){direct(lock(id));var result=(Map<String,Object>)checkout(id);var p=payments.findById(id).orElseThrow(ApiException::notFound);var out=invoiceView(p);if(result.containsKey("redirectUrl"))out.put("redirectUrl",result.get("redirectUrl"));return out;}
+ @Transactional public Object publicCheckout(String id,PaymentConsentRequest consent){var invoice=direct(lock(id));acceptTerms(invoice,consent);var result=(Map<String,Object>)checkout(id);var p=payments.findById(id).orElseThrow(ApiException::notFound);var out=invoiceView(p);if(result.containsKey("redirectUrl"))out.put("redirectUrl",result.get("redirectUrl"));return out;}
  @Transactional public Object publicVerify(String id){var p=direct(lock(id));verifyLocked(p);return invoiceView(p);}
  public Object list(String status,int page){var paging=PageRequest.of(Math.max(0,page),20,Sort.by("createdAt").descending());return (status!=null&&!status.isBlank()?payments.findByStatus(status,paging):payments.findAll(paging)).map(this::view);}
  private Payment lock(String id){return payments.locked(id).orElseThrow(ApiException::notFound);}
  @Transactional public Object checkout(String id){
   var p=lock(id);
   if(p.status.equals("PAID"))return view(p);
+  if(p.termsAcceptedAt==null||!TERMS_VERSION.equals(p.termsVersion))throw bad("Purchase terms must be accepted before payment");
   if(p.authority!=null){var result=view(p);result.put("redirectUrl","https://payment.zarinpal.com/pg/StartPay/"+p.authority);return result;}
   if(p.lastRequestAt!=null&&p.lastRequestAt.isAfter(Instant.now().minusSeconds(5)))throw new ApiException(HttpStatus.TOO_MANY_REQUESTS,"Wait a few seconds before retrying payment");
   p.lastRequestAt=Instant.now();

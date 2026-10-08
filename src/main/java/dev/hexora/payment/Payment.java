@@ -15,6 +15,8 @@ public class Payment {
  @Column(length=30) public String cardPan;
  @Column(name="product_id") public Long productId;
  @Column(name="purchaser_id") public Long purchaserId;
+ public Instant termsAcceptedAt;
+ @Column(length=32) public String termsVersion;
  public long fee;
  public Instant lastRequestAt;
  public Instant lastVerifyAt;
