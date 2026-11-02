@@ -18,6 +18,19 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
     assert.equal(await page.locator('.hx-depth').count(), 30);
     assert.equal(await page.locator('.hx-hero video').count(), 0);
     assert.equal(await page.locator('.hx-particles').count(), 1);
+    assert.equal(await page.locator('.firefly-field').count(), 0, 'legacy page-wide particles must be absent');
+    assert(await page.locator('.hx-particles').evaluate(c => c.parentElement.classList.contains('hx-stage')));
+    const yaw = await page.locator('.hx-solid').evaluate(e => {
+      const animation = e.getAnimations().find(a => a.animationName === 'hx-sway');
+      animation.pause();
+      animation.currentTime = 0;
+      const left = new DOMMatrix(getComputedStyle(e).transform).m13;
+      animation.currentTime = 7000;
+      const right = new DOMMatrix(getComputedStyle(e).transform).m13;
+      animation.play();
+      return [left, right];
+    });
+    assert(yaw[0] * yaw[1] < 0 && Math.abs(yaw[0] + yaw[1]) < 0.01, 'idle logo yaw must be balanced');
     const canvas = page.locator('.hx-particles');
     const first = await canvas.evaluate(c => c.toDataURL());
     await page.waitForTimeout(180);
@@ -27,7 +40,7 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
     await page.waitForFunction(() => document.querySelector('.hx-tilt').style.getPropertyValue('--ry')); 
     assert((await page.locator('.hx-tilt').getAttribute('style')).includes('--ry'));
     await page.locator('.hx-turn').click();
-    assert(await page.locator('.hx-solid').evaluate(e => e.getAnimations().some(a => a.effect.getKeyframes().length === 3)));
+    assert(await page.locator('.hx-solid').evaluate(e => e.getAnimations().some(a => a.effect.getKeyframes().length === 4)));
     await page.locator('.hx-motion').click();
     assert.equal(await page.locator('.hx-hero').getAttribute('data-motion'), 'off');
     assert.equal(await canvas.evaluate(c => getComputedStyle(c).visibility), 'hidden');
@@ -42,6 +55,11 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
         await page.setViewportSize({ width, height: 900 });
         const layout = await page.locator('.hx-hero').evaluate(e => ({ width: e.clientWidth, scroll: e.scrollWidth }));
         assert(layout.scroll <= layout.width + 1, `${lang}/${width}: hero overflow ${JSON.stringify(layout)}`);
+        const bounds = await page.locator('.hx-particles').evaluate(c => {
+          const canvas = c.getBoundingClientRect(), stage = c.parentElement.getBoundingClientRect();
+          return [canvas.x - stage.x, canvas.y - stage.y, canvas.width - stage.width, canvas.height - stage.height];
+        });
+        assert(bounds.every(v => Math.abs(v) < 1), `${lang}/${width}: ember canvas escaped logo stage`);
       }
     }
     assert.equal(await page.locator('.hx-actions a[href="/contact"]').count(), 1);
@@ -55,7 +73,7 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
     await page.goto(base + '/skills');
     assert.equal(await page.locator('.hx-hero:visible').count(), 0);
     assert.deepEqual(errors, []);
-    console.log('Hero browser checks passed: live profile/status, FA/EN, 12 layouts, PNG depth, particles, tilt/rotation, pause, reduced motion, real links and other-page isolation.');
+    console.log('Hero browser checks passed: live profile/status, FA/EN, 12 layouts, PNG depth, logo-bound embers, symmetric idle yaw, tilt/rotation, pause, reduced motion, real links and other-page isolation.');
   } finally {
     await browser.close();
   }

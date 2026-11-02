@@ -18,7 +18,6 @@
   let height = 0;
   let points = [];
   let rotation = null;
-  const pointer = { x: -1000, y: -1000 };
 
   function syncLabel() {
     const fa = motion ? 'توقف حرکت‌ها' : 'فعال کردن حرکت‌ها';
@@ -31,21 +30,29 @@
     hero.dataset.motion = motion ? 'on' : 'off';
   }
 
+  // Every ember belongs to the logo stage, never the page or the hero copy.
+  function ember(initial = false) {
+    const life = 230 + Math.random() * 190;
+    return {
+      age: initial ? Math.random() * life : 0,
+      life,
+      origin: width * (0.5 + (Math.random() + Math.random() - 1) * 0.34),
+      sway: 5 + Math.random() * 15,
+      phase: Math.random() * Math.PI * 2,
+      radius: 0.5 + Math.random() * 0.85,
+      brightness: 0.45 + Math.random() * 0.35
+    };
+  }
+
   function resize() {
-    const rect = hero.getBoundingClientRect();
+    const rect = stage.getBoundingClientRect();
     width = rect.width;
     height = rect.height;
     const ratio = Math.min(devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     if (context) context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    points = Array.from({ length: width < 621 ? 22 : 46 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.2,
-      vy: (Math.random() - 0.5) * 0.17,
-      radius: Math.random() * 0.8 + 0.4
-    }));
+    points = Array.from({ length: width < 400 ? 42 : 70 }, () => ember(true));
   }
 
   function stop() {
@@ -67,31 +74,33 @@
       const delta = lastTime ? Math.min((time - lastTime) / 33, 2) : 1;
       lastTime = time;
       context.clearRect(0, 0, width, height);
-      for (const point of points) {
-        point.x += point.vx * delta;
-        point.y += point.vy * delta;
-        if (point.x < 0 || point.x > width) point.vx *= -1;
-        if (point.y < 0 || point.y > height) point.vy *= -1;
-        const proximity = Math.max(0, 1 - Math.hypot(point.x - pointer.x, point.y - pointer.y) / 160);
-        context.fillStyle = `rgba(101,255,192,${0.25 + proximity * 0.4})`;
-        context.beginPath();
-        context.arc(point.x, point.y, point.radius + proximity * 0.7, 0, Math.PI * 2);
-        context.fill();
-      }
       for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          const a = points[i];
-          const b = points[j];
-          const distance = Math.hypot(a.x - b.x, a.y - b.y);
-          if (distance < 105) {
-            context.strokeStyle = `rgba(0,194,110,${0.09 * (1 - distance / 105)})`;
-            context.lineWidth = 0.5;
-            context.beginPath();
-            context.moveTo(a.x, a.y);
-            context.lineTo(b.x, b.y);
-            context.stroke();
-          }
-        }
+        let point = points[i];
+        point.age += delta;
+        if (point.age >= point.life) point = points[i] = ember();
+        const progress = point.age / point.life;
+        const x = point.origin + Math.sin(progress * 7 + point.phase) * point.sway;
+        const y = height * (0.89 - progress * 0.85);
+        const fade = Math.pow(Math.sin(Math.PI * progress), 0.8);
+        const opacity = fade * point.brightness * (0.8 + 0.2 * Math.sin(point.age * 0.13 + point.phase));
+        const halo = context.createRadialGradient(x, y, 0, x, y, point.radius * 6);
+        halo.addColorStop(0, `rgba(101,255,192,${opacity * 0.35})`);
+        halo.addColorStop(1, 'rgba(0,194,110,0)');
+        context.fillStyle = halo;
+        context.fillRect(x - point.radius * 6, y - point.radius * 6, point.radius * 12, point.radius * 12);
+        const trail = context.createLinearGradient(x, y, x, y + point.radius * 7);
+        trail.addColorStop(0, `rgba(101,255,192,${opacity * 0.7})`);
+        trail.addColorStop(1, 'rgba(0,194,110,0)');
+        context.strokeStyle = trail;
+        context.lineWidth = point.radius * 0.8;
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x, y + point.radius * 7);
+        context.stroke();
+        context.fillStyle = `rgba(190,255,222,${opacity})`;
+        context.beginPath();
+        context.arc(x, y, point.radius, 0, Math.PI * 2);
+        context.fill();
       }
     }
     frame = requestAnimationFrame(draw);
@@ -118,27 +127,22 @@
     if (preference.matches) return;
     if (!motion) setMotion(true);
     if (rotation) rotation.cancel();
+    const resting = getComputedStyle(solid).transform;
     rotation = solid.animate([
-      { transform: 'rotateY(0deg)' },
-      { transform: 'rotateY(180deg)' },
-      { transform: 'rotateY(360deg)' }
-    ], { duration: 2300, easing: 'cubic-bezier(.45,0,.25,1)' });
+      { transform: resting },
+      { transform: 'rotateY(-18deg)' },
+      { transform: 'rotateY(18deg)' },
+      { transform: resting }
+    ], { duration: 2600, easing: 'cubic-bezier(.45,0,.25,1)' });
     rotation.onfinish = () => { rotation = null; };
   });
 
   if (matchMedia('(pointer: fine)').matches) {
-    hero.addEventListener('pointermove', event => {
-      if (!motion) return;
-      const rect = hero.getBoundingClientRect();
-      pointer.x = event.clientX - rect.left;
-      pointer.y = event.clientY - rect.top;
-    });
-    hero.addEventListener('pointerleave', () => { pointer.x = pointer.y = -1000; });
     stage.addEventListener('pointermove', event => {
       if (!motion) return;
       const rect = stage.getBoundingClientRect();
-      tilt.style.setProperty('--rx', `${-((event.clientY - rect.top) / rect.height - 0.5) * 22}deg`);
-      tilt.style.setProperty('--ry', `${((event.clientX - rect.left) / rect.width - 0.5) * 34}deg`);
+      tilt.style.setProperty('--rx', `${-((event.clientY - rect.top) / rect.height - 0.5) * 10}deg`);
+      tilt.style.setProperty('--ry', `${((event.clientX - rect.left) / rect.width - 0.5) * 18}deg`);
     });
     stage.addEventListener('pointerleave', () => {
       tilt.style.setProperty('--rx', '0deg');
@@ -149,8 +153,8 @@
   new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting && !hero.hidden;
     if (visible) start(); else stop();
-  }, { threshold: 0 }).observe(hero);
-  new ResizeObserver(() => { resize(); start(); }).observe(hero);
+  }, { threshold: 0 }).observe(stage);
+  new ResizeObserver(() => { resize(); start(); }).observe(stage);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       stop();
