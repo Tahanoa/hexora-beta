@@ -30,17 +30,25 @@
     hero.dataset.motion = motion ? 'on' : 'off';
   }
 
-  // Every ember belongs to the logo stage, never the page or the hero copy.
+  // Short-lived sparks originate along every edge of the logo, not a floor emitter.
   function ember(initial = false) {
-    const life = 230 + Math.random() * 190;
+    const vertices = [[0,-1],[0.866,-0.5],[0.866,0.5],[0,1],[-0.866,0.5],[-0.866,-0.5]];
+    const edge = Math.floor(Math.random() * vertices.length);
+    const a = vertices[edge], b = vertices[(edge + 1) % vertices.length];
+    const t = Math.random();
+    const life = 85 + Math.random() * 100;
     return {
       age: initial ? Math.random() * life : 0,
       life,
-      origin: width * (0.5 + (Math.random() + Math.random() - 1) * 0.34),
-      sway: 5 + Math.random() * 15,
+      x: width * (0.5 + (a[0] + (b[0] - a[0]) * t) * 0.32) + (Math.random() - 0.5) * 16,
+      y: height * (0.4 + (a[1] + (b[1] - a[1]) * t) * 0.33) + (Math.random() - 0.5) * 14,
+      vx: (Math.random() - 0.5) * 0.17,
+      vy: -0.015 - Math.random() * 0.07,
+      sway: 2 + Math.random() * 5,
+      frequency: 0.012 + Math.random() * 0.023,
       phase: Math.random() * Math.PI * 2,
-      radius: 0.5 + Math.random() * 0.85,
-      brightness: 0.45 + Math.random() * 0.35
+      radius: 0.4 + Math.random() * 0.7,
+      brightness: 0.3 + Math.random() * 0.4
     };
   }
 
@@ -52,7 +60,7 @@
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     if (context) context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    points = Array.from({ length: width < 400 ? 42 : 70 }, () => ember(true));
+    points = Array.from({ length: width < 400 ? 28 : 44 }, () => ember(true));
   }
 
   function stop() {
@@ -74,34 +82,32 @@
       const delta = lastTime ? Math.min((time - lastTime) / 33, 2) : 1;
       lastTime = time;
       context.clearRect(0, 0, width, height);
+      // Keep the effect in a tight envelope around the silhouette, even during drift.
+      context.save();
+      context.beginPath();
+      context.ellipse(width * 0.5, height * 0.4, width * 0.36, height * 0.37, 0, 0, Math.PI * 2);
+      context.clip();
       for (let i = 0; i < points.length; i++) {
         let point = points[i];
         point.age += delta;
         if (point.age >= point.life) point = points[i] = ember();
         const progress = point.age / point.life;
-        const x = point.origin + Math.sin(progress * 7 + point.phase) * point.sway;
-        const y = height * (0.89 - progress * 0.85);
-        const fade = Math.pow(Math.sin(Math.PI * progress), 0.8);
-        const opacity = fade * point.brightness * (0.8 + 0.2 * Math.sin(point.age * 0.13 + point.phase));
-        const halo = context.createRadialGradient(x, y, 0, x, y, point.radius * 6);
-        halo.addColorStop(0, `rgba(101,255,192,${opacity * 0.35})`);
+        const angle = point.age * point.frequency + point.phase;
+        const x = point.x + point.vx * point.age + (Math.sin(angle) - Math.sin(point.phase)) * point.sway;
+        const y = point.y + point.vy * point.age + (Math.cos(angle * 0.73) - Math.cos(point.phase * 0.73)) * point.sway * 0.6;
+        const fade = Math.sin(Math.PI * progress);
+        const opacity = fade * fade * point.brightness;
+        const halo = context.createRadialGradient(x, y, 0, x, y, point.radius * 4.5);
+        halo.addColorStop(0, `rgba(101,255,192,${opacity * 0.28})`);
         halo.addColorStop(1, 'rgba(0,194,110,0)');
         context.fillStyle = halo;
-        context.fillRect(x - point.radius * 6, y - point.radius * 6, point.radius * 12, point.radius * 12);
-        const trail = context.createLinearGradient(x, y, x, y + point.radius * 7);
-        trail.addColorStop(0, `rgba(101,255,192,${opacity * 0.7})`);
-        trail.addColorStop(1, 'rgba(0,194,110,0)');
-        context.strokeStyle = trail;
-        context.lineWidth = point.radius * 0.8;
-        context.beginPath();
-        context.moveTo(x, y);
-        context.lineTo(x, y + point.radius * 7);
-        context.stroke();
+        context.fillRect(x - point.radius * 5, y - point.radius * 5, point.radius * 10, point.radius * 10);
         context.fillStyle = `rgba(190,255,222,${opacity})`;
         context.beginPath();
-        context.arc(x, y, point.radius, 0, Math.PI * 2);
+        context.ellipse(x, y, point.radius * 0.7, point.radius * (1 + progress * 0.5), point.phase, 0, Math.PI * 2);
         context.fill();
       }
+      context.restore();
     }
     frame = requestAnimationFrame(draw);
   }

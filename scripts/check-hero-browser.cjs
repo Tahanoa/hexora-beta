@@ -35,6 +35,20 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
     const first = await canvas.evaluate(c => c.toDataURL());
     await page.waitForTimeout(180);
     assert.notEqual(await canvas.evaluate(c => c.toDataURL()), first, 'particles should animate');
+    const coverage = await canvas.evaluate(c => {
+      const { data } = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+      let left = 0, right = 0, maxY = 0;
+      for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) {
+        if (data[(y * c.width + x) * 4 + 3] > 12) {
+          if (x < c.width * 0.5) left++; else right++;
+          maxY = Math.max(maxY, y / c.height);
+        }
+      }
+      return { left, right, maxY };
+    });
+    assert(coverage.left > 0 && coverage.right > 0, 'sparks must surround both sides of the logo');
+    assert(coverage.maxY < 0.78, 'sparks must not accumulate below the logo');
+
     const rect = await page.locator('.hx-stage').boundingBox();
     await page.locator('.hx-stage').hover({ position: { x: rect.width * .75, y: rect.height * .25 } });
     await page.waitForFunction(() => document.querySelector('.hx-tilt').style.getPropertyValue('--ry')); 
