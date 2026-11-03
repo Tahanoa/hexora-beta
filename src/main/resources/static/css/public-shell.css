@@ -47,10 +47,3 @@
 
 .public-menu-lines{display:flex;flex-direction:column;gap:5px;width:20px}.public-menu-lines>span{display:block;width:20px;height:2px;background:currentColor;border-radius:4px;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .2s}.public-header #menuBtn[aria-expanded="true"] .public-menu-lines>span:first-child{transform:translateY(7px) rotate(45deg)}.public-header #menuBtn[aria-expanded="true"] .public-menu-lines>span:nth-child(2){opacity:0;transform:scaleX(.5)}.public-header #menuBtn[aria-expanded="true"] .public-menu-lines>span:last-child{transform:translateY(-7px) rotate(-45deg)}
 @media(prefers-reduced-motion:reduce){.public-header.nav .mobile-nav,.public-menu-lines>span{transition:none}}
-
-/* The section name is the heading; editorial copy supports it. */
-.section-head .section-subtitle,.skill-showcase>.section-subtitle,.career-heading>.section-subtitle{font-size:1rem;font-weight:400;line-height:1.9;color:var(--muted);margin:8px 0 20px;letter-spacing:0}
-.page-intro .section-subtitle,.hx-svc-intro .section-subtitle,.faq-intro .section-subtitle,.testimonials-intro .section-subtitle,.process-hero .section-subtitle,.contact-intro .section-subtitle{font-size:clamp(1rem,2vw,1.25rem);font-weight:400;line-height:1.9;color:var(--muted);letter-spacing:0;margin:10px 0 18px}
-.section-head h2{font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:800;line-height:1.5;margin:8px 0}
-
-.section-subtitle strong{font-weight:inherit}
