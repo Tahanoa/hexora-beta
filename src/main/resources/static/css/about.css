@@ -62,3 +62,11 @@
 @media(prefers-reduced-motion:reduce){
  .skill-category-nav button{transition:none}
 }
+/* Bare social and skill icons retain accessible names and keyboard focus. */
+.bio-identity .contact-icon-link,.bio-identity .contact-icon-link:hover,.orbit-skill{border:0;background:transparent;box-shadow:none;border-radius:0}
+.bio-identity .contact-icon-link i{font-size:1.4rem}.bio-identity .contact-icon-link:hover{color:var(--mint);box-shadow:none}
+.bio-identity .contact-icon-link:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.skill-name{border:0;background:transparent;box-shadow:none;position:relative}.skill-name-list{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}.skill-name .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.bio-story h2{font-size:clamp(1.4rem,2.5vw,1.9rem)}.bio-story .bio-summary{font-size:1rem;font-weight:400;color:var(--muted)}
+.learning-journey{margin-top:28px}.journey-path{display:flex;flex-wrap:wrap;gap:16px 0;list-style:none;padding:12px 0;margin:0;align-items:center}.journey-path li{display:flex;align-items:center;gap:9px;min-width:0;font-size:.9rem;color:var(--text);overflow-wrap:anywhere}.journey-path li:not(:last-child)::after{content:'';width:28px;height:1px;margin-inline:12px;background:linear-gradient(to left,var(--green),var(--line));flex-shrink:0}.journey-number{display:grid;place-items:center;flex-shrink:0;width:26px;height:26px;border:1px solid #00c26e55;border-radius:50%;font-size:.65rem;color:var(--mint);background:#00c26e0a}
+@media(max-width:600px){.journey-path li{font-size:.8rem}.journey-path li:not(:last-child)::after{width:18px;margin-inline:9px}}
