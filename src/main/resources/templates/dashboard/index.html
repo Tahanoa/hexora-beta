@@ -11,8 +11,8 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 <script src="/js/client.js"></script>
 <script src="/js/dashboard-shell.js" defer></script>
-<link rel="stylesheet" href="/css/admin-shell.css"><script src="/js/i18n.js"></script></head>
-<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden">
+<link rel="stylesheet" href="/css/admin-shell.css"><script src="/js/i18n.js"></script><th:block th:replace="~{fragments/page-loader :: assets}"></th:block></head>
+<body class="bg-[#0B0F14] text-[#F5F7FA] min-h-screen overflow-x-hidden"><div th:replace="~{fragments/page-loader :: overlay}"></div>
 
 <!-- ===== Sidebar ===== -->
 <div th:replace="~{dashboard/fragments/sidebar :: sidebar}"></div>

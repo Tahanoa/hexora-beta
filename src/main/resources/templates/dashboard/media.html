@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
   <script src="/js/client.js"></script><script src="/js/i18n.js"></script><script src="/js/dashboard-shell.js" defer></script>
   <link rel="stylesheet" href="/css/admin-shell.css"><link rel="stylesheet" href="/css/media-library.css">
-</head>
-<body>
+<th:block th:replace="~{fragments/page-loader :: assets}"></th:block></head>
+<body><div th:replace="~{fragments/page-loader :: overlay}"></div>
 <div th:replace="~{dashboard/fragments/sidebar :: sidebar}"></div>
 <main class="dashboard-main hx-media">
   <div th:replace="~{dashboard/fragments/topbar :: topbar('mediaTitle', 'mediaSubtitle', 'رسانه‌ها', 'کتابخانهٔ تصاویر و فایل‌های سایت', 'mediaLanguage', 'mediaLanguageText', 'mediaRefresh')}"></div>

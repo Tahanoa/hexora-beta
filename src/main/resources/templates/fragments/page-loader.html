@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:fragment="assets">
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js"></script>
+  </th:block>
+</head>
+<body>
+  <div th:fragment="overlay" id="loadingOverlay" class="cssload-wrap" role="status"
+       aria-label="در حال بارگذاری" data-i18n-aria-label-fa="در حال بارگذاری"
+       data-i18n-aria-label-en="Loading">
+    <div class="cssload-cssload-spinner" aria-hidden="true"></div>
+    <noscript><style>#loadingOverlay{display:none}</style></noscript>
+  </div>
+</body>
+</html>
