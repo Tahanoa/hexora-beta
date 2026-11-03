@@ -1,0 +1,11 @@
+# Service brief detail page
+
+Service details now use a dedicated brief layout: a prominent actual service title, an at-a-glance request panel, optional cover, section index, numbered deliverables, features, explicit included/excluded scope, support and revision terms, related work and native FAQ disclosures. Only populated sections appear, and the section index is generated from those sections. No service content, price, timeline or testimonial is invented. The summary labels deliverable counts as entered data, and pricing uses the existing service-pricing helper.
+
+`service-detail-studio.js` is loaded only by the service-detail template and delegates presentation from the existing `services.js` renderer. Existing fetch endpoints, numeric/slug routes, request links, error/retry behavior and backend contracts are unchanged. Existing detail markup remains a fallback when the new module is unavailable. The homepage and services index do not load the new assets. CSS is scoped to `.sd-page`, uses the project's emerald and a self-hosted Estedad font, and replaces the detail page's ambient particles with an editorial layout.
+
+The desktop section index stays in view and tracks the current section; on mobile it becomes a wrapping set of native links. FAQ open state and focused FAQ/index links survive language updates. Text is escaped and cover/project URLs reuse the existing protocol validation. Native details/summary controls support keyboard use without a custom widget.
+
+Motion: 200ms feedback, 400ms one-time section entrances, one easing (`cubic-bezier(.2,0,0,1)`), travel at most 14px, no loops. Entrances are skipped when changing language. OS reduced-motion and the site's motion preference suppress movement and cancel active entrances. All content is visible without animation or IntersectionObserver support.
+
+Validation: Maven package; i18n checks; Playwright `scripts/check-service-detail-studio-browser.cjs` for five FA and four EN widths, actual request/project links, section anchors, keyboard FAQ and locale/focus retention, optional cover, missing fields, reduced motion, escaping, numeric/slug routes, 404/error and retry. The existing services-index browser test also verifies compatibility. Browser fixtures are isolated; screenshot data is illustrative and is never written to the database.
