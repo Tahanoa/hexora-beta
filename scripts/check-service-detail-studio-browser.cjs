@@ -14,15 +14,29 @@ const fixture={id:901,slug:'web-design',title:'طراحی و توسعه وب‌�
  for(const width of [320,390,768,1024,1440]){await page.setViewportSize({width,height:960});await page.waitForTimeout(450);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'FA overflow '+width);if(process.env.HEXORA_SCREENSHOT_DIR&&(width===390||width===1440))await page.screenshot({path:`${process.env.HEXORA_SCREENSHOT_DIR}/service-detail-preview-${width}.png`,fullPage:true});}
  await page.locator('#sd-nav-scope').click();assert.equal(new URL(page.url()).hash,'#sd-scope');
  await page.locator('#sd-question-0').focus();await page.keyboard.press('Enter');assert(await page.locator('[data-sd-faq="0"]').evaluate(e=>e.open));
+ // Both directions interpolate, and a rapid reversal resolves to the last intent.
+ await page.waitForFunction(()=>!document.querySelector('[data-sd-faq="0"]').dataset.sdAnimating);
+ const openHeight=await page.locator('[data-sd-faq="0"]').evaluate(e=>e.getBoundingClientRect().height);
+ await page.locator('#sd-question-0').evaluate(e=>e.click());
+ assert.equal(await page.locator('[data-sd-faq="0"]').getAttribute('data-sd-animating'),'close');
+ await page.waitForTimeout(80);
+ const middleHeight=await page.locator('[data-sd-faq="0"]').evaluate(e=>e.getBoundingClientRect().height);
+ assert(middleHeight<openHeight&&middleHeight>60,'closing must interpolate the panel height');
+ await page.locator('#sd-question-0').evaluate(e=>e.click());
+ await page.waitForFunction(()=>{const e=document.querySelector('[data-sd-faq="0"]');return e.open&&!e.dataset.sdAnimating;});
+ assert.equal(await page.locator('[data-sd-faq="0"]').evaluate(e=>e.style.overflow),'');
+ await page.locator('#sd-question-0').evaluate(e=>e.click());
+ await page.waitForFunction(()=>!document.querySelector('[data-sd-faq="0"]').open);
+ await page.locator('#sd-question-0').focus();await page.keyboard.press('Enter');
  // Change the locale while an accordion has focus; keep the open state and focus.
  await page.evaluate(()=>{localStorage.setItem('hexora-lang','en');document.documentElement.lang='en';document.documentElement.dir='ltr';});await page.waitForTimeout(150);assert(await page.locator('[data-sd-faq="0"]').evaluate(e=>e.open));assert(await page.locator('#sd-question-0').evaluate(e=>e===document.activeElement));assert.match(await page.locator('#sdBriefTitle').innerText(),/At a glance/);
  for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:960});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'EN overflow '+width);}
- await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await page.locator('.sd-hero').waitFor();assert.equal(await page.locator('.sd-section').evaluateAll(ns=>ns.flatMap(n=>n.getAnimations()).length),0);
+ await page.locator('#sd-question-0').evaluate(e=>e.click());await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>!document.querySelector('[data-sd-faq="0"]').open);assert.equal(await page.locator('[data-sd-faq="0"]').getAttribute('data-sd-animating'),null);await page.reload();await page.locator('.sd-hero').waitFor();assert.equal(await page.locator('.sd-section').evaluateAll(ns=>ns.flatMap(n=>n.getAnimations()).length),0);
  mode='covered';await page.reload();await page.locator('.sd-cover img').waitFor();assert(await page.locator('.sd-cover img').evaluate(e=>e.complete&&e.naturalWidth>0));
  mode='unsafe';await page.reload();await page.locator('.sd-hero').waitFor();assert.equal(await page.locator('#serviceDetail img,#serviceDetail script,#serviceDetail svg[onload]').count(),0);assert.match(await page.locator('.sd-hero h1').innerText(),/<img/);
  mode='minimal';await page.goto(base+'/services/902');await page.locator('.sd-hero').waitFor();assert.equal(await page.locator('.sd-section,.sd-index,.sd-cover').count(),0);assert.match(await page.locator('.sd-brief').innerText(),/After reviewing requirements/);
  mode='missing';await page.reload();await page.locator('#serviceRetry').waitFor();assert.equal(await page.locator('.hx-svc-state a[href="/services"]').count(),1);assert.equal(await page.locator('#serviceDetail').getAttribute('aria-busy'),'false');
  mode='error';await page.reload();await page.locator('#serviceRetry').waitFor();const previous=calls;mode='normal';await page.locator('#serviceRetry').click();await page.locator('.sd-hero').waitFor();assert.equal(calls,previous+1);
- assert.deepEqual(errors,[]);console.log('PASS: FA/EN responsive layouts, real fields and request links, section anchors, keyboard FAQ with locale/focus retention, optional cover, missing fields, reduced motion, escaping, numeric route, 404/error and retry.');
+ assert.deepEqual(errors,[]);console.log('PASS: FA/EN responsive layouts, real fields and request links, section anchors, bidirectional/reversible FAQ animation with keyboard and locale/focus retention, optional cover, missing fields, reduced motion, escaping, numeric route, 404/error and retry.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
