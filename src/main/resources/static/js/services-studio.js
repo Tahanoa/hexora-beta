@@ -24,6 +24,18 @@
   document.querySelectorAll('[data-service-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.serviceFilter===filter)));
   if(!query)reveal();else observer?.disconnect();
  }
+ let buildStage=0;
+ function buildNote(){
+  const notes=[['از یک نیاز روشن و ایدهٔ اولیه شروع می‌کنیم.','Start with a clear need and an initial idea.'],['ایده، به ساختار و تجربهٔ کاربری تبدیل می‌شود.','Shape the idea into structure and a user experience.'],['ساختار، به یک محصول قابل استفاده تبدیل می‌شود.','Turn the structure into a usable product.']];
+  $('svBuildNote').textContent=t(...notes[buildStage]);
+ }
+ document.querySelector('.sv-build-controls').addEventListener('click',event=>{
+  const button=event.target.closest('[data-build-select]');if(!button)return;
+  buildStage=Number(button.dataset.buildSelect);document.querySelector('.sv-build').dataset.buildStage=String(buildStage);
+  document.querySelectorAll('[data-build-select]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  document.querySelector('.sv-build-caption>span:last-child').textContent=String(buildStage+1).padStart(2,'0')+' / 03';buildNote();
+ });
+ new MutationObserver(buildNote).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});buildNote();
  document.querySelector('.sv-filters').addEventListener('click',e=>{const b=e.target.closest('[data-service-filter]');if(b){filter=b.dataset.serviceFilter;if($('serviceList').dataset.loaded==='true')render(items);else document.querySelectorAll('[data-service-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}});
  // Capture before the existing clear-search handler so it also resets the featured filter.
  $('serviceList').addEventListener('click',e=>{if(e.target.closest('#clearServiceSearch'))filter='all';},true);
