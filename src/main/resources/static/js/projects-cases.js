@@ -62,7 +62,7 @@
     if (loading) return;
     loading = true; failed = false; message('');
     $('caseList').setAttribute('aria-busy','true'); $('caseRetry').disabled = true; render();
-    const release = window.holdPageLoader?.() || (() => {});
+    const release = window.holdPageLoader?.({blocking:false}) || (() => {});
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 15000);
     try {
       const response = await fetch('/api/projects/public', {signal:controller.signal});

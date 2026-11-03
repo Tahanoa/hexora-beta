@@ -1,22 +1,35 @@
 (() => {
-  let pending = 0, loaded = document.readyState === 'complete', timer;
-  const started = performance.now(), minimum = 3000;
+  let pending = 0;
+  let ready = document.readyState !== 'loading';
+  let frame = 0;
   const overlay = () => document.getElementById('loadingOverlay');
-  function finish() {
-    clearTimeout(timer);
-    if (!loaded || pending) return;
-    timer = setTimeout(() => {
-      if (loaded && !pending) overlay()?.classList.add('hidden','is-hidden');
-    }, Math.max(0, minimum - (performance.now() - started)));
+  function show() {
+    const node = overlay();
+    node?.classList.remove('hidden', 'is-hidden');
+    node?.setAttribute('aria-hidden', 'false');
   }
-  window.holdPageLoader = () => {
-    pending++; clearTimeout(timer); overlay()?.classList.remove('hidden','is-hidden');
+  function finish() {
+    cancelAnimationFrame(frame);
+    if (!ready || pending) return;
+    frame = requestAnimationFrame(() => {
+      if (!ready || pending) return;
+      const node = overlay();
+      node?.classList.add('hidden', 'is-hidden');
+      node?.setAttribute('aria-hidden', 'true');
+    });
+  }
+  // Data sections use their own skeletons; only explicit essential work blocks the shell.
+  window.holdPageLoader = ({ blocking = true } = {}) => {
+    if (!blocking) return () => {};
+    pending++;
+    cancelAnimationFrame(frame);
+    show();
     let released = false;
     return () => { if (!released) { released = true; pending--; finish(); } };
   };
-  window.showPageLoader = () => overlay()?.classList.remove('hidden','is-hidden');
+  window.showPageLoader = show;
   window.hidePageLoader = finish;
-  window.addEventListener('load', () => { loaded = true; finish(); }, {once:true});
-  window.addEventListener('pageshow', event => { if (event.persisted) { loaded = true; finish(); } });
+  document.addEventListener('DOMContentLoaded', () => { ready = true; finish(); }, { once: true });
+  window.addEventListener('pageshow', event => { if (event.persisted) { ready = true; finish(); } });
   finish();
 })();

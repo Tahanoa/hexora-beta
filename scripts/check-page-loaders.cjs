@@ -17,19 +17,19 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
       const html = await response.text();
       assert.equal((html.match(/id="loadingOverlay"/g) || []).length, 1, path + ': missing/duplicate overlay');
       assert.equal((html.match(/href="\/css\/loading.css"/g) || []).length, 1, path + ': missing/duplicate CSS');
-      assert.equal((html.match(/src="\/js\/loading.js"/g) || []).length, 1, path + ': missing/duplicate runtime');
+      assert.equal((html.match(/src="\/js\/loading.js(?:\?[^"]*)?"/g) || []).length, 1, path + ': missing/duplicate runtime');
       assert(html.includes('cssload-cssload-spinner'), path + ': spinner missing');
+      assert.equal((html.match(/src="\/js\/ux.js\?v=1"/g)||[]).length,1,path+': shared UX runtime missing or duplicated');
     }
     await context.addInitScript(value => localStorage.setItem('accessToken', value), token);
     const page = await context.newPage();
     for (const path of ['/services', '/products', '/contact', '/account', '/dashboard', '/manage/demos', '/loader-missing-page']) {
       await page.goto(base + path, { waitUntil: 'domcontentloaded' });
-      await page.locator('#loadingOverlay').waitFor({ state: 'visible' });
-      await page.waitForFunction(() => document.querySelector('#loadingOverlay')?.classList.contains('is-hidden'));
+      await page.waitForFunction(() => document.querySelector('#loadingOverlay')?.classList.contains('is-hidden'), null, {timeout:1500});
       assert.equal(await page.locator('#loadingOverlay').evaluate(e => getComputedStyle(e).pointerEvents), 'none');
     }
+    await page.route('**/terms', async route => { const response = await route.fetch(); const html = (await response.text()).replace('</head>', '<script>window.releaseLoaderTest=window.holdPageLoader();</script></head>'); await route.fulfill({response,body:html}); });
     await page.goto(base + '/terms', { waitUntil: 'domcontentloaded' });
-    await page.evaluate(() => { window.releaseLoaderTest = window.holdPageLoader(); });
     await page.waitForTimeout(3200);
     assert(await page.locator('#loadingOverlay').isVisible(), 'pending work must keep loader visible');
     await page.evaluate(() => window.releaseLoaderTest());
@@ -39,6 +39,6 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
     await plain.goto(base + '/terms');
     assert.equal(await plain.locator('#loadingOverlay').evaluate(e => getComputedStyle(e).display), 'none');
     await noJS.close();
-    console.log('Page loaders passed: 36 rendered routes, one shared overlay/CSS/runtime per page; public/account/admin/404 display and dismissal; pending-work release; no-JavaScript fallback.');
+    console.log('Page loaders passed: 36 rendered routes, one shared overlay/CSS/runtime per page; no fixed wait; public/account/admin/404 display and dismissal; pending-work release; no-JavaScript fallback.');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

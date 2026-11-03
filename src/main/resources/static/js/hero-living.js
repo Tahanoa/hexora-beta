@@ -10,7 +10,7 @@
   const context = canvas.getContext('2d');
   const toggle = hero.querySelector('.hx-motion');
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
-  let motion = !preference.matches;
+  let motion = !preference.matches && document.documentElement.dataset.uxMotion !== 'off';
   let visible = false;
   let frame = 0;
   let lastTime = 0;
@@ -113,7 +113,7 @@
   }
 
   function setMotion(enabled) {
-    motion = enabled && !preference.matches;
+    motion = enabled && !preference.matches && document.documentElement.dataset.uxMotion !== 'off';
     if (!motion) {
       stop();
       if (rotation) rotation.cancel();
@@ -126,6 +126,7 @@
     start();
   }
 
+  document.addEventListener('hexora:motion', event => setMotion(!event.detail.reduced));
   toggle.addEventListener('click', () => setMotion(!motion));
   preference.addEventListener('change', () => setMotion(!preference.matches));
   new MutationObserver(syncLabel).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });

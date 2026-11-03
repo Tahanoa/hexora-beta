@@ -1,13 +1,13 @@
 (async()=>{
  const area=document.getElementById('testimonialsList');if(!area||area.closest('section')?.hidden)return;
- const release=window.holdPageLoader?.()||(()=>{}),home=!!area.closest('.home-testimonials');
+ const release=window.holdPageLoader?.({blocking:false})||(()=>{}),home=!!area.closest('.home-testimonials');
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const safe=v=>{if(!v?.trim())return '';try{const url=new URL(v,location.origin);return ['http:','https:'].includes(url.protocol)?esc(url.href):''}catch{return ''}};
  const t=(fa,en)=>document.documentElement.lang==='en'?en:fa;
  let items=[],failed=false;
  function render(){
   if(failed){area.innerHTML=`<div class="testimonial-empty"><p>${t('دریافت بازخوردها ناموفق بود.','Unable to load feedback.')}</p><button type="button" class="testimonial-retry">${t('تلاش مجدد','Try again')}</button></div>`;area.querySelector('button').onclick=load;return;}
-  if(!items.length){if(home){area.closest('section').hidden=true;return;}area.innerHTML=`<div class="testimonial-empty"><i class="fa-regular fa-comment" aria-hidden="true"></i><h2>${t('بازخورد تازه‌ای در راه است.','More feedback to come.')}</h2><p>${t('هنوز نظری برای نمایش منتشر نشده است.','No client feedback has been published yet.')}</p></div>`;return;}
+  if(!items.length){if(home){area.closest('section').hidden=true;return;}area.innerHTML=window.HexoraUX?.state({title:['هنوز بازخوردی منتشر نشده','No feedback published yet'],message:['می‌توانید نمونه‌کارها را بررسی کنید یا درباره همکاری بپرسید.','Explore my work or ask about collaborating.'],href:'/projects',action:['مشاهده نمونه‌کارها','Explore projects']})||`<p>${t('هنوز بازخوردی منتشر نشده','No feedback published yet')}</p>`;return;}
   area.innerHTML=(home?items.slice(0,6):items).map(x=>{
    const rating=Number(x.rating),validRating=x.rating!=null&&Number.isInteger(rating)&&rating>=1&&rating<=5;
    const avatar=safe(x.avatar),source=safe(x.sourceUrl);

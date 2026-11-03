@@ -5,7 +5,7 @@ let en=localStorage.getItem('hexora-lang')==='en';
 const text=(fa,english)=>`data-fa="${esc(fa)}" data-en="${esc(english)}"`;
 function language(){en=document.documentElement.lang==='en';$('langBtn').textContent=en?'FA':'EN';document.querySelectorAll('[data-fa]').forEach(el=>{const value=en?el.dataset.en:el.dataset.fa;el.innerHTML=value.split(/<br\s*\/?>/i).map(esc).join('<br>')})}
 $('year').textContent=new Date().getFullYear();new MutationObserver(language).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});language();
-const area=$('projectDetail');if(area){const release=window.holdPageLoader?.()||(()=>{});try{
+const area=$('projectDetail');if(area){const release=window.holdPageLoader?.({blocking:false})||(()=>{});try{
  const slug=document.body.dataset.projectSlug;let response=await fetch('/api/projects/public/'+encodeURIComponent(slug));if(response.status===404&&/^\d+$/.test(slug))response=await fetch('/api/projects/public/by-id/'+slug);if(!response.ok)throw new Error(String(response.status));const json=await response.json(),p=json.data??json;if(!p||!p.title)throw new Error('404');
  document.title=p.title+' | Hexora';
  const states={COMPLETED:['تکمیل‌شده','Completed'],IN_PROGRESS:['در حال اجرا','In progress'],PLANNING:['در مرحله برنامه‌ریزی','Planning']},state=states[p.status]||[p.status||'—',p.status||'—'];
