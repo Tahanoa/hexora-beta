@@ -62,3 +62,19 @@
 @media(prefers-reduced-motion:reduce){
  .skill-category-nav button{transition:none}
 }
+
+/* About-page icons stand alone, without cards, borders or backgrounds. */
+.biography .bio-identity .contact-icon-link,.biography .bio-identity .contact-icon-link:hover,.biography .orbit-skill{border:0;background:transparent;box-shadow:none;border-radius:0}
+.biography .bio-identity .contact-icon-link i{font-size:1.4rem}
+.biography .bio-identity .contact-icon-link:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.biography .skill-name{position:relative;border:0;background:transparent;box-shadow:none}
+.biography .skill-name-list{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}
+.biography .skill-name .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* One learning step per row, connected in reading order in either language. */
+.learning-journey{margin-top:28px}
+.journey-path{display:flex;flex-direction:column;list-style:none;margin:16px 0 0;padding:0;gap:0}
+.journey-path li{position:relative;display:flex;align-items:flex-start;gap:14px;min-width:0;padding-bottom:24px}
+.journey-path li:last-child{padding-bottom:0}
+.journey-path li:not(:last-child)::after{content:'';position:absolute;inset-inline-start:14px;top:30px;bottom:0;width:1px;background:linear-gradient(var(--green),var(--line))}
+.journey-number{display:grid;place-items:center;flex:0 0 29px;height:29px;border:1px solid #00c26e55;border-radius:50%;font-size:.7rem;color:var(--mint);background:#00c26e0a}
+.journey-label{font-size:.95rem;line-height:29px;overflow-wrap:anywhere;min-width:0}
