@@ -1,0 +1,9 @@
+# Contact conversation desk
+
+The contact route has a new contact-first title, a primary conversation desk and a three-part writing guide. On mobile, the conversation precedes the guide. The account gate, phone editor, message history, composer, attachment picker, service-request banner and profile links retain their existing IDs and behavior. Main styling is scoped to `.contact-workspace`; dashboard chat is unchanged.
+
+Only the public template and contact-only stylesheet change. `chat.js`, API routes, authentication, phone validation, message polling, file handling, service selection, draft storage and backend logic are unchanged. There is no visible draft-management UI. The profile's actual contact links are used, with no invented contact details or response-time promises. The prior online-looking avatar dot and ambient particles are removed.
+
+The self-hosted Estedad font and emerald palette align with the services and skills pages. Supporting copy is smaller than headings. Native controls retain visible keyboard focus, and the conversation anchor has a focusable destination. Message entrances are short (240ms, 5px); reduced motion disables them and all nonessential contact transitions. No new libraries, images or continuous animations are added.
+
+Validation: Maven package, existing i18n and shared UX browser checks, plus `scripts/check-contact-desk-browser.cjs` (Playwright; `HEXORA_TEST_BASE_URL`, optional `HEXORA_CHROMIUM`). The isolated-fixture test covers guest and signed-in FA/EN layouts at five widths, real profile links, anchor focus, phone gating and Persian-digit saving, starters, service context, failed-send retention and successful clearing, keyboard/mobile controls, long message escaping and reduced motion. The shared UX test additionally verifies per-account draft restore and logout cleanup. No screenshots or preview artifacts are generated.
