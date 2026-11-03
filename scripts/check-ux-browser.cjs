@@ -68,7 +68,10 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
   assert.equal(await page.locator('#chatText').inputValue(),'');
   owner=1;await page.evaluate(()=>localStorage.setItem('user',JSON.stringify({id:1,username:'user1'})));
   await page.reload();await page.waitForFunction(()=>document.getElementById('chatText').value==='Only user one');
-  await page.locator('.ux-draft-clear').click();assert.equal(await page.locator('#chatText').inputValue(),'');
+  assert.equal(await page.locator('.ux-draft-note,.ux-draft-clear').count(),0);
+  await page.locator('#chatText').fill('');
+  await page.reload();await page.locator('#chatText:not([disabled])').waitFor();
+  assert.equal(await page.locator('#chatText').inputValue(),'');
   // Review form fields survive page changes; only successful submission removes them.
   await page.goto(base+'/products/ux-demo');await page.locator('[data-tab="reviews"]').click();
   await page.locator('#pdReviewForm textarea').fill('نظر ناتمام درباره محصول');

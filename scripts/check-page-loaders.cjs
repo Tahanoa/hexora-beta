@@ -19,7 +19,7 @@ const base = process.env.HEXORA_TEST_BASE_URL || 'http://127.0.0.1:8080';
       assert.equal((html.match(/href="\/css\/loading.css"/g) || []).length, 1, path + ': missing/duplicate CSS');
       assert.equal((html.match(/src="\/js\/loading.js(?:\?[^"]*)?"/g) || []).length, 1, path + ': missing/duplicate runtime');
       assert(html.includes('cssload-cssload-spinner'), path + ': spinner missing');
-      assert.equal((html.match(/src="\/js\/ux.js\?v=1"/g)||[]).length,1,path+': shared UX runtime missing or duplicated');
+      assert.equal((html.match(/src="\/js\/ux.js\?v=2"/g)||[]).length,1,path+': shared UX runtime missing or duplicated');
     }
     await context.addInitScript(value => localStorage.setItem('accessToken', value), token);
     const page = await context.newPage();

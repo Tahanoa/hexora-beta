@@ -45,12 +45,7 @@
     if (!previous) {
       field.addEventListener('input', () => save(field));
       field.addEventListener('change', () => save(field));
-      const note = document.createElement('small'); note.className = 'ux-draft-note';
-      note.innerHTML = text(['پیش‌نویس در همین تب نگه داشته می‌شود.','Your draft is kept in this tab.']);
-      const clear = document.createElement('button'); clear.type = 'button'; clear.className = 'ux-draft-clear';
-      clear.innerHTML = text(['حذف پیش‌نویس','Discard draft']);
-      clear.addEventListener('click', () => { field.value = ''; save(field); field.dispatchEvent(new Event('input', { bubbles: true })); field.focus(); });
-      note.append(clear); field.insertAdjacentElement('afterend', note);
+
     }
   }
   function clear(field) { const value = bindings.get(field); if (value) { remove(value.scope, value.owner); value.last = ''; } }
