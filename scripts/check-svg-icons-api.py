@@ -24,18 +24,13 @@ try:
  upload(safe,token=None,expected=401)
  for source in [b'<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',b'<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"/>',b'<svg xmlns="http://www.w3.org/2000/svg"><foreignObject/></svg>',b'<svg xmlns="http://www.w3.org/2000/svg"><use href="https://example.com/x.svg#x"/></svg>',b'<!DOCTYPE svg [<!ENTITY x SYSTEM "file:///etc/passwd">]><svg xmlns="http://www.w3.org/2000/svg"><title>&x;</title></svg>',b'<svg xmlns="http://www.w3.org/2000/svg"><path style="fill:url(https://example.com/x)"/></svg>',b'not an svg',b'x'*(256*1024+1)]:upload(source,expected=400)
  upload(safe,name='fake.png',expected=400)
- for color in [b'#00c26e',b'#65ffc0']:created.append(upload(safe.replace(b'#00c26e',color),name='named-icon-'+suffix+'.svg'))
- assert upload(safe,name='named-icon-'+suffix+'.svg')['id']==created[0]['id'],'identical upload should reuse the saved file'
+ for _ in range(2):created.append(upload(safe,name='named-icon-'+suffix+'.svg'))
  assert created[0]['id']!=created[1]['id'],'same name must not overwrite an existing icon'
  for media in created:
   assert media['fileName']=='named-icon-'+suffix+'.svg';assert media['contentType']=='image/svg+xml'
   raw,headers=call('GET',media['url']);assert b'linearGradient' in raw;assert headers['Content-Type'].startswith('image/svg+xml');assert 'sandbox' in headers['Content-Security-Policy'];assert headers['X-Content-Type-Options']=='nosniff'
  catalog=call('GET','/api/media/icons',token=admin)[0];assert all(any(x['id']==m['id'] for x in catalog) for m in created)
  skill=call('POST','/api/skills',{'name':'SVG test '+suffix,'category':'OTHER','level':50,'icon':created[0]['url']},admin,expected=201)[0]
- usages=call('GET','/api/media/usage',token=admin)[0];assert str(created[0]['id']) in usages
- call('DELETE','/api/media/'+str(created[0]['id']),token=admin,expected=409)
- call('GET','/api/admin/workspace',expected=401)
- assert 'counts' in call('GET','/api/admin/workspace',token=admin)[0]
  assert any(x['id']==skill['id'] and x['icon']==created[0]['url'] for x in call('GET','/api/skills/public')[0])
  print('PASS: admin-only upload/catalog, malicious/invalid/oversized SVG rejection, gradients and internal refs, original filename, duplicate-name isolation, public MIME/CSP, persisted catalog and saved skill reference.')
 finally:

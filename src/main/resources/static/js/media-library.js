@@ -5,24 +5,22 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const number=value=>Number(value||0).toLocaleString(en()?'en-US':'fa-IR');
   function size(value){const bytes=Math.max(0,Number(value)||0);if(bytes<1024)return number(bytes)+' B';if(bytes<1024**2)return number(Math.round(bytes/1024))+' KB';return Number(bytes/1024**2).toLocaleString(en()?'en-US':'fa-IR',{maximumFractionDigits:1})+' MB';}
-  const kind=item=>item.contentType==='image/svg+xml'?'svg':String(item.contentType||'').startsWith('image/')?'image':item.contentType==='application/pdf'?'pdf':'other';
+  const kind=item=>String(item.contentType||'').startsWith('image/')?'image':item.contentType==='application/pdf'?'pdf':'other';
   function fileURL(item){const id=String(item.id??'');return /^\d+$/.test(id)?'/api/media/public/'+id:'';}
   function date(value){if(!value)return '—';const parsed=new Date(value);return Number.isNaN(+parsed)?'—':parsed.toLocaleDateString(en()?'en-US':'fa-IR',{year:'numeric',month:'short',day:'numeric'});}
   function validate(file,replace){
     if(!file||file.size<=0||file.size>5*1024*1024)return t('فایل باید بین ۱ بایت و ۵ مگابایت باشد.','Each file must be between 1 byte and 5 MB.');
-    const svg=file.type==='image/svg+xml'||/\.svg$/i.test(file.name);if(svg&&file.size>256*1024)return t('SVG باید کمتر از ۲۵۶ کیلوبایت باشد.','SVG must be under 256 KB.');
-    const image=svg||['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)||(!file.type&&/\.(png|jpe?g|gif|webp)$/i.test(file.name));
+    const image=['image/png','image/jpeg','image/gif','image/webp'].includes(file.type)||(!file.type&&/\.(png|jpe?g|gif|webp)$/i.test(file.name));
     const pdf=file.type==='application/pdf'||(!file.type&&/\.pdf$/i.test(file.name));
-    if(!image&&!pdf)return t('فقط PNG، JPG، GIF، WebP و PDF قابل آپلود هستند.','Only PNG, JPG, GIF, WebP, SVG and PDF files are supported.');
-    if(replace&&((kind(replace)==='svg'&&!svg)||(kind(replace)!=='svg'&&svg)))return t('نوع فایل جایگزین باید با فایل فعلی هماهنگ باشد؛ SVG را جداگانه آپلود کنید.','Keep the replacement file type; upload SVG separately.');
+    if(!image&&!pdf)return t('فقط PNG، JPG، GIF، WebP و PDF قابل آپلود هستند.','Only PNG, JPG, GIF, WebP and PDF files are supported.');
     if(replace?.type==='IMAGE'&&!image)return t('برای جایگزینی تصویر، یک فایل تصویری انتخاب کنید.','Choose an image to replace this image.');
     return '';
   }
   function filterItems(items,query,filter,sort){
     const q=String(query||'').trim().toLocaleLowerCase();
-    return items.filter(item=>(filter==='all'||kind(item)===filter||(filter==='image'&&kind(item)==='svg')||(filter==='used'&&(state.usage[item.id]||[]).length>0)||(filter==='unused'&&state.usageReady&&!(state.usage[item.id]||[]).length))&&String(item.fileName||'').toLocaleLowerCase().includes(q)).sort((a,b)=>sort==='name'?String(a.fileName).localeCompare(String(b.fileName),en()?'en':'fa',{numeric:true}):sort==='size'?Number(b.size)-Number(a.size):sort==='oldest'?String(a.createdAt||'').localeCompare(String(b.createdAt||'')):String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+    return items.filter(item=>(filter==='all'||kind(item)===filter)&&String(item.fileName||'').toLocaleLowerCase().includes(q)).sort((a,b)=>sort==='name'?String(a.fileName).localeCompare(String(b.fileName),en()?'en':'fa',{numeric:true}):sort==='size'?Number(b.size)-Number(a.size):sort==='oldest'?String(a.createdAt||'').localeCompare(String(b.createdAt||'')):String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
   }
-  const state={usage:{},usageReady:false,items:[],queue:[],busy:false,loading:false,authorized:false,failed:false,selected:null,replace:null,limit:24,sequence:0,message:null};
+  const state={items:[],queue:[],busy:false,loading:false,authorized:false,failed:false,selected:null,replace:null,limit:24,sequence:0,message:null};
   function controls(){
     const locked=state.busy||state.loading||!state.authorized;
     $('mediaRefresh').disabled=locked;
@@ -30,7 +28,7 @@
     $('mediaClearQueue').disabled=locked;
     $('mediaDropzone').setAttribute('aria-disabled',String(locked));
     $('mediaDropzone').tabIndex=locked?-1:0;
-    document.querySelectorAll('[data-media-copy],[data-media-delete],[data-media-replace],[data-queue-remove]').forEach(button=>button.disabled=locked||(button.dataset.mediaDelete&&(!state.usageReady||(state.usage[button.dataset.mediaDelete]||[]).length>0)));
+    document.querySelectorAll('[data-media-copy],[data-media-delete],[data-media-replace],[data-queue-remove]').forEach(button=>button.disabled=locked);
   }
   function status(fa,english,error=false){state.message={fa,english,error};HexoraNotify.feedback(t(fa,english),error,{source:'mediaStatus'});}
   function errorText(error){
@@ -50,11 +48,11 @@
     return json.data;
   }
   function fileIcon(item){return `<span class="hx-media-file-icon"><i class="fa-regular ${kind(item)==='pdf'?'fa-file-pdf':'fa-file'}" aria-hidden="true"></i><small>${kind(item)==='pdf'?'PDF':t('فایل','FILE')}</small></span>`;}
-  function preview(item){const url=fileURL(item);return (kind(item)==='image'||kind(item)==='svg')&&url?`<img src="${esc(url+'?v='+encodeURIComponent(item.updatedAt||item.createdAt||''))}" alt="${esc(item.fileName)}" loading="lazy">`:fileIcon(item);}
+  function preview(item){const url=fileURL(item);return kind(item)==='image'&&url?`<img src="${esc(url+'?v='+encodeURIComponent(item.updatedAt||item.createdAt||''))}" alt="${esc(item.fileName)}" loading="lazy">`:fileIcon(item);}
   function card(item){const id=esc(item.id),name=esc(item.fileName);return `<article class="hx-media-card"><button class="hx-media-preview" type="button" data-media-details="${id}" aria-label="${esc(t('جزئیات فایل: ','File details: ')+item.fileName)}">${preview(item)}</button><div class="hx-media-card-info"><h3 title="${name}">${name}</h3><div class="hx-media-card-meta"><span>${esc(String(item.contentType||'').split('/').pop().toUpperCase())}</span><span dir="ltr">${size(item.size)}</span></div><div class="hx-media-card-footer"><time datetime="${esc(item.createdAt||'')}">${date(item.createdAt)}</time><div><button type="button" class="hx-media-icon-button" data-media-copy="${id}" aria-label="${esc(t('کپی لینک فایل','Copy file link'))}" title="${esc(t('کپی لینک','Copy link'))}"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button type="button" class="hx-media-icon-button" data-media-details="${id}" aria-label="${esc(t('جزئیات فایل','File details'))}" title="${esc(t('جزئیات','Details'))}"><i class="fa-solid fa-sliders" aria-hidden="true"></i></button></div></div></div></article>`;}
   function render(){
     $('mediaTotal').textContent=number(state.items.length);
-    $('mediaImages').textContent=number(state.items.filter(item=>kind(item)==='image'||kind(item)==='svg').length);
+    $('mediaImages').textContent=number(state.items.filter(item=>kind(item)==='image').length);
     $('mediaDocuments').textContent=number(state.items.filter(item=>kind(item)==='pdf').length);
     $('mediaStorage').textContent=size(state.items.reduce((total,item)=>total+Number(item.size||0),0));
     const items=filterItems(state.items,$('mediaSearch').value,$('mediaFilter').value,$('mediaSort').value);
@@ -69,7 +67,7 @@
   async function load(){
     if(state.loading)return;
     state.loading=true;state.failed=false;render();controls();
-    try{const items=await request('/api/media');state.items=Array.isArray(items)?items:[];state.usageReady=false;try{state.usage=await request('/api/media/usage');state.usageReady=true;}catch{status('دریافت موارد استفاده ناموفق بود؛ حذف فایل موقتاً غیرفعال است.','Usage could not be loaded; deletion is temporarily disabled.',true);}}
+    try{const items=await request('/api/media');state.items=Array.isArray(items)?items:[];}
     catch(error){state.failed=true;status(errorText(error),errorText(error),true);}
     finally{state.loading=false;render();controls();}
   }
@@ -101,7 +99,7 @@
     for(const entry of pending){
       entry.status='uploading';entry.error='';renderQueue();
       const body=new FormData();body.append('file',entry.file,entry.file.name);body.append('type',entry.file.type==='application/pdf'||/\.pdf$/i.test(entry.file.name)?'DOCUMENT':'IMAGE');
-      try{await request(entry.file.type==='image/svg+xml'||/\.svg$/i.test(entry.file.name)?'/api/media/icons':'/api/media/upload',{method:'POST',body});entry.status='done';done++;}
+      try{await request('/api/media/upload',{method:'POST',body});entry.status='done';done++;}
       catch(error){entry.status='error';entry.error=errorText(error);}
       renderQueue();
       if(!state.authorized)break;
@@ -112,8 +110,7 @@
   }
   function details(item){
     const url=fileURL(item),absolute=url?new URL(url,location.origin).href:'';
-    $('mediaDetailContent').innerHTML=`<header class="hx-media-detail-heading"><h2 id="mediaDetailTitle">${esc(item.fileName)}</h2><button type="button" class="hx-media-icon-button" data-media-close aria-label="${esc(t('بستن','Close'))}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header><div class="hx-media-detail-body"><div class="hx-media-detail-preview">${preview(item)}</div><div class="hx-media-detail-info"><dl><div><dt>${t('نوع فایل','File type')}</dt><dd dir="ltr">${esc(item.contentType)}</dd></div><div><dt>${t('حجم فایل','File size')}</dt><dd dir="ltr">${size(item.size)}</dd></div><div><dt>${t('تاریخ آپلود','Uploaded')}</dt><dd>${date(item.createdAt)}</dd></div><div><dt>${t('شناسه رسانه','Media ID')}</dt><dd>${number(item.id)}</dd></div></dl><code class="hx-media-link">${esc(absolute)}</code><div class="hx-media-detail-actions"><button class="hx-media-button hx-media-primary" type="button" data-media-copy="${esc(item.id)}"><i class="fa-solid fa-link" aria-hidden="true"></i>${t('کپی لینک','Copy link')}</button><a class="hx-media-button" href="${esc(url)}" download="${esc(item.fileName)}"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i>${t('دانلود','Download')}</a><button class="hx-media-button" type="button" data-media-replace="${esc(item.id)}">${t('جایگزینی فایل','Replace file')}</button><button class="hx-media-button hx-media-danger" type="button" data-media-delete="${esc(item.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i>${t('حذف','Delete')}</button></div><p class="hx-media-detail-note">${t('جایگزینی، لینک فعلی را حفظ می‌کند. فایل‌های استفاده‌شده در محتوا قابل حذف نیستند.','Replacing keeps the current link. Files referenced by content cannot be deleted.')}</p></div></div>`;
-    const refs=state.usage[item.id]||[],block=document.createElement('section');block.className='admin-media-usage';block.innerHTML=`<h3>${t('موارد استفاده','Where this file is used')} (${refs.length})</h3>${state.usageReady?(refs.map(ref=>`<a href="${esc(ref.href)}">${esc(ref.label)}</a>`).join('')||`<p>${t('در محتوای ثبت‌شده استفاده نشده است.','Not referenced by registered content.')}</p>`):`<p>${t('موارد استفاده دریافت نشد.','Usage information unavailable.')}</p>`}${kind(item)==='svg'?`<a href="/manage/skills?icon=${encodeURIComponent(url)}">${t('استفاده برای مهارت جدید','Use for a new skill')}</a><a href="/manage/services?icon=${encodeURIComponent(url)}">${t('استفاده برای خدمت جدید','Use for a new service')}</a>`:''}`;$('mediaDetailContent').append(block);
+    $('mediaDetailContent').innerHTML=`<header class="hx-media-detail-heading"><h2 id="mediaDetailTitle">${esc(item.fileName)}</h2><button type="button" class="hx-media-icon-button" data-media-close aria-label="${esc(t('بستن','Close'))}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header><div class="hx-media-detail-body"><div class="hx-media-detail-preview">${preview(item)}</div><div class="hx-media-detail-info"><dl><div><dt>${t('نوع فایل','File type')}</dt><dd dir="ltr">${esc(item.contentType)}</dd></div><div><dt>${t('حجم فایل','File size')}</dt><dd dir="ltr">${size(item.size)}</dd></div><div><dt>${t('تاریخ آپلود','Uploaded')}</dt><dd>${date(item.createdAt)}</dd></div><div><dt>${t('شناسه رسانه','Media ID')}</dt><dd>${number(item.id)}</dd></div></dl><code class="hx-media-link">${esc(absolute)}</code><div class="hx-media-detail-actions"><button class="hx-media-button hx-media-primary" type="button" data-media-copy="${esc(item.id)}"><i class="fa-solid fa-link" aria-hidden="true"></i>${t('کپی لینک','Copy link')}</button><a class="hx-media-button" href="${esc(url)}" download="${esc(item.fileName)}"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i>${t('دانلود','Download')}</a><button class="hx-media-button" type="button" data-media-replace="${esc(item.id)}">${t('جایگزینی فایل','Replace file')}</button><button class="hx-media-button hx-media-danger" type="button" data-media-delete="${esc(item.id)}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i>${t('حذف','Delete')}</button></div><p class="hx-media-detail-note">${t('جایگزینی، لینک فعلی را حفظ می‌کند. حذف فایل می‌تواند تصاویر استفاده‌شده در سایت را از دسترس خارج کند.','Replacing keeps the current link. Deleting a file can break images already used on your site.')}</p></div></div>`;
     controls();
   }
   async function copy(item){
@@ -121,7 +118,6 @@
     catch{state.selected=item.id;details(item);if(!$('mediaDetails').open)$('mediaDetails').showModal();status('کپی خودکار ممکن نبود؛ لینک را از جزئیات فایل کپی کنید.','Automatic copying failed. Copy the link from file details.',true);}
   }
   async function remove(item){
-    if(!state.usageReady||(state.usage[item.id]||[]).length){status('این فایل استفاده شده است؛ ابتدا موارد استفاده را حذف کنید.','This file is in use; remove its references first.',true);return;}
     if(!await HexoraNotify.confirm(t(`«${item.fileName}» حذف شود؟ این فایل ممکن است در سایت استفاده شده باشد.`,`Delete “${item.fileName}”? This file may already be used on your site.`)))return;
     state.busy=true;controls();
     try{await request('/api/media/'+item.id,{method:'DELETE'});state.items=state.items.filter(value=>value.id!==item.id);$('mediaDetails').close();state.selected=null;status('فایل حذف شد.','File deleted.');render();}
@@ -171,7 +167,7 @@
       if(data.mediaDetails){state.selected=item.id;details(item);if(!$('mediaDetails').open)$('mediaDetails').showModal();}
       else if(data.mediaCopy)copy(item);
       else if(data.mediaDelete)remove(item);
-      else if(data.mediaReplace){state.replace=item.id;$('mediaReplaceInput').accept=kind(item)==='svg'?'.svg,image/svg+xml':item.type==='IMAGE'?'image/png,image/jpeg,image/gif,image/webp':'image/png,image/jpeg,image/gif,image/webp,application/pdf,.pdf';$('mediaReplaceInput').value='';$('mediaReplaceInput').click();}
+      else if(data.mediaReplace){state.replace=item.id;$('mediaReplaceInput').accept=item.type==='IMAGE'?'image/png,image/jpeg,image/gif,image/webp':'image/png,image/jpeg,image/gif,image/webp,application/pdf,.pdf';$('mediaReplaceInput').value='';$('mediaReplaceInput').click();}
     });
     $('mediaDetails').addEventListener('close',()=>{state.selected=null;state.replace=null;});
     $('mediaDetails').addEventListener('click',event=>{if(event.target!==$('mediaDetails'))return;const box=event.target.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)event.target.close();});

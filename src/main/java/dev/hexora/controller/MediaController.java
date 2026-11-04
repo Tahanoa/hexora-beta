@@ -13,14 +13,13 @@ import java.time.Duration;
 import java.util.*;
 @RestController @RequestMapping("/api/media")
 public class MediaController {
- private final MediaRepository repository;private final MediaService service;private final dev.hexora.service.AdminMediaUsage usage;
- public MediaController(MediaRepository repository,MediaService service,dev.hexora.service.AdminMediaUsage usage){this.repository=repository;this.service=service;this.usage=usage;}
+ private final MediaRepository repository;private final MediaService service;
+ public MediaController(MediaRepository repository,MediaService service){this.repository=repository;this.service=service;}
  @GetMapping("/public/{id}") ResponseEntity<byte[]> file(@PathVariable Long id){var m=repository.findById(id).orElseThrow(ApiException::notFound);return ResponseEntity.ok().header("X-Content-Type-Options","nosniff").headers(svgHeaders(m.getContentType())).header("Content-Disposition",(m.getType()==MediaType.IMAGE?ContentDisposition.inline():ContentDisposition.attachment()).filename(m.getFileName(),StandardCharsets.UTF_8).build().toString()).cacheControl(CacheControl.maxAge(Duration.ofMinutes(5)).cachePublic()).contentType(org.springframework.http.MediaType.parseMediaType(m.getContentType())).body(m.getData());}
  private HttpHeaders svgHeaders(String contentType){var headers=new HttpHeaders();if("image/svg+xml".equals(contentType))headers.set("Content-Security-Policy","default-src 'none'; style-src 'unsafe-inline'; sandbox");return headers;}
  @GetMapping("/public/info/{id}") Object info(@PathVariable Long id){return ApiResponse.success(service.info(repository.findById(id).orElseThrow(ApiException::notFound)));}
  @GetMapping("/public/name/{fileName}") Object name(@PathVariable String fileName){return ApiResponse.success(service.info(repository.findByFileName(fileName).orElseThrow(ApiException::notFound)));}
  @GetMapping("/public/base64/{id}") Object base64(@PathVariable Long id){var m=repository.findById(id).orElseThrow(ApiException::notFound);return ApiResponse.success("data:"+m.getContentType()+";base64,"+Base64.getEncoder().encodeToString(m.getData()));}
- @GetMapping("/usage") Object usage(){return ApiResponse.success(usage.all());}
  @GetMapping("/icons") Object icons(){return ApiResponse.success(repository.findByContentTypeOrderByCreatedAtDesc("image/svg+xml").stream().map(service::info).toList());}
  @PostMapping("/icons") @ResponseStatus(HttpStatus.CREATED) Object icon(@RequestParam MultipartFile file){return ApiResponse.created(service.info(service.uploadIcon(file)));}
  @PostMapping("/upload") @ResponseStatus(HttpStatus.CREATED) Object upload(@RequestParam MultipartFile file,@RequestParam(defaultValue="IMAGE")MediaType type){return ApiResponse.created(service.info(service.upload(file,type)));}
@@ -31,5 +30,5 @@ public class MediaController {
  @GetMapping("/type/{type}") Object type(@PathVariable MediaType type){return ApiResponse.success(repository.findByTypeOrderByCreatedAtDesc(type).stream().map(service::info).toList());}
  @GetMapping("/recent") Object recent(@RequestParam(defaultValue="10")int limit){if(limit<1||limit>100)throw new IllegalArgumentException("Invalid limit");return ApiResponse.success(repository.findAll(PageRequest.of(0,limit,Sort.by("createdAt").descending())).map(service::info).getContent());}
  @GetMapping("/stats") Object stats(){var list=repository.findAll();return ApiResponse.success(Map.of("total",list.size(),"totalSize",list.stream().mapToLong(m->m.getSize()).sum()));}
- @DeleteMapping("/{id}") ResponseEntity<?> delete(@PathVariable Long id){if(!usage.all().getOrDefault(id,java.util.List.of()).isEmpty())throw new ApiException(HttpStatus.CONFLICT,"This media is in use; remove its references before deleting");repository.delete(repository.findById(id).orElseThrow(ApiException::notFound));return ResponseEntity.noContent().build();}
+ @DeleteMapping("/{id}") ResponseEntity<?> delete(@PathVariable Long id){repository.delete(repository.findById(id).orElseThrow(ApiException::notFound));return ResponseEntity.noContent().build();}
 }

@@ -13,17 +13,16 @@ import java.io.IOException;
 public class MediaService {
  private final MediaRepository repository;
  public MediaService(MediaRepository repository){this.repository=repository;}
- public Media upload(MultipartFile file,MediaType type){Media entity=new Media();apply(file,type,entity);var duplicate=duplicate(entity);if(duplicate.isPresent())return duplicate.get();Media saved=repository.saveAndFlush(entity);saved.setUrl("/api/media/public/"+saved.getId());return repository.saveAndFlush(saved);}
- public Media uploadIcon(MultipartFile file){Media media=new Media();applyIcon(file,media);var existing=duplicate(media);if(existing.isPresent())return existing.get();media=repository.saveAndFlush(media);media.setUrl("/api/media/public/"+media.getId());return repository.saveAndFlush(media);}
- private void applyIcon(MultipartFile file,Media media){
+ public Media upload(MultipartFile file,MediaType type){Media entity=new Media();apply(file,type,entity);Media saved=repository.saveAndFlush(entity);saved.setUrl("/api/media/public/"+saved.getId());return repository.saveAndFlush(saved);}
+ public Media uploadIcon(MultipartFile file){
   String name=Optional.ofNullable(file.getOriginalFilename()).orElse("icon.svg").replaceAll("[\\r\\n\\/\\\\]","_");
   if(!name.toLowerCase(Locale.ROOT).endsWith(".svg")||name.length()>255)throw new IllegalArgumentException("Choose an SVG filename under 256 characters");
   if(file.isEmpty()||file.getSize()>256*1024)throw new IllegalArgumentException("SVG icons must be under 256 KB");
   byte[] bytes;try{bytes=SvgIconSanitizer.sanitize(file.getBytes());}catch(IOException e){throw new IllegalStateException("Cannot read upload",e);}
-  media.setFileName(name);media.setContentType("image/svg+xml");media.setData(bytes);media.setSize(bytes.length);media.setType(MediaType.IMAGE);
+  Media media=new Media();media.setFileName(name);media.setContentType("image/svg+xml");media.setData(bytes);media.setSize(bytes.length);media.setType(MediaType.IMAGE);
+  media=repository.saveAndFlush(media);media.setUrl("/api/media/public/"+media.getId());return repository.saveAndFlush(media);
  }
- private Optional<Media> duplicate(Media candidate){return repository.findBySizeAndContentType(candidate.getSize(),candidate.getContentType()).stream().filter(m->m.getType()==candidate.getType()&&Arrays.equals(m.getData(),candidate.getData())).findFirst();}
- public Media update(Long id,MultipartFile file){Media entity=repository.findById(id).orElseThrow(ApiException::notFound);if("image/svg+xml".equals(entity.getContentType()))applyIcon(file,entity);else apply(file,entity.getType(),entity);entity.setUrl("/api/media/public/"+id);return repository.saveAndFlush(entity);}
+ public Media update(Long id,MultipartFile file){Media entity=repository.findById(id).orElseThrow(ApiException::notFound);apply(file,entity.getType(),entity);entity.setUrl("/api/media/public/"+id);return repository.saveAndFlush(entity);}
  private void apply(MultipartFile file,MediaType type,Media entity){
   if(file.isEmpty()||file.getSize()>5*1024*1024)throw new IllegalArgumentException("Invalid file size");
   byte[] bytes;try{bytes=file.getBytes();}catch(IOException ex){throw new IllegalStateException("Cannot read upload",ex);}

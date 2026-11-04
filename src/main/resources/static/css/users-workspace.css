@@ -1,0 +1,5 @@
+/* Preserve the users page's typography and feedback without changing other admin pages. */
+@font-face{font-family:HexoraAdmin;src:url('/fonts/estedad-arabic-variable.woff2') format('woff2');font-weight:100 900;font-display:swap}
+body .dashboard-main,body #sidebar{font-family:HexoraAdmin,Tahoma,sans-serif}body .dashboard-main :is(h1,h2,h3,h4,input,select,button,textarea){font-family:inherit}body .pd-dialog{font-family:HexoraAdmin,Tahoma,sans-serif}
+.dashboard-main :focus-visible{outline:2px solid #65ffc0;outline-offset:4px}.dashboard-main button:not(:disabled){transition:background-color 160ms,border-color 160ms}.dashboard-main .btn:disabled{opacity:.45;cursor:default}
+@media(prefers-reduced-motion:reduce){.dashboard-main *{transition:none!important;animation:none!important}}

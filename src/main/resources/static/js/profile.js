@@ -282,7 +282,7 @@ async function loadProfileData() {
     try {
         // Load profile data from API
         const profile = await fetchAPI('/api/profile/public');
-        if (profile && profile.success && !window.HexoraAdminUX?.dirty(document.getElementById('profileForm'))) {
+        if (profile && profile.success) {
             const data = profile.data;
             currentProfile = data;
             renderProfileSocials(data);
@@ -290,7 +290,7 @@ async function loadProfileData() {
             document.getElementById('fullName').value = data.fullName || '';
             document.getElementById('brandName').value = data.brandName || '';
             const fields = ['fullName','brandName','title','email','phone','location','bio','shortDescription','aboutText','journeyText','githubUrl','linkedinUrl','instagramUrl','workingStatus'];
-            fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = data[id] || ''; });window.HexoraAdminUX?.clean(document.getElementById('profileForm'));
+            fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = data[id] || ''; });
         }
 
         // Load stats
@@ -452,10 +452,10 @@ document.getElementById('profileForm')?.addEventListener('submit', async functio
         });
 
         if (result.success) {
-            window.HexoraAdminUX?.clean(document.getElementById('profileForm'));showToast('success', t.saveSuccess, '');
+            showToast('success', t.saveSuccess, '');
             loadProfileData();
         } else {
-            window.HexoraAdminUX?.errors(document.getElementById('profileForm'),result.errors||{});showToast('error', t.saveError, window.HexoraI18n.tr(result.message) || '');
+            showToast('error', t.saveError, window.HexoraI18n.tr(result.message) || '');
         }
     } catch (error) {
         showToast('error', t.saveError, error.message || '');
@@ -512,7 +512,7 @@ document.getElementById('passwordForm')?.addEventListener('submit', async functi
             localStorage.removeItem('accessToken');localStorage.removeItem('user');
             showToast('success', t.passwordChangeSuccess, '');
             setTimeout(()=>location.href='/login',1000);
-            document.getElementById('passwordForm').reset();window.HexoraAdminUX?.clean(document.getElementById('passwordForm'));
+            document.getElementById('passwordForm').reset();
             document.getElementById('passwordStrength').classList.add('hidden');
         } else {
             showToast('error', t.passwordChangeError, window.HexoraI18n.tr(result.message) || '');
