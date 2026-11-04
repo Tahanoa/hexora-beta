@@ -31,6 +31,7 @@ public class PageController {
  @GetMapping("/profile") String profile(){return "dashboard/profile";}
  @GetMapping("/manage/{section}") String manage(@PathVariable String section,Model model){
   if(!java.util.Set.of("users","products","payments","demos","testimonials","projects","skills","services","statistics","experience","contact","media","profile").contains(section)) throw new IllegalArgumentException("Invalid section");
+  if(section.equals("projects"))return "dashboard/projects";
   if(section.equals("users"))return "dashboard/users";
   if(section.equals("products"))return "dashboard/products";
   if(section.equals("payments"))return "dashboard/payments";
