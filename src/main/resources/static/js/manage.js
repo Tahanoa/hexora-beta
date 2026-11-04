@@ -30,12 +30,13 @@
   const $ = selector => document.querySelector(selector);
   applyLanguage();
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  let editing = null;
+  const iconMarkup=value=>window.HexoraIcons?.render(value)||`<i class="${esc(/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+$/i.test(value||'')?value:'fa-solid fa-code')}" aria-hidden="true"></i>`;
+  let editing = null, pendingIconUploads = 0;
 
   function setStatus(message,error=false){HexoraNotify.feedback(tr(message),error,{source:'status'});}
   function iconPickerHtml(value = '') {
     const current = String(value || '');
-    return `<div class="field full icon-picker"><label>${esc(tr("آیکون انتخاب‌شده"))}</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="${esc(tr("آیکون را از فهرست انتخاب کنید"))}" autocomplete="off"><span class="icon-preview" aria-label="${esc(tr("پیش‌نمایش آیکون"))}"><i class="${esc(current || 'fa-solid fa-code')}"></i></span></div><div class="icon-picker-row"><input class="icon-search" type="search" placeholder="${esc(tr("جست‌وجو: نام، برند یا کلمه مرتبط مانند user، java، heart"))}" aria-label="${esc(tr("جست‌وجوی آیکون"))}"><select class="icon-style" aria-label="${esc(tr("نوع آیکون"))}"><option value="">${esc(tr("همه انواع"))}</option value="solid">Solid</option><option value="regular">Regular</option><option value="brands">Brands</option></select></div><span class="icon-help" role="status">${esc(tr("در حال دریافت فهرست کامل آیکون‌ها..."))}</span><div class="icon-options"></div><div class="icon-pagination"><button class="btn icon-prev" type="button">${esc(tr("قبلی"))}</button><span class="icon-page"></span><button class="btn icon-next" type="button">${esc(tr("بعدی"))}</button></div></div>`;
+    return `<div class="field full icon-picker"><label>${esc(tr("آیکون انتخاب‌شده"))}</label><div class="icon-picker-row"><input name="icon" value="${esc(current)}" placeholder="${esc(tr("آیکون را از فهرست انتخاب کنید"))}" autocomplete="off"><span class="icon-preview" aria-label="${esc(tr("پیش‌نمایش آیکون"))}">${iconMarkup(current)}</span></div><div class="icon-picker-row"><input class="icon-search" type="search" placeholder="${esc(tr("جست‌وجو: نام، برند یا کلمه مرتبط مانند user، java، heart"))}" aria-label="${esc(tr("جست‌وجوی آیکون"))}"><select class="icon-style" aria-label="${esc(tr("نوع آیکون"))}"><option value="">${esc(tr("همه انواع"))}</option><option value="solid">Solid</option><option value="regular">Regular</option><option value="brands">Brands</option><option value="uploaded">${t("SVGهای آپلودشده","Uploaded SVGs")}</option></select></div><div class="icon-upload-row"><button class="btn icon-upload" type="button">${t("آپلود آیکون SVG","Upload SVG icon")}</button><input class="icon-upload-file" type="file" accept=".svg,image/svg+xml" hidden><small>${t("SVG ثابت؛ حداکثر ۲۵۶ کیلوبایت؛ با نام فایل ذخیره می‌شود.","Static SVG, max 256 KB; saved with its filename.")}</small></div><span class="icon-upload-status" role="status"></span><span class="icon-help" role="status">${esc(tr("در حال دریافت فهرست کامل آیکون‌ها..."))}</span><div class="icon-options"></div><div class="icon-pagination"><button class="btn icon-prev" type="button">${esc(tr("قبلی"))}</button><span class="icon-page"></span><button class="btn icon-next" type="button">${esc(tr("بعدی"))}</button></div></div>`;
   }
 
   const optionalProjectFields = new Set(['shortDescription','description','image','demoUrl','githubUrl','clientName','projectDate']);
@@ -90,39 +91,38 @@
     catch(error){status.hidden=true;HexoraNotify.feedback(error.message,true,{key:'project-cover'});}finally{controls.forEach(el=>el.disabled=false);save.disabled=false;input.value='';}
   });
   async function bindIconPicker() {
-    const picker = $('.icon-picker'); if (!picker) return;
-    const input = picker.querySelector('[name="icon"]'), preview = picker.querySelector('.icon-preview i');
-    const search = picker.querySelector('.icon-search'), style = picker.querySelector('.icon-style');
-    const options = picker.querySelector('.icon-options'), help = picker.querySelector('.icon-help');
-    const prev = picker.querySelector('.icon-prev'), next = picker.querySelector('.icon-next');
-    let all = [], page = 0;
-    const pageSize = 80;
-    function render() {
-      const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
-      const results = all.filter(icon => (!style.value || icon.style === style.value) && words.every(word =>
-        [icon.name, icon.label, ...icon.terms].join(' ').toLowerCase().includes(word)));
-      const pages = Math.max(1, Math.ceil(results.length / pageSize));
-      page = Math.min(page, pages - 1);
-      help.textContent = t(`${results.length.toLocaleString('fa-IR')} نتیجه از ${all.length.toLocaleString('fa-IR')} آیکون`,`${results.length.toLocaleString('en-US')} results from ${all.length.toLocaleString('en-US')} icons`);
-      options.innerHTML = results.slice(page * pageSize, (page + 1) * pageSize).map(icon => {
-        const name = `fa-${icon.style} fa-${icon.name}`;
-        return `<button type="button" class="icon-option ${name === input.value ? 'selected' : ''}" data-icon="${esc(name)}" title="${esc(icon.label)} (${icon.style})" aria-label="${esc(icon.label)} (${icon.style})" aria-pressed="${name === input.value}"><i class="${esc(name)}" aria-hidden="true"></i><small>${esc(icon.name)}</small></button>`;
-      }).join('') || `<span class="icon-empty">${esc(tr("آیکونی یافت نشد."))}</span>`;
-      prev.disabled = page === 0; next.disabled = page === pages - 1;
-      picker.querySelector('.icon-page').textContent = `${(page + 1).toLocaleString(currentLang==='fa'?'fa-IR':'en-US')} / ${pages.toLocaleString(currentLang==='fa'?'fa-IR':'en-US')}`;
+    const picker=$('.icon-picker');if(!picker)return;
+    const input=picker.querySelector('[name="icon"]'),preview=picker.querySelector('.icon-preview'),search=picker.querySelector('.icon-search'),style=picker.querySelector('.icon-style');
+    const options=picker.querySelector('.icon-options'),help=picker.querySelector('.icon-help'),prev=picker.querySelector('.icon-prev'),next=picker.querySelector('.icon-next');
+    const upload=picker.querySelector('.icon-upload'),file=picker.querySelector('.icon-upload-file'),uploadStatus=picker.querySelector('.icon-upload-status');
+    let all=[],page=0;const pageSize=80;
+    const custom=media=>({name:media.fileName,label:media.fileName,style:'uploaded',terms:[],value:media.url});
+    const valueOf=icon=>icon.value||`fa-${icon.style} fa-${icon.name}`;
+    function render(){
+      preview.innerHTML=iconMarkup(input.value);
+      const words=search.value.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
+      const results=all.filter(icon=>(!style.value||icon.style===style.value)&&words.every(word=>[icon.name,icon.label,...icon.terms].join(' ').toLocaleLowerCase().includes(word)));
+      const pages=Math.max(1,Math.ceil(results.length/pageSize));page=Math.max(0,Math.min(page,pages-1));
+      help.hidden=false;help.textContent=t(`${results.length.toLocaleString('fa-IR')} نتیجه از ${all.length.toLocaleString('fa-IR')} آیکون`,`${results.length.toLocaleString('en-US')} results from ${all.length.toLocaleString('en-US')} icons`);
+      options.innerHTML=results.slice(page*pageSize,(page+1)*pageSize).map(icon=>{const value=valueOf(icon);return `<button type="button" class="icon-option ${value===input.value?'selected':''}" data-icon="${esc(value)}" title="${esc(icon.label)}" aria-label="${esc(icon.label)}" aria-pressed="${value===input.value}">${iconMarkup(value)}<small>${esc(icon.name)}</small></button>`;}).join('')||`<span class="icon-empty">${esc(tr('آیکونی یافت نشد.'))}</span>`;
+      prev.disabled=page===0;next.disabled=page===pages-1;picker.querySelector('.icon-page').textContent=`${page+1} / ${pages}`;
     }
-    options.addEventListener('click', event => {
-      const button = event.target.closest('[data-icon]'); if (!button) return;
-      input.value = button.dataset.icon; preview.className = input.value; render();
-    });
-    input.addEventListener('input', () => { preview.className = input.value || 'fa-solid fa-code'; render(); });
-    search.addEventListener('input', () => { page = 0; render(); });
-    style.addEventListener('change', () => { page = 0; render(); });
-    prev.onclick = () => { page--; render(); options.scrollTop = 0; };
-    next.onclick = () => { page++; render(); options.scrollTop = 0; };
-    prev.disabled = next.disabled = true;
-    try { all = await loadIcons(); if (picker.isConnected) render(); }
-    catch (error) { if(picker.isConnected){help.hidden=true;HexoraNotify.feedback(error.message,true,{key:'icon-picker'});} }
+    options.addEventListener('click',event=>{const button=event.target.closest('[data-icon]');if(button){input.value=button.dataset.icon;render();}});
+    input.addEventListener('input',render);search.addEventListener('input',()=>{page=0;render();});style.addEventListener('change',()=>{page=0;render();});
+    prev.onclick=()=>{page--;render();options.scrollTop=0;};next.onclick=()=>{page++;render();options.scrollTop=0;};
+    upload.onclick=()=>file.click();
+    file.onchange=async()=>{
+      const chosen=file.files?.[0];if(!chosen)return;
+      if(!/\.svg$/i.test(chosen.name)||chosen.size>256*1024){HexoraNotify.feedback(t('فایل SVG تا ۲۵۶ کیلوبایت انتخاب کنید.','Choose an SVG file up to 256 KB.'),true,{key:'icon-upload'});file.value='';return;}
+      pendingIconUploads++;$('#saveBtn').disabled=true;upload.disabled=true;uploadStatus.textContent=t('در حال آپلود…','Uploading…');
+      try{const body=new FormData();body.append('file',chosen,chosen.name);const response=await fetch('/api/media/icons',{method:'POST',body});const json=await response.json();if(!response.ok)throw Error(json.message||t('آپلود آیکون ناموفق بود.','Icon upload failed.'));const media=json.data;all.unshift(custom(media));if(!picker.isConnected)return;input.value=media.url;search.value='';style.value='uploaded';page=0;render();uploadStatus.textContent=t('ذخیره شد: ','Saved: ')+media.fileName;}
+      catch(error){HexoraNotify.feedback(error.message,true,{key:'icon-upload'});uploadStatus.textContent='';}
+      finally{pendingIconUploads--;$('#saveBtn').disabled=pendingIconUploads>0;upload.disabled=false;file.value='';}
+    };
+    prev.disabled=next.disabled=true;upload.disabled=true;
+    const results=await Promise.allSettled([loadIcons(),fetch('/api/media/icons').then(async response=>{if(!response.ok)throw Error(t('دریافت SVGها ناموفق بود.','Unable to load SVG icons.'));return (await response.json()).data;})]);
+    all=[...(results[1].status==='fulfilled'?results[1].value.map(custom):[]),...(results[0].status==='fulfilled'?results[0].value:[])];
+    if(picker.isConnected){upload.disabled=false;render();results.filter(r=>r.status==='rejected').forEach(r=>HexoraNotify.feedback(r.reason.message,true,{key:'icon-picker'}));}
   }
   function unwrap(json) { return json?.data ?? []; }
   async function load(path = endpoint) {
@@ -133,10 +133,10 @@
   }
   function renderRows(items) {
     $('#tableHead').innerHTML = meta.columns.map(column => `<th>${esc(tr(column))}</th>`).join('') + `<th>${esc(tr("عملیات"))}</th>`;
-    $('#rows').innerHTML = items.length ? items.map(item => `<tr>${meta.columns.map(column => `<td>${column === 'message' ? `<span title="${esc(item[column])}">${esc(String(item[column] || '').slice(0, 70))}</span>` : column === 'published' ? `<span class="badge">${item.published?t('منتشرشده','Published'):t('پیش‌نویس','Draft')}</span>` : column === 'isRead' ? `<span class="badge">${item[column] ? tr('خوانده شده') : tr('جدید')}</span>` : column === 'icon' ? `<i class="${esc(item[column] || 'fa-solid fa-code')}"></i>` : section==='experience'&&column==='startDate'?esc(window.HexoraJalali.display(item[column])):column==='featured'?(item.featured?t('ویژه','Featured'):'—'):typeof item[column]==='boolean'?t(item[column]?'بله':'خیر',item[column]?'Yes':'No'):esc(['status','category'].includes(column)?tr(item[column]):item[column])}</td>`).join('')}<td class="actions">${section === 'contact' && !item.isRead ? `<button class="btn" data-read="${item.id}">${esc(tr("خوانده شد"))}</button>` : ''}${section==='contact'?`<button class="btn" data-detail='${esc(JSON.stringify(item))}'>${esc(tr("مشاهده کامل"))}</button>`:section==='media'?`<a class="btn" target="_blank" rel="noreferrer" href="${esc(item.url)}">${esc(tr("مشاهده"))}</a><button class="btn" data-replace="${item.id}">${esc(tr("جایگزینی فایل"))}</button><button class="btn" data-copy="${esc(item.url)}">${esc(tr("کپی URL"))}</button>`:`<button class="btn" data-edit='${esc(JSON.stringify(item))}'>${esc(tr("ویرایش"))}</button>`}<button class="btn danger" data-delete="${item.id}">${esc(tr("حذف"))}</button></td></tr>`).join('') : `<tr><td class="empty" colspan="5">${esc(tr("موردی ثبت نشده است"))}</td></tr>`;
+    $('#rows').innerHTML = items.length ? items.map(item => `<tr>${meta.columns.map(column => `<td>${column === 'message' ? `<span title="${esc(item[column])}">${esc(String(item[column] || '').slice(0, 70))}</span>` : column === 'published' ? `<span class="badge">${item.published?t('منتشرشده','Published'):t('پیش‌نویس','Draft')}</span>` : column === 'isRead' ? `<span class="badge">${item[column] ? tr('خوانده شده') : tr('جدید')}</span>` : column === 'icon' ? iconMarkup(item[column]) : section==='experience'&&column==='startDate'?esc(window.HexoraJalali.display(item[column])):column==='featured'?(item.featured?t('ویژه','Featured'):'—'):typeof item[column]==='boolean'?t(item[column]?'بله':'خیر',item[column]?'Yes':'No'):esc(['status','category'].includes(column)?tr(item[column]):item[column])}</td>`).join('')}<td class="actions">${section === 'contact' && !item.isRead ? `<button class="btn" data-read="${item.id}">${esc(tr("خوانده شد"))}</button>` : ''}${section==='contact'?`<button class="btn" data-detail='${esc(JSON.stringify(item))}'>${esc(tr("مشاهده کامل"))}</button>`:section==='media'?`<a class="btn" target="_blank" rel="noreferrer" href="${esc(item.url)}">${esc(tr("مشاهده"))}</a><button class="btn" data-replace="${item.id}">${esc(tr("جایگزینی فایل"))}</button><button class="btn" data-copy="${esc(item.url)}">${esc(tr("کپی URL"))}</button>`:`<button class="btn" data-edit='${esc(JSON.stringify(item))}'>${esc(tr("ویرایش"))}</button>`}<button class="btn danger" data-delete="${item.id}">${esc(tr("حذف"))}</button></td></tr>`).join('') : `<tr><td class="empty" colspan="5">${esc(tr("موردی ثبت نشده است"))}</td></tr>`;
   }
   async function save(event) {
-    event.preventDefault();
+    event.preventDefault();if(pendingIconUploads)return;
     const data = Object.fromEntries(new FormData($('#editorForm')));
     if(section==='services'){
       data.features=JSON.stringify([...document.querySelectorAll('[data-list="features"] .svc-editor-items input')].map(x=>x.value.trim()).filter(Boolean));

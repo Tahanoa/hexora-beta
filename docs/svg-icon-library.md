@@ -1,0 +1,14 @@
+# Persistent SVG icon library
+
+Every management icon picker (skills, services and statistics) now has an SVG upload control and an Uploaded SVGs filter. Uploads keep the original filename (including Persian names), become searchable catalog entries and are selected immediately. Catalog entries live in the existing media database, not browser storage, and remain available after reload and across forms. Identical filenames create separate media IDs and do not overwrite previous uploads. Saving an entity stores its stable `/api/media/public/{id}` reference in the existing icon string field; Font Awesome class values remain compatible.
+
+New admin-only endpoints, protected by the existing API security rules:
+
+- `GET /api/media/icons`: metadata for uploaded SVGs, newest first.
+- `POST /api/media/icons`: multipart `file`, up to 256 KiB, `.svg` filename up to 255 characters.
+
+SVGs are parsed with secure XML processing, DTD/entities/external access disabled, and an allowlist of static SVG geometry, groups, gradients, clipping/masks and internal references. Scripts, event attributes, foreign objects, embedded images, animation, stylesheet blocks and external resource references are rejected. Approved inline presentation styles are supported; processing instructions/comments are removed. Public SVG responses use `image/svg+xml`, nosniff, inline disposition and a restrictive sandbox CSP. Raster/PDF upload behavior and response policies are preserved. There is no new table or schema migration.
+
+The shared icon renderer outputs validated internal media references as decorative `<img>` elements, never inline SVG. It supports public skills, homepage skill chips and service cards, biography skill groups/orbits, and legacy service/skills fallbacks. Only same-origin numeric media paths qualify; unknown values fall back to a known Font Awesome class. Dedicated CSS sizes images in each existing icon container without adding borders to biography icons. Save is blocked while an icon upload is pending. The inherited malformed Solid filter option was also corrected.
+
+Verification: Maven package; existing i18n, skills, biography and services browser tests; `scripts/check-svg-icons-api.py` for authorization, malicious/invalid/oversized rejection, internal gradients, duplicate filenames, response headers, catalog persistence and entity references; `scripts/check-svg-icons-browser.cjs` for actual upload with a Persian filename, selected preview, reload/search/filter, saving a skill and actual rendering on skills/about/home, mobile and Font Awesome compatibility. Integration records are removed in finally blocks. Browser tests generate no previews. Run integration checks with a local test app, `HEXORA_TEST_BASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` and optional `HEXORA_CHROMIUM`.
