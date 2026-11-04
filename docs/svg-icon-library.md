@@ -1,6 +1,6 @@
 # Persistent SVG icon library
 
-Every management icon picker (skills, services and statistics) now has an SVG upload control and an Uploaded SVGs filter. Uploads keep the original filename (including Persian names), become searchable catalog entries and are selected immediately. Catalog entries live in the existing media database, not browser storage, and remain available after reload and across forms. Identical filenames create separate media IDs and do not overwrite previous uploads. Saving an entity stores its stable `/api/media/public/{id}` reference in the existing icon string field; Font Awesome class values remain compatible.
+Every management icon picker (skills, services and statistics) now has an SVG upload control and an Uploaded SVGs filter. Uploads keep the original filename (including Persian names), become searchable catalog entries and are selected immediately. Catalog entries live in the existing media database, not browser storage, and remain available after reload and across forms. Identical filenames with different contents create separate media IDs. Byte-identical uploads of the same media type reuse the existing file and filename, avoiding duplicate storage. Existing files are never overwritten by a new upload. Saving an entity stores its stable `/api/media/public/{id}` reference in the existing icon string field; Font Awesome class values remain compatible.
 
 New admin-only endpoints, protected by the existing API security rules:
 

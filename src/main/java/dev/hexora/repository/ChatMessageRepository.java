@@ -17,6 +17,9 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage,Long>{
  long incomingBytes(@Param("user") Long userId);
  @Query(value="select m.userId from ChatMessage m group by m.userId order by max(m.id) desc",countQuery="select count(distinct m.userId) from ChatMessage m")
  org.springframework.data.domain.Page<Long> conversationUsers(Pageable page);
+ String FILTER=" from chat_messages m join users u on u.id=m.user_id where m.id=(select max(x.id) from chat_messages x where x.user_id=m.user_id) and (:state='' or (:state='NEW' and exists(select 1 from chat_messages n where n.user_id=m.user_id and n.from_admin=false and n.read_by_recipient=false)) or (:state='WAITING' and m.from_admin=false) or (:state='HANDLED' and m.from_admin=true and not exists(select 1 from chat_messages n where n.user_id=m.user_id and n.from_admin=false and n.read_by_recipient=false))) and (:q='' or lower(u.username) like concat('%',:q,'%') or lower(m.text) like concat('%',:q,'%'))";
+ @Query(value="select m.user_id"+FILTER+" order by m.id desc",countQuery="select count(*)"+FILTER,nativeQuery=true)
+ org.springframework.data.domain.Page<Long> conversationUsersFiltered(@Param("state")String state,@Param("q")String q,Pageable page);
  @Modifying @Query("update ChatMessage m set m.readByRecipient=true where m.userId=:userId and m.fromAdmin=:fromAdmin and m.id in :ids")
  void markRead(@Param("userId")Long userId,@Param("fromAdmin")boolean fromAdmin,@Param("ids")List<Long> ids);
 }

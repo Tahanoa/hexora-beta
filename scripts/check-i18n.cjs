@@ -2,9 +2,9 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const source=fs.readFileSync('src/main/resources/static/js/i18n.js','utf8');
 function context(lang){
  const elements=new Map();
- const element=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=v},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}});return elements.get(id)};
+ const element=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=v},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}});return elements.get(id)};
  const document={documentElement:{lang,dir:lang==='en'?'ltr':'rtl'},querySelector:q=>element(q),getElementById:()=>null,querySelectorAll:()=>[],addEventListener(){}};
- const ctx={document,window:{},localStorage:{getItem:()=>lang},MutationObserver:class{observe(){}},URL,location:{origin:'https://example.test'},fetch:async()=>({ok:true,json:async()=>({data:[]})})};
+ const ctx={document,window:{},localStorage:{getItem:()=>lang},MutationObserver:class{observe(){}},URL,URLSearchParams,location:{origin:'https://example.test'},fetch:async()=>({ok:true,json:async()=>({data:[]})})};
  vm.createContext(ctx);vm.runInContext(source,ctx);return {ctx,element};
 }
 for(const lang of ['fa','en']){

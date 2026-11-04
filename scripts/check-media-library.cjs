@@ -1,16 +1,17 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 class Element{
  constructor(){this.value='';this.innerHTML='';this.textContent='';this.dataset={};this.attrs={};this.hidden=false;this.open=false;this.disabled=false;this.events={};this.classes=new Set();this.classList={toggle:(name,value)=>{value??=!this.classes.has(name);value?this.classes.add(name):this.classes.delete(name);return value},add:name=>this.classes.add(name),remove:name=>this.classes.delete(name)};}
- setAttribute(name,value){this.attrs[name]=value;}addEventListener(name,fn){this.events[name]=fn;}showModal(){this.open=true;}close(){this.open=false;this.events.close?.();}click(){this.onclick?.();}querySelectorAll(){return []}
+ setAttribute(name,value){this.attrs[name]=value;}addEventListener(name,fn){this.events[name]=fn;}showModal(){this.open=true;}close(){this.open=false;this.events.close?.();}click(){this.onclick?.();}append(child){this.innerHTML+=child.innerHTML||'';}querySelectorAll(){return []}
 }
 const elements=new Map(),element=id=>{if(!elements.has(id))elements.set(id,new Element());return elements.get(id)};
-const events={},document={documentElement:{lang:'en',dir:'ltr'},getElementById:element,querySelectorAll:()=>[],addEventListener:(name,fn)=>events[name]=fn};
+const events={},document={documentElement:{lang:'en',dir:'ltr'},getElementById:element,createElement:()=>new Element(),querySelectorAll:()=>[],addEventListener:(name,fn)=>events[name]=fn};
 class FormData{constructor(){this.fields=new Map()}append(key,value){this.fields.set(key,value)}get(key){return this.fields.get(key)}}
 let files=[],requests=[],failUpload=false,failLoad=false;
-const context={document,window:{HexoraI18n:{tr:value=>value}},location:{origin:'https://hexora.test',href:''},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},navigator:{clipboard:{writeText:async()=>{}}},MutationObserver:class{observe(){}},URL,FormData,confirm:()=>true,
+const context={document,window:{HexoraI18n:{tr:value=>value}},location:{origin:'https://hexora.test',href:''},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},navigator:{clipboard:{writeText:async()=>{}}},HexoraNotify:{feedback(){},confirm:async()=>true},MutationObserver:class{observe(){}},URL,FormData,confirm:()=>true,
  fetch:async(path,options={})=>{
   requests.push({path,options});
   if(path==='/api/media'&&failLoad)throw Error('Network failed');
+  if(path==='/api/media/usage')return {ok:true,status:200,json:async()=>({data:{}})};
   if(path==='/api/media')return {ok:true,status:200,json:async()=>({data:files})};
   if(path==='/api/media/upload'){
    if(failUpload)return {ok:false,status:400,json:async()=>({message:'Invalid file size'})};
@@ -25,7 +26,7 @@ vm.createContext(context);
 let source=fs.readFileSync('src/main/resources/static/js/media-library.js','utf8');source=source.replace('\n  start();\n','\n  window.testMedia={state,validate,filterItems,card,addFiles,upload,load,replace,details,remove,render,wire,language};\n');vm.runInContext(source,context);
 const api=context.window.testMedia,png={name:'cover.png',size:1024,type:'image/png',lastModified:1},pdf={name:'brief.pdf',size:1024,type:'application/pdf',lastModified:2};
 (async()=>{
- assert.equal(api.validate(png),'');assert.equal(api.validate({...png,size:5*1024*1024}),'');assert(api.validate({...png,size:5*1024*1024+1}));assert(api.validate({...png,size:0}));assert(api.validate({...png,type:'image/svg+xml',name:'bad.svg'}));assert(api.validate(pdf,{type:'IMAGE'}));
+ assert.equal(api.validate(png),'');assert.equal(api.validate({...png,size:5*1024*1024}),'');assert(api.validate({...png,size:5*1024*1024+1}));assert(api.validate({...png,size:0}));assert.equal(api.validate({...png,type:'image/svg+xml',name:'icon.svg'}),'');assert(api.validate({...png,type:'image/svg+xml',name:'large.svg',size:256*1024+1}));assert(api.validate(pdf,{type:'IMAGE'}));assert(api.validate(png,{type:'IMAGE',contentType:'image/svg+xml'}));assert(api.validate({...png,type:'image/svg+xml',name:'icon.svg'},{type:'IMAGE',contentType:'image/png'}));
  api.addFiles([png]);assert.equal(api.state.queue.length,0,'Upload queue requires admin authorization');
  api.state.authorized=true;api.addFiles([png,png,pdf]);assert.equal(api.state.queue.length,2,'Deduplicate chosen files');
  failUpload=true;await api.upload();assert(api.state.queue.every(item=>item.status==='error'));assert(!api.state.busy);assert.equal(files.length,0);
