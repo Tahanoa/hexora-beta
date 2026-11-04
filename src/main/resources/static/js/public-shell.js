@@ -24,7 +24,7 @@
   header.addEventListener('focusout', event => { if (event.relatedTarget && !header.contains(event.relatedTarget)) setOpen(false); });
   tablet.addEventListener('change', () => setOpen(false));
   const path = location.pathname.replace(/\/$/, '') || '/';
-  header.querySelectorAll('a[href]').forEach(link => {
+  header.querySelectorAll('nav a[href]').forEach(link => {
     const href = link.getAttribute('href');
     const active = href === path || (href !== '/' && path.startsWith(href + '/'));
     link.classList.toggle('active', active);
