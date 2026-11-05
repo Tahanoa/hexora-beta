@@ -32,6 +32,7 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const iconMarkup=value=>window.HexoraIcons?.render(value)||`<i class="${esc(/^fa-(solid|regular|brands)\s+fa-[a-z0-9-]+$/i.test(value||'')?value:'fa-solid fa-code')}" aria-hidden="true"></i>`;
   let editing = null, pendingIconUploads = 0;
+  const studio = window.HexoraContentWorkspace?.init({section,t,tr,esc,iconMarkup,onCreate:()=>{editing=null;renderForm();bindIconPicker();},onRefresh:()=>load()});
 
   function setStatus(message,error=false){HexoraNotify.feedback(tr(message),error,{source:'status'});}
   function iconPickerHtml(value = '') {
@@ -66,11 +67,11 @@
       form.innerHTML=groups.map(([title,names])=>`<fieldset class="svc-editor-group"><legend>${title}</legend>${names.map(name=>fieldHtml(meta.fields.find(f=>f[0]===name),item[name]??'')).join('')}</fieldset>`).join('');serviceProjects();
     }else form.innerHTML=meta.fields.map(field=>fieldHtml(field,item[field[0]])).join('');
     if(section==='experience')window.HexoraJalali.enhance(form);
-    $('#saveBtn').textContent=editing?t('ویرایش','Update'):t('ذخیره','Save');updateProjectImagePreview();
+    $('#saveBtn').textContent=editing?t('ویرایش','Update'):t('ذخیره','Save');updateProjectImagePreview();studio?.form(item,!!editing);
   }
   function imageUrl(value){if(!value?.trim())return '';try{const url=new URL(value,location.origin);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}}
   function updateProjectImagePreview(){const field=$('.project-image-field');if(!field)return;const img=field.querySelector('img'),url=imageUrl(field.querySelector('[name="image"],[name="cover"]').value);img.hidden=!url;img.onerror=()=>{img.hidden=true;};if(url)img.src=url;else img.removeAttribute('src');}
-  function selectProjectImage(url){const input=$('.project-image-field input[name]');if(input){input.value=url;updateProjectImagePreview();}}
+  function selectProjectImage(url){const input=$('.project-image-field input[name]');if(input){input.value=url;updateProjectImagePreview();studio?.changed();}}
   async function openMediaPicker(){
     const dialog=document.createElement('dialog');dialog.className='project-media-dialog';
     dialog.innerHTML=`<div class="media-picker-header"><h2>${t('انتخاب تصویر کاور','Choose cover image')}</h2><button type="button" class="btn" data-close>${t('بستن','Close')}</button></div><input type="search" class="media-picker-search" placeholder="${t('جست‌وجوی نام فایل','Search file name')}" aria-label="${t('جست‌وجوی رسانه','Search media')}"><div class="media-picker-grid" aria-live="polite">${t('در حال دریافت رسانه‌ها…','Loading media…')}</div>`;
@@ -127,11 +128,13 @@
   function unwrap(json) { return json?.data ?? []; }
   async function load(path = endpoint) {
 
+    studio?.loading();
     if(path===endpoint) $('#rows').innerHTML=Array.from({length:5},()=>'<tr class="skeleton-row"><td colspan="5"><div class="skeleton-block"></div></td></tr>').join('');
     try { const response = await fetch(typeof path==='string'?path:endpoint); if (!response.ok) throw Error(response.status === 403 ? tr('دسترسی مدیریت ندارید') : tr('دریافت اطلاعات ناموفق بود')); let data = unwrap(await response.json()); if (data?.content) data = data.content; renderRows(Array.isArray(data) ? data : []);  }
-    catch (error) { setStatus(error.message, true); $('#rows').innerHTML = `<tr><td colspan="5" class="empty">${esc(error.message)}</td></tr>`; }
+    catch (error) { studio?.failed();setStatus(error.message, true); $('#rows').innerHTML = `<tr><td colspan="5" class="empty">${esc(error.message)}</td></tr>`; }
   }
   function renderRows(items) {
+    if(studio){studio.rows(items);return;}
     $('#tableHead').innerHTML = meta.columns.map(column => `<th>${esc(tr(column))}</th>`).join('') + `<th>${esc(tr("عملیات"))}</th>`;
     $('#rows').innerHTML = items.length ? items.map(item => `<tr>${meta.columns.map(column => `<td>${column === 'message' ? `<span title="${esc(item[column])}">${esc(String(item[column] || '').slice(0, 70))}</span>` : column === 'published' ? `<span class="badge">${item.published?t('منتشرشده','Published'):t('پیش‌نویس','Draft')}</span>` : column === 'isRead' ? `<span class="badge">${item[column] ? tr('خوانده شده') : tr('جدید')}</span>` : column === 'icon' ? iconMarkup(item[column]) : section==='experience'&&column==='startDate'?esc(window.HexoraJalali.display(item[column])):column==='featured'?(item.featured?t('ویژه','Featured'):'—'):typeof item[column]==='boolean'?t(item[column]?'بله':'خیر',item[column]?'Yes':'No'):esc(['status','category'].includes(column)?tr(item[column]):item[column])}</td>`).join('')}<td class="actions">${section === 'contact' && !item.isRead ? `<button class="btn" data-read="${item.id}">${esc(tr("خوانده شد"))}</button>` : ''}${section==='contact'?`<button class="btn" data-detail='${esc(JSON.stringify(item))}'>${esc(tr("مشاهده کامل"))}</button>`:section==='media'?`<a class="btn" target="_blank" rel="noreferrer" href="${esc(item.url)}">${esc(tr("مشاهده"))}</a><button class="btn" data-replace="${item.id}">${esc(tr("جایگزینی فایل"))}</button><button class="btn" data-copy="${esc(item.url)}">${esc(tr("کپی URL"))}</button>`:`<button class="btn" data-edit='${esc(JSON.stringify(item))}'>${esc(tr("ویرایش"))}</button>`}<button class="btn danger" data-delete="${item.id}">${esc(tr("حذف"))}</button></td></tr>`).join('') : `<tr><td class="empty" colspan="5">${esc(tr("موردی ثبت نشده است"))}</td></tr>`;
   }
@@ -142,11 +145,11 @@
       data.features=JSON.stringify([...document.querySelectorAll('[data-list="features"] .svc-editor-items input')].map(x=>x.value.trim()).filter(Boolean));
       data.deliverables=[...document.querySelectorAll('[data-list="deliverables"] .svc-editor-items input')].map(x=>x.value.trim()).filter(Boolean);
       data.faqs=[...document.querySelectorAll('.svc-faq-row')].map(row=>({question:row.querySelector('[data-question]').value.trim(),answer:row.querySelector('[data-answer]').value.trim()})).filter(x=>x.question||x.answer);
-      if(data.faqs.some(x=>!x.question||!x.answer)){setStatus(t('هر پرسش باید پاسخ داشته باشد.','Each question needs an answer.'),true);return;}
+      if(data.faqs.some(x=>!x.question||!x.answer)){studio?.errors({faqs:t('هر پرسش باید پاسخ داشته باشد.','Each question needs an answer.')});setStatus(t('هر پرسش باید پاسخ داشته باشد.','Each question needs an answer.'),true);return;}
       const projects=$('#serviceProjects');if(projects?.dataset.ready!=='true'){setStatus(t('ابتدا دریافت نمونه‌کارها را دوباره امتحان کنید.','Retry loading projects before saving.'),true);return;}
       data.relatedProjectIds=[...document.querySelectorAll('[data-related-project]:checked')].map(x=>Number(x.value));
       ['slug','cover','shortDescription','description','audience','scope','exclusions','duration','priceLabel','support','revisions'].forEach(name=>data[name]=data[name]?.trim()||null);
-      if($('#editorForm [name="published"]').checked&&(!data.shortDescription||!data.deliverables.length)){setStatus(t('برای انتشار، معرفی کوتاه و حداقل یک خروجی تحویل وارد کنید.','Publishing requires an introduction and at least one deliverable.'),true);return;}
+      if($('#editorForm [name="published"]').checked&&(!data.shortDescription||!data.deliverables.length)){studio?.errors({...(!data.shortDescription?{shortDescription:t('برای انتشار، معرفی کوتاه لازم است.','An introduction is required for publishing.')}:{}),...(!data.deliverables.length?{deliverables:t('حداقل یک خروجی تحویل وارد کنید.','Add at least one deliverable.')}: {})});setStatus(t('برای انتشار، معرفی کوتاه و حداقل یک خروجی تحویل وارد کنید.','Publishing requires an introduction and at least one deliverable.'),true);return;}
       if(data.cover){try{const coverUrl=new URL(data.cover,location.origin);if(coverUrl.origin===location.origin&&/^\/api\/media\/public\/[0-9]+$/.test(coverUrl.pathname))data.cover=coverUrl.pathname;}catch{}}
     }
     if(section==='testimonials')['role','company','projectTitle','avatar','sourceUrl'].forEach(name=>{data[name]=data[name]?.trim()||null;});
@@ -154,18 +157,19 @@
     if(section==='profile'&&editing){data.avatarId=data.avatarId===''?editing.avatarId:data.avatarId;}
     meta.fields.filter(field => field[2] === 'checkbox').forEach(field => data[field[0]] = $(`[name="${field[0]}"]`).checked);
     meta.fields.forEach(([name,label,type])=>{if(type==='number')data[name]=data[name]===''?null:Number(data[name]);if((type==='date'||type==='datetime-local')&&!data[name])data[name]=null;});
+    if(studio&&!studio.validate(data))return;
     if(section==='experience'&&data.startDate&&data.endDate&&data.endDate<data.startDate){setStatus(t('تاریخ پایان نباید پیش از شروع باشد.','End date cannot be before start date.'),true);return;}
     const url = editing ? `${endpoint}/${editing.id}` : endpoint;
-    if($('#saveBtn').disabled)return;$('#saveBtn').disabled=true;
-    try { const response = await fetch(url, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} }); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(section==='services'&&json.errors&&typeof json.errors==='object'?Object.entries(json.errors).map(([key,value])=>`${key}: ${value}`).join(' · '):json.message||tr('ذخیره انجام نشد')); editing = null; renderForm(); bindIconPicker(); await load();setStatus(tr('با موفقیت ذخیره شد')); }
-    catch (error) { setStatus(error.message, true); }
-    finally{$('#saveBtn').disabled=false;}
+    if($('#saveBtn').disabled)return;$('#saveBtn').disabled=true;studio?.busy(true);
+    try { const response = await fetch(url, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} }); const json = await response.json().catch(() => ({})); if (!response.ok) {const error=Error(section==='services'&&json.errors&&typeof json.errors==='object'?Object.entries(json.errors).map(([key,value])=>`${key}: ${value}`).join(' · '):json.message||tr('ذخیره انجام نشد'));error.fields=json.errors||{};throw error;} studio?.busy(false);studio?.saved();editing = null; renderForm(); bindIconPicker(); await load();setStatus(tr('با موفقیت ذخیره شد')); }
+    catch (error) { studio?.busy(false);studio?.errors(error.fields||{},error.message);setStatus(error.message, true); }
+    finally{$('#saveBtn').disabled=false;studio?.busy(false);}
   }
   document.addEventListener('click', async event => {
     try {
     const edit = event.target.closest('[data-edit]'), del = event.target.closest('[data-delete]'), read = event.target.closest('[data-read]');
-    if (edit) { editing = JSON.parse(edit.dataset.edit); renderForm(editing); bindIconPicker(); scrollTo({top:0, behavior:'smooth'}); }
-    if (del && await HexoraNotify.confirm(tr('این مورد حذف شود؟'))) { const response = await fetch(`${endpoint}/${del.dataset.delete}`, {method:'DELETE'}); if (response.ok) { await load();setStatus(tr('حذف شد')); } else setStatus(tr('حذف انجام نشد'), true); }
+    if (edit) { if(studio?.isBusy())return;editing = JSON.parse(edit.dataset.edit); renderForm(editing); bindIconPicker(); if(studio)studio.open();else scrollTo({top:0, behavior:'smooth'}); }
+    if (del && !studio?.isBusy() && await HexoraNotify.confirm(tr('این مورد حذف شود؟'))) { const response = await fetch(`${endpoint}/${del.dataset.delete}`, {method:'DELETE'}); if (response.ok) { await load();setStatus(tr('حذف شد')); } else setStatus(tr('حذف انجام نشد'), true); }
     if (read) { const response = await fetch(`${endpoint}/${read.dataset.read}/read`, {method:'PATCH'}); if(response.ok){await load();setStatus(tr('خوانده شد'));}else setStatus(tr('عملیات ناموفق بود'),true); }
     }catch(error){setStatus(error.message||tr('عملیات ناموفق بود'),true);}
   });
@@ -210,8 +214,8 @@
     try { const response = await fetch('/api/media/upload', {method:'POST', body}); const json = await response.json().catch(() => ({})); if (!response.ok) throw Error(json.message || tr('آپلود انجام نشد')); const media = json.data || {}; HexoraNotify.feedback(tr('آپلود شد'),false,{source:'mediaUploadStatus'}); form.reset(); await load(); }
     catch (error) { HexoraNotify.feedback(error.message,true,{source:'mediaUploadStatus'}); }
   });
-  $('#cancelBtn').onclick = () => { editing = null; renderForm(); bindIconPicker(); setStatus(tr('فرم پاک شد')); };
+  $('#cancelBtn').onclick = async () => { if(studio&&!await studio.close())return;editing = null; renderForm(); bindIconPicker(); if(!studio)setStatus(tr('فرم پاک شد')); };
   $('#refreshBtn').onclick = load;
   $('#logoutBtn').onclick = async () => { if(await window.logoutSession())location = '/login'; };
-  (async () => { const user = await loadSession(); if (!user || !Array.isArray(user.roles) || !user.roles.includes('ADMIN')) { location = '/login'; return; } applyLanguage(); renderForm(); bindIconPicker(); setupQueries(); if (section === 'contact') $('#editorPanel').style.display = 'none'; if (section === 'media') { $('#editorPanel').style.display = 'none'; $('#mediaUploadPanel').style.display = 'block'; } await load(); releaseLoader(); })().catch(error=>{setStatus(error.message,true);releaseLoader();});
+  (async () => { const user = await loadSession(); if (!user || !Array.isArray(user.roles) || !user.roles.includes('ADMIN')) { location = '/login'; return; } applyLanguage(); renderForm(); bindIconPicker(); if(studio){studio.ready();releaseLoader();}else setupQueries(); if (section === 'contact') $('#editorPanel').style.display = 'none'; if (section === 'media') { $('#editorPanel').style.display = 'none'; $('#mediaUploadPanel').style.display = 'block'; } await load(); releaseLoader(); })().catch(error=>{studio?.failed();setStatus(error.message,true);releaseLoader();});
 })();
